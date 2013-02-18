@@ -1,0 +1,27 @@
+From 8c3b82c6c459bf962b10baa0830e6640af907850 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Sun, 17 Feb 2013 22:17:55 +0100
+Subject: [PATCH 2/2] Use CMAKE_INSTALL_PREFIX instead of hardcoding /usr
+
+---
+ razorqt-resources/sys/CMakeLists.txt |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/razorqt-resources/sys/CMakeLists.txt b/razorqt-resources/sys/CMakeLists.txt
+index e1772c4..f69d143 100644
+--- a/razorqt-resources/sys/CMakeLists.txt
++++ b/razorqt-resources/sys/CMakeLists.txt
+@@ -22,8 +22,8 @@ ENDMACRO(INSTALL_SESSION_FILES)
+ 
+ #INSTALL_SESSION_FILES("/etc/X11/sessions")
+ #INSTALL_SESSION_FILES("/usr/share/sessions")
+-INSTALL_SESSION_FILES("/usr/share/xsessions")
+-INSTALL_SESSION_FILES("/usr/share/apps/kdm/sessions")
++INSTALL_SESSION_FILES("${CMAKE_INSTALL_PREFIX}/share/xsessions")
++INSTALL_SESSION_FILES("${CMAKE_INSTALL_PREFIX}/share/apps/kdm/sessions")
+ #INSTALL_SESSION_FILES("/usr/local/share/apps/kdm/sessions")
+ #INSTALL_SESSION_FILES("/usr/share/config/kdm/sessions")
+ #INSTALL_SESSION_FILES("/usr/local/share/config/kdm/sessions")
+-- 
+1.7.10.4
+

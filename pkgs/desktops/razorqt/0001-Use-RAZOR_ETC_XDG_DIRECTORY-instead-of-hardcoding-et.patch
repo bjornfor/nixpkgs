@@ -1,0 +1,45 @@
+From ef0557476733eccc1ce1a443ef904839815a5fe7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Sun, 17 Feb 2013 14:02:13 +0100
+Subject: [PATCH 1/2] Use RAZOR_ETC_XDG_DIRECTORY instead of hardcoding
+ /etc/xdg
+
+---
+ razorqt-config/src/CMakeLists.txt                 |    2 +-
+ razorqt-resources/application-menu/CMakeLists.txt |    2 +-
+ razorqt-resources/autostart/CMakeLists.txt        |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/razorqt-config/src/CMakeLists.txt b/razorqt-config/src/CMakeLists.txt
+index 193809c..76df89d 100644
+--- a/razorqt-config/src/CMakeLists.txt
++++ b/razorqt-config/src/CMakeLists.txt
+@@ -52,4 +52,4 @@ target_link_libraries( razor-config qcategorizedview)
+ 
+ INSTALL(TARGETS razor-config RUNTIME DESTINATION bin)
+ install(FILES ${DESKTOP_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+-install(FILES razor-config.menu DESTINATION /etc/xdg/menus/)
++install(FILES razor-config.menu DESTINATION ${RAZOR_ETC_XDG_DIRECTORY}/menus/)
+diff --git a/razorqt-resources/application-menu/CMakeLists.txt b/razorqt-resources/application-menu/CMakeLists.txt
+index 4c4939d..5139db5 100644
+--- a/razorqt-resources/application-menu/CMakeLists.txt
++++ b/razorqt-resources/application-menu/CMakeLists.txt
+@@ -28,4 +28,4 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/razor-applications.menu.in
+ 
+ add_subdirectory(desktop-directories)
+ 
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/razor-applications.menu DESTINATION /etc/xdg/menus/)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/razor-applications.menu DESTINATION ${RAZOR_ETC_XDG_DIRECTORY}/menus/)
+diff --git a/razorqt-resources/autostart/CMakeLists.txt b/razorqt-resources/autostart/CMakeLists.txt
+index aa9dece..a00c119 100644
+--- a/razorqt-resources/autostart/CMakeLists.txt
++++ b/razorqt-resources/autostart/CMakeLists.txt
+@@ -11,4 +11,4 @@ razor_translate_desktop(DESKTOP_FILES
+ add_custom_target(autostart_desktop_files ALL DEPENDS ${DESKTOP_FILES})
+ #************************************************
+ 
+-install(FILES ${DESKTOP_FILES} DESTINATION /etc/xdg/autostart)
++install(FILES ${DESKTOP_FILES} DESTINATION ${RAZOR_ETC_XDG_DIRECTORY}/autostart)
+-- 
+1.7.10.4
+
