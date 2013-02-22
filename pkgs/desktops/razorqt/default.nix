@@ -22,26 +22,13 @@ stdenv.mkDerivation rec {
   # TODO:
   # Use multiple outputs: bin, doc ?
 
-  # -- panel's CPU load plugin requires libstatgrab
-  # -- 
-  # -- 
-  # -- Network monitor plugin requires libstatgrab
-
   # -- RAZOR_ETC_XDG_DIRECTORY will be autodetected now
   # -- You can set it manually with -DRAZOR_ETC_XDG_DIRECTORY=<value>
   # -- RAZOR_ETC_XDG_DIRECTORY autodetected as '/etc/xdg'
 
-  # -- Installing: /nix/store/vccals05crx8plrp402lqhncrsz7knyw-razorqt-0.5.2/$out/etc/autostart/razor-xscreensaver-autostart.desktop
-  # -- Installing: /nix/store/vccals05crx8plrp402lqhncrsz7knyw-razorqt-0.5.2/$out/etc/autostart/razor-qlipper-autostart.desktop
-  # CMake Error at razorqt-resources/sys/cmake_install.cmake:44 (FILE):
-  #   file cannot create directory: /var/empty/share/xsessions.  Maybe need
-  #   administrative privileges.
-  # Call Stack (most recent call first):
-  #   razorqt-resources/cmake_install.cmake:43 (INCLUDE)
-  #   cmake_install.cmake:41 (INCLUDE)
-
-  # '$out' is not expanded ($out/etc): -- Installing: /nix/store/n0nfhvk292nddp1dgip6lgn8d22n-razor-qt-0.5.2/$out/etc/razor/razor.conf
-  # But relative path seems to work :-)
+  # '$out' is not expanded ($out/etc):
+  #   Installing: /nix/store/n0nfhvk292nddp1dgip6lgn8d22n-razor-qt-0.5.2/$out/etc/razor/razor.conf
+  # But relative path seems to work.
   cmakeFlags = "-DRAZOR_ETC_XDG_DIRECTORY=etc/xdg";
 
   buildInputs = [ cmake pkgconfig qt48 file libXcomposite libXdamage libXau
@@ -52,10 +39,10 @@ stdenv.mkDerivation rec {
   meta = {
     description = "Lightweight desktop environment based on Qt technologies";
     longDescription = ''
-      Razor-qt is an advanced, easy-to-use, and fast desktop
-      environment based on Qt technologies. It has been tailored for users who value
-      simplicity, speed, and an intuitive interface. Unlike desktop environments,
-      Razor-qt also works fine with weak machines and low requirements software. This
+      Razor-qt is an advanced, easy-to-use, and fast desktop environment based
+      on Qt technologies. It has been tailored for users who value simplicity,
+      speed, and an intuitive interface. Unlike desktop environments, Razor-qt
+      also works fine with weak machines and low requirements software. This
       metapackage provides all the components of Razor-qt
     '';
     homepage = http://www.razor-qt.org/;
