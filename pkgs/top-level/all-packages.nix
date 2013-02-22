@@ -8739,7 +8739,7 @@ let
 
   oxygen_gtk = callPackage ../misc/themes/gtk2/oxygen-gtk { };
 
-  razorqt = callPackage ../desktops/razorqt { };
+  razorqt = callPackage ../desktops/razorqt { doxygen = null; };
 
   xfce = xfce4_10;
   xfce4_10 = recurseIntoAttrs (import ../desktops/xfce { inherit pkgs newScope; });
