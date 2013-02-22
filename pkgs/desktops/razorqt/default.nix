@@ -1,4 +1,12 @@
-{ stdenv, fetchurl, cmake, pkgconfig, qt48, file, libXcomposite, libXdamage, openbox }:
+{ stdenv, fetchurl, cmake, pkgconfig, qt48, file, libXcomposite, libXdamage,
+  libXau, libXdmcp, libpthreadstubs,
+  pulseaudio ? null,
+  polkit_qt_1 ? null,
+  lm_sensors ? null,
+  # TODO: LightDM with Qt4 support (for LightDM greeter) (OPTIONAL)
+  # TODO: libstatgrab (panel's CPU and Network Monitor plugins) (OPTIONAL)
+  openbox  # one of many possible windowmanagers
+}:
 
 stdenv.mkDerivation rec {
   name = "razorqt-0.5.2";
@@ -36,7 +44,8 @@ stdenv.mkDerivation rec {
   # But relative path seems to work :-)
   cmakeFlags = "-DRAZOR_ETC_XDG_DIRECTORY=etc/xdg";
 
-  buildInputs = [ cmake pkgconfig qt48 file libXcomposite libXdamage ];
+  buildInputs = [ cmake pkgconfig qt48 file libXcomposite libXdamage libXau
+                  libXdmcp libpthreadstubs pulseaudio polkit_qt_1 lm_sensors ];
 
   fixupPhase = "printf '[General]\nwindowmanager=${openbox}/bin/openbox' >> $out/etc/xdg/razor/session.conf";
 
