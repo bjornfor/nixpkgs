@@ -8243,6 +8243,8 @@ let
 
   recode = callPackage ../tools/text/recode { };
 
+  repetierHost = callPackage ../applications/misc/repetier-host { };
+
   retroshare = callPackage ../applications/networking/p2p/retroshare {
     qt = qt4;
   };
