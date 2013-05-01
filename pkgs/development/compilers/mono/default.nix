@@ -1,4 +1,4 @@
-{stdenv, fetchurl, bison, pkgconfig, glib, gettext, perl, libgdiplus}:
+{stdenv, fetchurl, bison, pkgconfig, glib, gettext, perl, libgdiplus, patchelf}:
 
 stdenv.mkDerivation rec {
   name = "mono-2.11.4";
@@ -30,6 +30,12 @@ stdenv.mkDerivation rec {
     makeFlagsArray=(INSTALL=`type -tp install`)
     patchShebangs ./
   ";
+
+  # The build process doesn't put any of the non-stdenv libs in RPATH, so we
+  # have to do it ourself.
+  postFixup = ''
+    ${patchelf}/bin/patchelf --set-rpath ${stdenv.gcc.gcc}/lib:${stdenv.gcc.gcc}/lib64:${stdenv.gcc.libc}/lib:${libgdiplus}/lib:$out/lib $out/bin/mono
+  '';
 
   meta = {
     homepage = http://mono-project.com/;
