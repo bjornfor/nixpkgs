@@ -4941,6 +4941,8 @@ let
 
   lv2 = callPackage ../development/libraries/audio/lv2 { };
 
+  opentk = callPackage ../development/libraries/opentk { };
+
   qrupdate = callPackage ../development/libraries/qrupdate { };
 
   redland = pkgs.librdf_redland;
