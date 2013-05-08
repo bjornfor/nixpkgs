@@ -8,9 +8,9 @@ stdenv.mkDerivation rec {
   # Repetier-Host doesn't seem to put out tarballs, only git is available
   src = fetchgit {
     url = "git://github.com/repetier/Repetier-Host.git";
-    #rev = "refs/tags/v${version}";
+    rev = "refs/tags/v${version}";
     #sha256 = "0sjjj9z1dhilhpc8pq4154czrb79z9cm044jvn75kxcjv6v5l2m5";
-    rev = "05c108534abf10dc2e70258bf960c04047312328";
+    #rev = "05c108534abf10dc2e70258bf960c04047312328";
     sha256 = "1d38ax4szhjvppymgkbk9x1778w130r9ffgksq8pms4j2xd6z0dw";
   };
 
