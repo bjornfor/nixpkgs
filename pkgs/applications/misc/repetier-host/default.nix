@@ -20,7 +20,9 @@ stdenv.mkDerivation rec {
     export LD_LIBRARY_PATH=${libgdiplus}/lib
     # Become case insensitive and map unix/win path separators:
     export MONO_IOMAP=all
-    xbuild src/RepetierHost/RepetierHost.sln
+    export MONO_PATH=${opentk}/lib
+    export XBUILD_LOG_REFERENCE_RESOLVER=1
+    xbuild /verbosity:detailed src/RepetierHost/RepetierHost.sln
   '';
 
   #doCheck = false;
