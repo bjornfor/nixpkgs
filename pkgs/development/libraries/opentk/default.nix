@@ -1,7 +1,8 @@
 { stdenv, fetchurl, unzip, mono, mesa, x11 }:
 
 stdenv.mkDerivation rec {
-  name = "opentk-2010-10-06";
+  name = "opentk-${version}";
+  version = "2010-10-06";
   
   src = fetchurl {
     url = "mirror://sourceforge/opentk/${name}.zip";
@@ -36,6 +37,15 @@ stdenv.mkDerivation rec {
     cp -r Binaries/OpenTK/Release/*.exe $out/bin
     mkdir -p $out/share
     cp -r Binaries/OpenTK/Release/Data/ $out/share/
+
+    # Create pkg-config file
+    mkdir -p $out/lib/pkgconfig
+    cat > $out/lib/pkgconfig/opentk.pc << EOF
+    Name: OpenTK
+    Description: Low-level C# library that wraps OpenGL, OpenCL and OpenAL
+    Version: ${version}
+    Libs: -r:$out/lib/OpenTK.dll -r:$out/lib/OpenTK.Compatibility.dll -r:$out/lib/OpenTK.GLControl.dll
+    EOF
   '';
     ## Try to make a working wrapper for the opentk examples. Isn't there a cleaner way?
     #cat > $out/bin/opentk-examples << EOF
