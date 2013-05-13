@@ -1,12 +1,12 @@
-{ stdenv, fetchurl, cmake, pkgconfig, qt48, file, libXcomposite, libXdamage,
-  libXau, libXdmcp, libpthreadstubs,
-  pulseaudio ? null,
-  polkit_qt_1 ? null,
-  lm_sensors ? null,
-  doxygen ? null,  # to build documentation
-  # TODO: LightDM with Qt4 support (for LightDM greeter) (OPTIONAL)
-  # TODO: libstatgrab (panel's CPU and Network Monitor plugins) (OPTIONAL)
-  openbox  # one of many possible windowmanagers
+{ stdenv, fetchurl, cmake, pkgconfig, qt48, file, libXcomposite, libXdamage
+, libXau, libXdmcp, libpthreadstubs
+, pulseaudio ? null
+, polkit_qt_1 ? null
+, lm_sensors ? null
+, doxygen ? null  # to build documentation
+# TODO: LightDM with Qt4 support (for LightDM greeter) (OPTIONAL)
+# TODO: libstatgrab (panel's CPU and Network Monitor plugins) (OPTIONAL)
+, openbox  # one of many possible windowmanagers
 }:
 
 stdenv.mkDerivation rec {
@@ -17,8 +17,10 @@ stdenv.mkDerivation rec {
     sha256 = "1bg1w2q00izz4ywv3qf1jwwqa0b01h1ab9qf5h5a493sp878k2mc";
   };
 
-  patches = [ ./0001-Use-RAZOR_ETC_XDG_DIRECTORY-instead-of-hardcoding-et.patch
-              ./0002-Use-CMAKE_INSTALL_PREFIX-instead-of-hardcoding-usr.patch ];
+  patches =
+    [ ./0001-Use-RAZOR_ETC_XDG_DIRECTORY-instead-of-hardcoding-et.patch
+      ./0002-Use-CMAKE_INSTALL_PREFIX-instead-of-hardcoding-usr.patch
+    ];
 
   # TODO:
   # Use multiple outputs: bin, doc ?
@@ -32,9 +34,10 @@ stdenv.mkDerivation rec {
   # But relative path seems to work.
   cmakeFlags = "-DRAZOR_ETC_XDG_DIRECTORY=etc/xdg";
 
-  buildInputs = [ cmake pkgconfig qt48 file libXcomposite libXdamage libXau
-                  libXdmcp libpthreadstubs pulseaudio polkit_qt_1 lm_sensors
-                  doxygen ];
+  buildInputs =
+    [ cmake pkgconfig qt48 file libXcomposite libXdamage libXau libXdmcp
+      libpthreadstubs pulseaudio polkit_qt_1 lm_sensors doxygen
+    ];
 
   # FIXME: this files seems to be ignored. If the same is put in ~/.config/razor/session.conf it works.
   fixupPhase = "printf '[General]\nwindowmanager=${openbox}/bin/openbox' >> $out/etc/xdg/razor/session.conf";
