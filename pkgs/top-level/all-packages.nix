@@ -3546,6 +3546,8 @@ let
 
   lttngTools = callPackage ../development/tools/misc/lttng-tools { };
 
+  lttngtop = callPackage ../development/tools/misc/lttngtop { };
+
   lttngUst = callPackage ../development/tools/misc/lttng-ust { };
 
   lttv = callPackage ../development/tools/misc/lttv { };
