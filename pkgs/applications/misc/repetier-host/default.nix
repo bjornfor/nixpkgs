@@ -4,13 +4,13 @@
 # out how to build it from source.
 
 stdenv.mkDerivation rec {
-  version = "0.85c";
+  version = "0.90c";
   name = "repetier-host-${version}";
 
   src = fetchurl {
     name = "${name}.tar.gz";
-    url = "http://www.repetier.com/?wpdmact=process&did=MzUuaG90bGluaw==";
-    sha256 = "1ny22lf9s3yb9bhx9gdxkflvz6q62crzpvza1x449nr6dc2c9w42";
+    url = "http://www.repetier.com/?wpdmact=process&did=NDAuaG90bGluaw==";
+    sha256 = "1a008bsf2yprf8jchwrw4ag1a7vlw2d6mc7jyyb314ni48lffbpa";
   };
 
   phases = [ "unpackPhase" "installPhase" ];
