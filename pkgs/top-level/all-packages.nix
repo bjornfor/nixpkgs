@@ -8243,7 +8243,12 @@ let
 
   recode = callPackage ../tools/text/recode { };
 
-  repetierHost = callPackage ../applications/misc/repetier-host { };
+  repetierHost = callPackage ../applications/misc/repetier-host {
+    inherit (perl514Packages) EncodeLocale MathClipper ExtUtilsXSpp
+            BoostGeometryUtils MathConvexHullMonotoneChain MathGeometryVoronoi
+            MathPlanePath Moo IOStringy ClassXSAccessor Wx GrowlGNTP NetDBus;
+    perl = perl514;
+  };
 
   retroshare = callPackage ../applications/networking/p2p/retroshare {
     qt = qt4;

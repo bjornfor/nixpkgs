@@ -1,4 +1,7 @@
-{ stdenv, fetchurl, mono, libgdiplus, libX11, mesa, perl }:
+{ stdenv, fetchurl, mono, libgdiplus, libX11, mesa, perl
+, EncodeLocale, MathClipper, ExtUtilsXSpp, BoostGeometryUtils
+, MathConvexHullMonotoneChain, MathGeometryVoronoi, MathPlanePath, Moo, IOStringy
+, ClassXSAccessor, Wx, GrowlGNTP, NetDBus }:
 
 # NOTE: We use the binary distribution of Repetier-Host until someone figures
 # out how to build it from source.
