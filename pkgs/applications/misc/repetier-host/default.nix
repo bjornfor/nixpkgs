@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
     #!${stdenv.shell}
     export PATH=\$PATH:${perl}/bin
     export LD_LIBRARY_PATH=${libX11}/lib:${libgdiplus}/lib:${mesa}/lib:${mono}/lib
-    ${mono}/bin/mono $out/repetier-host/RepetierHost.exe
+    exec ${mono}/bin/mono $out/repetier-host/RepetierHost.exe
     EOF
     chmod a+x $out/bin/repetier-host
   '';
