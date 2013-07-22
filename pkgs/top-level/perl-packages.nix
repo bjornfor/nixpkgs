@@ -3356,6 +3356,17 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
+  Expect = buildPerlPackage {
+    name = "Expect-1.21";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/R/RG/RGIERSIG/Expect-1.21.tar.gz;
+      sha256 = "e5509307b8e330a3bc07dd4ab1d28e5451116449cc9c3bdabb1235f66ce62267";
+    };
+    propagatedBuildInputs = [ IOTty ];
+    meta = {
+    };
+  };
+
   ExporterDeclare = buildPerlModule {
     name = "Exporter-Declare-0.113";
     src = fetchurl {
@@ -5459,6 +5470,33 @@ let self = _self // overrides; _self = with self; {
     buildInputs = [ ProcWaitStat ];
   };
 
+  MIMEtools = buildPerlPackage {
+    name = "MIME-tools-5.504";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/D/DS/DSKOLL/MIME-tools-5.504.tar.gz;
+      sha256 = "0f5819eecd59bd46874f741dfc452a0a172e59a7ac6c422ce69e10593f7693d2";
+    };
+    buildInputs = [ TestDeep ];
+    propagatedBuildInputs = [ MailTools ];
+    meta = {
+      description = "Tools to manipulate MIME messages";
+      license = "perl";
+    };
+  };
+
+  MIMELite = buildPerlPackage {
+    name = "MIME-Lite-3.029";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/R/RJ/RJBS/MIME-Lite-3.029.tar.gz;
+      sha256 = "79cc876ccedcf928c89d232c6bdba8894014c6c37003b4ab5adc03a7de11c87f";
+    };
+    propagatedBuildInputs = [ EmailDateFormat MailTools ];
+    meta = {
+      description = "Unknown";
+      license = "perl";
+    };
+  };
+
   MIMETypes = buildPerlPackage {
     name = "MIME-Types-2.04";
     src = fetchurl {
@@ -6716,6 +6754,18 @@ let self = _self // overrides; _self = with self; {
     doCheck = false; # seems to hang waiting for connections
     meta = {
       description = "Extensible, general Perl server engine";
+    };
+  };
+
+  NetSFTPForeign = buildPerlPackage {
+    name = "Net-SFTP-Foreign-1.75";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/S/SA/SALVA/Net-SFTP-Foreign-1.75.tar.gz;
+      sha256 = "db962a0ac2f8dce469c99f8d4251f29e3ce05767c948541bde51ba109d39b0c2";
+    };
+    meta = {
+      description = "Secure File Transfer Protocol client";
+      license = "unknown";
     };
   };
 
@@ -8330,6 +8380,19 @@ let self = _self // overrides; _self = with self; {
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
       platforms = stdenv.lib.platforms.linux;
       maintainers = with maintainers; [ ocharles ];
+    };
+  };
+
+  SysMmap = buildPerlPackage {
+    name = "Sys-Mmap-0.16";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/T/TO/TODDR/Sys-Mmap-0.16.tar.gz;
+      sha256 = "36a637e78568762bd25e69df3c0671f79c9ddf48835f5460b4404303e1801c79";
+    };
+    meta = {
+      homepage = http://wiki.github.com/toddr/Sys-Mmap;
+      description = "Uses mmap to map in a file as a Perl variable";
+      license = "perl";
     };
   };
 
