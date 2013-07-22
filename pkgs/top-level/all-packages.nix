@@ -6194,6 +6194,11 @@ let
 
   zabbix20 = callPackage ../servers/monitoring/zabbix/2.0.nix { };
 
+  zoneminder = callPackage ../servers/zoneminder {
+    inherit (perlPackages) DBI DBDmysql DateManip LWPUserAgent SysMmap MIMELite
+                           MIMEtools NetSFTPForeign ArchiveZip Expect HTTPMessage
+                           URI HTTPDate;
+  };
 
   ### OS-SPECIFIC
 

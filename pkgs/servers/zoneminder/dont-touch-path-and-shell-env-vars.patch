@@ -1,0 +1,132 @@
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmaudit.pl.in ZoneMinder-1.25.0/scripts/zmaudit.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmaudit.pl.in	2013-08-11 09:54:37.825974648 +0200
++++ ZoneMinder-1.25.0/scripts/zmaudit.pl.in	2013-08-30 22:49:10.362062682 +0200
+@@ -62,8 +62,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ my $report = 0;
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmcontrol.pl.in ZoneMinder-1.25.0/scripts/zmcontrol.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmcontrol.pl.in	2013-08-11 09:54:37.825974648 +0200
++++ ZoneMinder-1.25.0/scripts/zmcontrol.pl.in	2013-08-30 22:49:48.052400250 +0200
+@@ -40,8 +40,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ sub Usage
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmdc.pl.in ZoneMinder-1.25.0/scripts/zmdc.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmdc.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmdc.pl.in	2013-08-30 22:51:31.370324686 +0200
+@@ -55,8 +55,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ my @daemons = (
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmfilter.pl.in ZoneMinder-1.25.0/scripts/zmfilter.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmfilter.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmfilter.pl.in	2013-08-30 22:50:36.940837845 +0200
+@@ -108,8 +108,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ my $delay = ZM_FILTER_EXECUTE_INTERVAL;
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmpkg.pl.in ZoneMinder-1.25.0/scripts/zmpkg.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmpkg.pl.in	2013-08-11 09:54:37.825974648 +0200
++++ ZoneMinder-1.25.0/scripts/zmpkg.pl.in	2013-08-11 09:56:30.777848298 +0200
+@@ -40,8 +40,6 @@
+ use Time::HiRes qw/gettimeofday/;
+ 
+ # Detaint our environment
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ logInit();
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmtrack.pl.in ZoneMinder-1.25.0/scripts/zmtrack.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmtrack.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmtrack.pl.in	2013-08-30 22:51:29.088304282 +0200
+@@ -50,8 +50,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ my $mid = 0;
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmtrigger.pl.in ZoneMinder-1.25.0/scripts/zmtrigger.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmtrigger.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmtrigger.pl.in	2013-08-30 22:51:35.858364812 +0200
+@@ -71,8 +71,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ logInit();
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmupdate.pl.in ZoneMinder-1.25.0/scripts/zmupdate.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmupdate.pl.in	2013-08-11 09:54:37.825974648 +0200
++++ ZoneMinder-1.25.0/scripts/zmupdate.pl.in	2013-08-30 22:50:06.637566639 +0200
+@@ -58,8 +58,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin:/usr/local/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ my $web_uid = (getpwnam( ZM_WEB_USER ))[2];
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmvideo.pl.in ZoneMinder-1.25.0/scripts/zmvideo.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmvideo.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmvideo.pl.in	2013-08-30 22:51:26.560281677 +0200
+@@ -42,8 +42,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ logInit();
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmwatch.pl.in ZoneMinder-1.25.0/scripts/zmwatch.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmwatch.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmwatch.pl.in	2013-08-30 22:51:24.120259859 +0200
+@@ -50,8 +50,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ sub Usage
+diff -uNr ZoneMinder-1.25.0.orig/scripts/zmx10.pl.in ZoneMinder-1.25.0/scripts/zmx10.pl.in
+--- ZoneMinder-1.25.0.orig/scripts/zmx10.pl.in	2013-08-11 09:54:37.826974656 +0200
++++ ZoneMinder-1.25.0/scripts/zmx10.pl.in	2013-08-30 22:51:33.538344070 +0200
+@@ -52,8 +52,6 @@
+ 
+ $| = 1;
+ 
+-$ENV{PATH}  = '/bin:/usr/bin';
+-$ENV{SHELL} = '/bin/sh' if exists $ENV{SHELL};
+ delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+ 
+ sub Usage
