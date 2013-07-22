@@ -1,0 +1,26 @@
+diff --git a/motion.h b/motion.h
+index ccfd4d0..dc27e4e 100644
+--- a/motion.h
++++ b/motion.h
+@@ -40,7 +40,7 @@
+ 
+ #define _LINUX_TIME_H 1
+ #if !defined(WITHOUT_V4L) && !defined(BSD)
+-#include <linux/videodev.h>
++#include <linux/videodev2.h>
+ #endif
+ 
+ #include <pthread.h>
+diff --git a/video.h b/video.h
+index e4e2f1b..9878a57 100644
+--- a/video.h
++++ b/video.h
+@@ -12,7 +12,7 @@
+ 
+ #define _LINUX_TIME_H 1
+ #ifndef WITHOUT_V4L
+-#include <linux/videodev.h>
++#include <linux/videodev2.h>
+ #include <sys/mman.h>
+ #include "pwc-ioctl.h"
+ #endif

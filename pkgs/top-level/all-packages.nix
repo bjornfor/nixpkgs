@@ -6030,6 +6030,8 @@ let
 
   mod_wsgi = callPackage ../servers/http/apache-modules/mod_wsgi { };
 
+  motion = callPackage ../servers/motion { };
+
   mpd = callPackage ../servers/mpd {
     # resolve the "stray '@' in program" errors
     stdenv = if stdenv.isDarwin
