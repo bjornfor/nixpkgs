@@ -1,0 +1,12 @@
+diff --git a/oclint-core/cmake/OCLintConfig.cmake b/oclint-core/cmake/OCLintConfig.cmake
+index 220b95f..58e028e 100644
+--- a/oclint-core/cmake/OCLintConfig.cmake
++++ b/oclint-core/cmake/OCLintConfig.cmake
+@@ -35,6 +35,7 @@ ENDIF()
+ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${LLVM_ROOT}/share/llvm/cmake")
+ INCLUDE(LLVMConfig)
+ 
++INCLUDE_DIRECTORIES( ${CLANG_ROOT}/include )
+ INCLUDE_DIRECTORIES( ${LLVM_INCLUDE_DIRS} )
+ LINK_DIRECTORIES( ${LLVM_LIBRARY_DIRS} )
+ ADD_DEFINITIONS( ${LLVM_DEFINITIONS} )

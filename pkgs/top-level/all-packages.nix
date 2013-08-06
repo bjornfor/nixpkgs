@@ -4638,6 +4638,8 @@ let
 
   noweb = callPackage ../development/tools/literate-programming/noweb { };
 
+  oclint = callPackage ../development/tools/oclint { };
+
   omake = callPackage ../development/tools/ocaml/omake { };
   omake_rc1 = callPackage ../development/tools/ocaml/omake/0.9.8.6-rc1.nix { };
 
