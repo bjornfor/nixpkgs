@@ -9528,6 +9528,8 @@ let
     wxGTK = wxGTK29;
   };
 
+  ltspice  = callPackage ../applications/science/electronics/ltspice { };
+
   ngspice = callPackage ../applications/science/electronics/ngspice { };
 
   qucs = callPackage ../applications/science/electronics/qucs { };
