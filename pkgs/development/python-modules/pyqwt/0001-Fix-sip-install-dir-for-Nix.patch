@@ -1,0 +1,32 @@
+From 463165c11fdc11381caeaa45395c0a061a27e21a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Sat, 14 Sep 2013 21:35:54 +0200
+Subject: [PATCH] Fix sip install dir for Nix
+
+The sip files are currently attempted to be installed into an existing
+nix store path where a bunch of sip files are located:
+
+  /nix/store/k0wd9070chf8pb4aw22f1nl8ay2916sp-PyQt-x11-gpl-4.10.1/share/sip
+
+This is bad (and doesn't work!), so patch the configure.py script to
+pick up the destination from the $out environment variable instead.
+---
+ configure/configure.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure/configure.py b/configure/configure.py
+index 8ca41b0..3a04298 100755
+--- a/configure/configure.py
++++ b/configure/configure.py
+@@ -846,7 +846,7 @@ def setup_qwt5_build(configuration, options, package):
+     pattern = os.path.join(os.pardir, 'sip', options.qwt, 'common', '*.sip')
+     sip_files += [os.path.join(os.pardir, f) for f in glob.glob(pattern)]
+     installs.append(
+-        [sip_files, os.path.join(configuration.pyqt_sip_dir, 'Qwt5')])
++        [sip_files, os.path.join(os.environ["out"], 'share', 'sip', 'Qwt5')])
+ 
+     # designer
+     if configuration.qt_version > 0x03ffff:
+-- 
+1.8.3.4
+

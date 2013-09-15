@@ -6731,6 +6731,10 @@ let
       else stdenv;
   };
 
+  pyqwt = callPackage ../development/python-modules/pyqwt {
+    inherit (pythonPackages) numpy;
+  };
+
   pysideApiextractor = callPackage ../development/python-modules/pyside/apiextractor.nix { };
 
   pysideGeneratorrunner = callPackage ../development/python-modules/pyside/generatorrunner.nix { };
