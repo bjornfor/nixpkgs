@@ -43,6 +43,19 @@ stdenv.mkDerivation rec {
     rmdir $out/{share,lib}/lua/5.1 $out/{share,lib}/lua
   '';
 
+  crossAttrs = {
+    makeFlags = [
+      "CC=${stdenv.cross.config}-gcc"
+      "RANLIB=${stdenv.cross.config}-ranlib"
+    ];
+    # Putting "AR=\"${stdenv.cross.config}-ar rcu" in makeFlags cause 'rcu' to
+    # be interpreted as a make target (word splitting fsck up). So patch the
+    # Makefile instead.
+    preBuild = ''
+      sed -i "s|^AR= ar rcu|AR=${stdenv.cross.config}-ar rcu|" src/Makefile
+    '';
+  };
+
   meta = {
     homepage = "http://www.lua.org";
     description = "Powerful, fast, lightweight, embeddable scripting language";
