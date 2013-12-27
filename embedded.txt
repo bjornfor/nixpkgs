@@ -1,0 +1,14 @@
+# Build kernel with Nix
+$ nix-build -A linux.crossDrv cross-arm.nix  # ensure crossSystem.platform = { kernelBaseConfig = "vexpress_defconfig"; kernelTarget = "zImage"; ... }
+
+# Build initramfs
+$ arm-none-linux-gnueabi-gcc -static hello.c -o init.arm.static
+$ echo init.arm.static | cpio -o --format=newc > initramfs
+
+# Run virtual ARM machine (press "ctrl-a x" to quit QEMU)
+$ qemu-system-arm -M vexpress-a9 -kernel result/zImage -initrd initramfs -append "console=ttyAMA0 rdinit=/init.arm.static" -nographic
+
+# Or run without console= and -nographic to get a SDL window (graphical)
+
+NOTE: linux defaults to run /init from an initramfs. This can be changed with
+the rdinit= kernel parameter.
