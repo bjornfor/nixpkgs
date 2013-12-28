@@ -95,7 +95,7 @@ in
 
       # To avoid a dependency on the build system 'bash'.
       preFixup = ''
-        rm $out/bin/{ldd,tzselect,catchsegv,xtrace}
+        rm $out/bin/{ldd,tzselect,catchsegv,xtrace,sotruss}
       '';
     }
    else {}))
