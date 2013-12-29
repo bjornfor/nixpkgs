@@ -26,6 +26,14 @@ stdenv.mkDerivation rec {
 
   makeFlags = "setowner= ";
 
+  crossAttrs = {
+    # Prevent runtime dependency on build system bash.
+    preFixup = ''
+      rm "$out/bin/unicode_start"
+      rm "$out/bin/unicode_stop"
+    '';
+  };
+
   meta = {
     homepage = ftp://ftp.altlinux.org/pub/people/legion/kbd/;
     description = "Linux keyboard utilities and keyboard maps";
