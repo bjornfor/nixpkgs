@@ -27,6 +27,12 @@ stdenv.mkDerivation rec {
   makeFlags = "setowner= ";
 
   crossAttrs = {
+    patchPhase = ''
+      # Fix the path to gzip/bzip2.
+      substituteInPlace src/findfile.c \
+        --replace gzip ${gzip.crossDrv}/bin/gzip \
+        --replace bzip2 ${bzip2.crossDrv}/bin/bzip2 \
+    '';
     # Prevent runtime dependency on build system bash.
     preFixup = ''
       rm "$out/bin/unicode_start"
