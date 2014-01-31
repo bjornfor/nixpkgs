@@ -3319,6 +3319,8 @@ let
 
   srecord = callPackage ../development/tools/misc/srecord { };
 
+  universalindentgui = callPackage ../development/tools/universalindentgui { };
+
   windowssdk = (
     import ../development/misc/windows-sdk {
       inherit fetchurl stdenv cabextract;
