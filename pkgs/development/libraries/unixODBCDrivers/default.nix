@@ -55,23 +55,44 @@ args : with args;
     "Threading       = 2\n";
  };
 # mysql connector
+# FIXME:
+# $ LD_DEBUG=files isql -v mysql-test
+#     [...]
+#           7813:     /nix/store/vhapcwmifih3fnx0pc6d85fcficjbvnd-mysql-connector-odbc-5.2.6/lib/libmyodbc5w.so: error: symbol lookup error: undefined symbol: my_thread_end_wait_time (fatal)
+#     [...]
+#     [01000][unixODBC][Driver Manager]Can't open lib '/nix/store/vhapcwmifih3fnx0pc6d85fcficjbvnd-mysql-connector-odbc-5.2.6/lib/libmyodbc5w.so' : file not found
+#     [ISQL]ERROR: Could not SQLConnect
  mysql = rec {
-    libraries = ["lib/libmyodbc3-3.51.12.so"];
-    deriv = stdenv.mkDerivation {
-      name = "mysql-connector-odbc-3.51.12";
+    deriv = stdenv.mkDerivation rec {
+      name = "mysql-connector-odbc-5.2.6";
       src = fetchurl {
-        url = http://ftp.snt.utwente.nl/pub/software/mysql/Downloads/MyODBC3/mysql-connector-odbc-3.51.12.tar.gz;
-        md5 = "a484f590464fb823a8f821b2f1fd7fef";
+        url = "http://cdn.mysql.com/Downloads/Connector-ODBC/5.2/${name}-src.tar.gz";
+        sha256 = "0yyi1bkyf0i6dixd8g8hz96j7k4l9bmyh8wdnifvn6c86lkblnq0";
       };
-      configureFlags = "--disable-gui"
-         +  " --with-mysql-path=${mysql} --with-unixODBC=${unixODBC}";
-      buildInputs = [libtool zlib];
+      buildInputs = [ cmake mysql zlib unixODBC ];
+      # - The shipped CMakeLists.txt file doesn't find our lib. Tell it where it is.
+      # - MYSQL_LINK_FLAGS are broken (from bad parsing of mysql_config output?),
+      #   seems like the end of the "mysql_config --cflags" output. Fix it by
+      #   manually copying the output of "mysql_config --libs" (plus -pthread).
+      preConfigure = ''
+        export cmakeFlags="$cmakeFlags -DMYSQL_LIB=${mysql}/lib/mysql/libmysqlclient.so"
+        export cmakeFlags="$cmakeFlags -DWITH_UNIXODBC=1"
+        export cmakeFlags="$cmakeFlags -DMYSQLCLIENT_LIB_NAME=libmysqlclient.so"
+        export cmakeFlagsArray+="-DMYSQL_LINK_FLAGS=$(mysql_config --libs) -pthread"
+      '';
+      postInstall = ''
+        mkdir -p "$out/share/mysql-connector-odbc"
+        for file in ChangeLog COPYING INSTALL Licenses_for_Third-Party_Components.txt README README.debug; do
+            mv "$out/$file" "$out/share/mysql-connector-odbc"
+        done
+        rm -rf "$out/test"
+      '';
       inherit mysql unixODBC;
     };
     ini =
       "[MYSQL]\n" +
       "Description     = MySQL driver\n" +
-      "Driver          = ${deriv}/lib/libmyodbc3-3.51.12.so\n" +
+      "Driver          = ${deriv}/lib/libmyodbc5w.so\n" + # the 'a' is for ANSI, 'w' is for Unicode
       "CPTimeout       = \n" +
       "CPReuse         = \n" +
       "FileUsage       = 3\n ";

@@ -7026,7 +7026,7 @@ let
   unixODBC = callPackage ../development/libraries/unixODBC { };
 
   unixODBCDrivers = recurseIntoAttrs (import ../development/libraries/unixODBCDrivers {
-    inherit fetchurl stdenv unixODBC glibc libtool openssl zlib;
+    inherit fetchurl stdenv unixODBC glibc libtool openssl zlib cmake;
     inherit postgresql mysql sqlite;
   });
 
