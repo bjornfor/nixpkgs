@@ -71,6 +71,8 @@ args : with args;
       };
       buildInputs = [ cmake mysql zlib unixODBC ];
       # - The shipped CMakeLists.txt file doesn't find our lib. Tell it where it is.
+      # - defining NONTHREADSAFE fixes
+      #   libmyodbc5w.so: error: symbol lookup error: undefined symbol: my_thread_end_wait_time (fatal)
       # - MYSQL_LINK_FLAGS are broken (from bad parsing of mysql_config output?),
       #   seems like the end of the "mysql_config --cflags" output. Fix it by
       #   manually copying the output of "mysql_config --libs" (plus -pthread).
@@ -78,6 +80,7 @@ args : with args;
         export cmakeFlags="$cmakeFlags -DMYSQL_LIB=${mysql}/lib/mysql/libmysqlclient.so"
         export cmakeFlags="$cmakeFlags -DWITH_UNIXODBC=1"
         export cmakeFlags="$cmakeFlags -DMYSQLCLIENT_LIB_NAME=libmysqlclient.so"
+        export cmakeFlags="$cmakeFlags -DNONTHREADSAFE=1"
         export cmakeFlagsArray+="-DMYSQL_LINK_FLAGS=$(mysql_config --libs) -pthread"
       '';
       postInstall = ''
