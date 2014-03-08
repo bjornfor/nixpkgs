@@ -9596,6 +9596,8 @@ let
 
   gnuradio-osmosdr = callPackage ../applications/misc/gnuradio-osmosdr { };
 
+  gnuradio-iqbalance = callPackage ../applications/misc/gnuradio-iqbalance { };
+
   goldendict = callPackage ../applications/misc/goldendict { };
 
   google-musicmanager = callPackage ../applications/audio/google-musicmanager { };
