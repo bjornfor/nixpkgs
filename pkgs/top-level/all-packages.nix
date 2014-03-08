@@ -5928,6 +5928,8 @@ let
 
   liboping = callPackage ../development/libraries/liboping { };
 
+  libosmo-dsp = callPackage ../development/libraries/libosmo-dsp { };
+
   libplist = callPackage ../development/libraries/libplist { };
 
   libQGLViewer = callPackage ../development/libraries/libqglviewer { };
