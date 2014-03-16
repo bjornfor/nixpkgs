@@ -1,7 +1,7 @@
 From aed93b6ada5b9b76b85d11d9bad732ca005295af Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
 Date: Sat, 15 Mar 2014 15:08:01 +0100
-Subject: [PATCH 2/2] Import XML_CATALOG_FILES to be able to validate the
+Subject: [PATCH 2/3] Import XML_CATALOG_FILES to be able to validate the
  manual
 
 In nixos/nixpkgs, 'xmlto' depends on $XML_CATALOG_FILES to be able to

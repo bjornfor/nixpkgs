@@ -1,0 +1,159 @@
+From 5229f4e68f8a525ab551b04d10e5d95d0cf7052b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Sat, 15 Mar 2014 23:30:38 +0100
+Subject: [PATCH 3/3] Fix paths to gpsd.hotplug in udev rules
+
+The gpsd build system allows us to specify where to install udev rules
+with "scons udevdir=...", but the rules file itself will always contain
+(hardcoded) paths to /lib/udev. Which makes it broken.
+
+This patch makes it so that the references to gpsd.hotplug stays in sync
+with where the rules file is installed, by adding a @udevdir@ "magic
+marker" in the rules file and then substituting that for the real
+udevdir install path at build time.
+---
+ SConstruct    |  3 ++-
+ gpsd.rules    | 51 ---------------------------------------------------
+ gpsd.rules.in | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 53 insertions(+), 52 deletions(-)
+ delete mode 100644 gpsd.rules
+ create mode 100644 gpsd.rules.in
+
+diff --git a/SConstruct b/SConstruct
+index a0b3d25..d294920 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -1228,6 +1228,7 @@ def substituter(target, source, env):
+         ('@VERSION@',    gpsd_version),
+         ('@prefix@',     env['prefix']),
+         ('@libdir@',     env['libdir']),
++        ('@udevdir@',    env['udevdir']),
+         ('@PYTHON@',     sys.executable),
+         ('@DATE@',       time.asctime()),
+         ('@MASTER',      'DO NOT HAND_HACK! THIS FILE IS GENERATED@'),
+@@ -1312,7 +1313,7 @@ if manbuilder:
+ build = env.Alias('build',
+                   [libraries, binaries, python_targets,
+                    "gpsd.php", manpage_targets,
+-                   "libgps.pc", "libgpsd.pc"])
++                   "libgps.pc", "libgpsd.pc", "gpsd.rules"])
+ env.Default(*build)
+ 
+ if qt_env:
+diff --git a/gpsd.rules b/gpsd.rules
+deleted file mode 100644
+index fada69e..0000000
+--- a/gpsd.rules
++++ /dev/null
+@@ -1,51 +0,0 @@
+-# udev rules for gpsd
+-#
+-# This file is Copyright (c) 2010 by the GPSD project
+-# BSD terms apply: see the file COPYING in the distribution root for details.
+-#
+-# GPSes don't have their own USB device class.  They're serial-over-USB
+-# devices, so what you see is actually the ID of the serial-over-USB chip.
+-# Fortunately, just two of these account for over 80% of consumer-grade
+-# GPS sensors.  The gpsd.hotplug wrapper script will tell a running gpsd
+-# that it should look at the device that just went active, because it
+-# might be a GPS.
+-#
+-# The following setup works on Debian and Ubuntu - something similar
+-# will apply on other distributions:
+-# 
+-#   /lib/udev/rules.d/25-gpsd.rules
+-#   /lib/udev/gpsd.hotplug
+-# 
+-# Setting the link in /lib/udev/rules.d activates the rule and determines
+-# when to run it on boot (similar to init.d processing).
+-
+-SUBSYSTEM!="tty", GOTO="gpsd_rules_end"
+-
+-# Prolific Technology, Inc. PL2303 Serial Port [linux module: pl2303]
+-ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# ATEN International Co., Ltd UC-232A Serial Port [linux module: pl2303]
+-ATTRS{idVendor}=="0557", ATTRS{idProduct}=="2008", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# PS-360 OEM (GPS sold with MS Street and Trips 2005) [linux module: pl2303]
+-ATTRS{idVendor}=="067b", ATTRS{idProduct}=="aaa0", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# FTDI 8U232AM / FT232 [linux module: ftdi_sio]
+-ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# Cypress M8/CY7C64013 (Delorme uses these) [linux module: cypress_m8]
+-ATTRS{idVendor}=="1163", ATTRS{idProduct}=="0100", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# Cypress M8/CY7C64013 (DeLorme LT-40)
+-ATTRS{idVendor}=="1163", ATTRS{idProduct}=="0200", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug" 
+-# Garmin International GPSmap, various models (tested with Garmin GPS 18 USB)  [linux module: garmin_gps]
+-ATTRS{idVendor}=="091e", ATTRS{idProduct}=="0003", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# Cygnal Integrated Products, Inc. CP210x Composite Device (Used by Holux m241 and Wintec grays2 wbt-201) [linux module: cp210x]
+-ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# Cygnal Integrated Products, Inc. [linux module: cp210x]
+-ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea71", SYMLINK="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# u-blox AG, u-blox 5 (tested with Navilock NL-402U) [linux module: cdc_acm]
+-ATTRS{idVendor}=="1546", ATTRS{idProduct}=="01a5", SYMLINK="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# u-blox AG, u-blox 6 (tested with GNSS Evaluation Kit TCXO) [linux module: cdc_acm]
+-ATTRS{idVendor}=="1546", ATTRS{idProduct}=="01a6", SYMLINK="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-# MediaTek (tested with HOLUX M-1200E) [linux module: cdc_acm]
+-ATTRS{idVendor}=="0e8d", ATTRS{idProduct}=="3329", SYMLINK="gps%n", RUN+="/lib/udev/gpsd.hotplug"
+-
+-ACTION=="remove", RUN+="/lib/udev/gpsd.hotplug"
+-
+-LABEL="gpsd_rules_end"
+diff --git a/gpsd.rules.in b/gpsd.rules.in
+new file mode 100644
+index 0000000..1a12b7e
+--- /dev/null
++++ b/gpsd.rules.in
+@@ -0,0 +1,51 @@
++# udev rules for gpsd
++#
++# This file is Copyright (c) 2010 by the GPSD project
++# BSD terms apply: see the file COPYING in the distribution root for details.
++#
++# GPSes don't have their own USB device class.  They're serial-over-USB
++# devices, so what you see is actually the ID of the serial-over-USB chip.
++# Fortunately, just two of these account for over 80% of consumer-grade
++# GPS sensors.  The gpsd.hotplug wrapper script will tell a running gpsd
++# that it should look at the device that just went active, because it
++# might be a GPS.
++#
++# The following setup works on Debian and Ubuntu - something similar
++# will apply on other distributions:
++#
++#   /lib/udev/rules.d/25-gpsd.rules
++#   /lib/udev/gpsd.hotplug
++#
++# Setting the link in /lib/udev/rules.d activates the rule and determines
++# when to run it on boot (similar to init.d processing).
++
++SUBSYSTEM!="tty", GOTO="gpsd_rules_end"
++
++# Prolific Technology, Inc. PL2303 Serial Port [linux module: pl2303]
++ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# ATEN International Co., Ltd UC-232A Serial Port [linux module: pl2303]
++ATTRS{idVendor}=="0557", ATTRS{idProduct}=="2008", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# PS-360 OEM (GPS sold with MS Street and Trips 2005) [linux module: pl2303]
++ATTRS{idVendor}=="067b", ATTRS{idProduct}=="aaa0", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# FTDI 8U232AM / FT232 [linux module: ftdi_sio]
++ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# Cypress M8/CY7C64013 (Delorme uses these) [linux module: cypress_m8]
++ATTRS{idVendor}=="1163", ATTRS{idProduct}=="0100", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# Cypress M8/CY7C64013 (DeLorme LT-40)
++ATTRS{idVendor}=="1163", ATTRS{idProduct}=="0200", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# Garmin International GPSmap, various models (tested with Garmin GPS 18 USB)  [linux module: garmin_gps]
++ATTRS{idVendor}=="091e", ATTRS{idProduct}=="0003", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# Cygnal Integrated Products, Inc. CP210x Composite Device (Used by Holux m241 and Wintec grays2 wbt-201) [linux module: cp210x]
++ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# Cygnal Integrated Products, Inc. [linux module: cp210x]
++ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea71", SYMLINK="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# u-blox AG, u-blox 5 (tested with Navilock NL-402U) [linux module: cdc_acm]
++ATTRS{idVendor}=="1546", ATTRS{idProduct}=="01a5", SYMLINK="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# u-blox AG, u-blox 6 (tested with GNSS Evaluation Kit TCXO) [linux module: cdc_acm]
++ATTRS{idVendor}=="1546", ATTRS{idProduct}=="01a6", SYMLINK="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++# MediaTek (tested with HOLUX M-1200E) [linux module: cdc_acm]
++ATTRS{idVendor}=="0e8d", ATTRS{idProduct}=="3329", SYMLINK="gps%n", RUN+="@udevdir@/gpsd.hotplug"
++
++ACTION=="remove", RUN+="@udevdir@/gpsd.hotplug"
++
++LABEL="gpsd_rules_end"
+-- 
+1.9.0
+

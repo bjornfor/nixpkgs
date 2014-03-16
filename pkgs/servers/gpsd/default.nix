@@ -1,11 +1,65 @@
 { fetchurl, stdenv, scons, pythonFull, pkgconfig, dbus, dbus_glib
-, ncurses, libX11, libXt, libXpm, libXaw, libXext, makeWrapper
-, libusb1, docbook_xml_dtd_412, docbook_xsl, bc
+, ncurses, libX11, libXt, libXpm, libXaw, libXext, makeWrapper, writeScript
+, libusb1, docbook_xml_dtd_412, docbook_xsl, bc, gnugrep, bash, utillinux
 , libxslt, xmlto, gpsdUser ? "gpsd", gpsdGroup ? "dialout"
 }:
 
 # TODO: the 'xgps' program doesn't work: "ImportError: No module named gobject"
 # TODO: put the X11 deps behind a guiSupport parameter for headless support
+
+let
+  # This is a copy of the gpsd.hotplug script from gpsd, where the first part
+  # (the part that reads /etc/{default,sysconfig}/gpsd) is removed and the
+  # remaining part is "purified" with absolute paths instead of using $PATH
+  # lookup.
+  hotplugScript = writeScript "gpsd.hotplug" ''
+    #!${bash}/bin/sh
+    # [Modified for NixOS.]
+    #
+    # This script is the gpsd udev handler for add/remove events on matched USB
+    # devices. It expects to see the following environment variables:
+    #
+    #    ACTION  = either "add" or "remove"
+    #    DEVNAME = the full name of the USB device that was just activated
+
+    if [ "$ACTION" = "remove" ] ; then
+      if echo $DEVLINKS | ${gnugrep}/bin/grep -q /dev/gps; then
+        :
+      else
+        exit 0
+      fi
+    fi
+
+    ${utillinux}/bin/logger -t "gpsd.hotplug" -p daemon.info "$ACTION" "$DEVNAME"
+
+    if [ -z "$DEVNAME" ]
+    then
+        ${utillinux}/bin/logger -t gpsd.hotplug -p daemon.err "no device"
+        exit 0
+    fi
+
+    # In recent versions of udev, the gpsd script runs in series with
+    # the task that creates the real /dev/ttyUSBn device
+    # node. Unfortunately, the gpsd script runs BEFORE the creation of
+    # the node, and the node is not created until after you kill the
+    # gpsd script, because the gpsd script waits forever for the node
+    # to appear.
+    #
+    # This is a race condition, and is best fixed by running the
+    # actual wait/hotplug portion in the background.
+
+    {
+        #${utillinux}/bin/logger -t gpsd.hotplug -p daemon.info "waiting for" $DEVNAME
+        while [ -x $DEVNAME ]
+        do
+            sleep 1
+        done
+        #${utillinux}/bin/logger -t gpsd.hotplug -p daemon.info $DEVNAME "is active"
+        @GPSDCTL@ $ACTION $DEVNAME
+    } &
+  '';
+
+in
 
 stdenv.mkDerivation rec {
   name = "gpsd-3.10";
@@ -28,6 +82,7 @@ stdenv.mkDerivation rec {
   patches = [
     ./0001-Import-LD_LIBRARY_PATH-to-allow-running-scons-check-.patch
     ./0002-Import-XML_CATALOG_FILES-to-be-able-to-validate-the-.patch
+    ./0003-Fix-paths-to-gpsd.hotplug-in-udev-rules.patch
   ];
 
   # - leapfetch=no disables going online at build time to fetch leap-seconds
@@ -50,11 +105,16 @@ stdenv.mkDerivation rec {
     scons check
   '';
 
-  # TODO: the udev rules file and the hotplug script need fixes to work on NixOS
   installPhase = ''
     scons install
     mkdir -p "$out/lib/udev/rules.d"
     scons udev-install
+
+    # Move upstream gpsd.hotplug script to the side and provide use our own
+    # modified version.
+    mv "$out/lib/udev/gpsd.hotplug" "$out/lib/udev/gpsd.hotplug.upstream"
+    cp ${hotplugScript} "$out/lib/udev/gpsd.hotplug"
+    sed -i -e "s|@GPSDCTL@|$out/sbin/gpsdctl|g" "$out/lib/udev/gpsd.hotplug"
   '';
 
   postInstall = "wrapPythonPrograms";
