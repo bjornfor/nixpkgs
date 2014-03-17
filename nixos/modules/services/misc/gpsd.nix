@@ -28,11 +28,21 @@ in
 
       device = mkOption {
         type = types.str;
-        default = "/dev/ttyUSB0";
+        default = "";
+        example = "/dev/ttyUSB0";
         description = ''
+          If you leave this blank, we'll activate gpsd hotplug support. The
+          hotplug scripts do the right thing when a USB device goes active,
+          launching gpsd if needed and telling gpsd which device to read data
+          from. Then, gpsd deduces a baud rate and GPS/AIS type by looking at
+          the data stream.
+
+          If you don't want hotplug:
+
           A device may be a local serial device for GPS input, or a URL of the form:
-               <literal>[{dgpsip|ntrip}://][user:passwd@]host[:port][/stream]</literal>
-          in which case it specifies an input source for DGPS or ntrip data.
+          <literal>{dgpsip|ntrip}://[user:passwd@]host[:port][/stream]</literal>
+          <literal>gpsd://host[:port][/device][?protocol]</literal>
+          in which case it specifies an input source for GPSD, DGPS or ntrip data.
         '';
       };
 
@@ -78,6 +88,8 @@ in
 
   config = mkIf cfg.enable {
 
+    services.udev.packages = [ pkgs.gpsd ];
+
     users.extraUsers = singleton
       { name = "gpsd";
         inherit uid;
@@ -90,18 +102,26 @@ in
         inherit gid;
       };
 
+    # Inspired by upstream unit files
     systemd.services.gpsd = {
-      description = "GPSD daemon";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
+      description = "GPS (Global Positioning System) Daemon";
+      requires = [ "gpsd.socket" ];
       serviceConfig = {
-        Type = "forking";
         ExecStart = ''
           ${pkgs.gpsd}/sbin/gpsd -D "${toString cfg.debugLevel}"  \
-            -S "${toString cfg.port}"                             \
+            -S "${toString cfg.port}" -N                          \
             ${if cfg.readonly then "-b" else ""}                  \
-            "${cfg.device}"
+            ${if cfg.device != "" then cfg.device else "-F /run/gpsd.sock"}
         '';
+      };
+    };
+
+    systemd.sockets.gpsd = {
+      description = "GPS (Global Positioning System) Daemon Sockets";
+      wantedBy = [ "sockets.target" ];
+      socketConfig = {
+        ListenStream = [ "/run/gpsd.sock" "127.0.0.1:${toString cfg.port}" ];
+        SocketMode = "0600";
       };
     };
 
