@@ -52,9 +52,10 @@ let
         #${utillinux}/bin/logger -t gpsd.hotplug -p daemon.info "waiting for" $DEVNAME
         while [ -x $DEVNAME ]
         do
+            ${utillinux}/bin/logger -t gpsd.hotplug -p daemon.info "waiting for" $DEVNAME
             sleep 1
         done
-        #${utillinux}/bin/logger -t gpsd.hotplug -p daemon.info $DEVNAME "is active"
+        ${utillinux}/bin/logger -t gpsd.hotplug -p daemon.info $DEVNAME "is active"
         @GPSDCTL@ $ACTION $DEVNAME
     } &
   '';
@@ -64,6 +65,8 @@ in
 stdenv.mkDerivation rec {
   name = "gpsd-3.10";
 
+  #src = ../../../../gpsd-copy;
+  #src = ../../../../gpsd;
   src = fetchurl {
     url = "http://download-mirror.savannah.gnu.org/releases/gpsd/${name}.tar.gz";
     sha256 = "0823hl5zgwnbgm0fq3i4z34lv76cpj0k6m0zjiygiyrxrz0w4vvh";

@@ -8726,7 +8726,8 @@ let
 
   gpscorrelate = callPackage ../applications/misc/gpscorrelate { };
 
-  gpsd = callPackage ../servers/gpsd { };
+  gpsd3 = callPackage ../servers/gpsd { };
+  gpsd = callPackage ../servers/gpsd/2.nix { };
 
   guitone = callPackage ../applications/version-management/guitone { };
 

@@ -88,7 +88,7 @@ in
 
   config = mkIf cfg.enable {
 
-    services.udev.packages = [ pkgs.gpsd ];
+    services.udev.packages = [ pkgs.gpsd3 ];
 
     users.extraUsers = singleton
       { name = "gpsd";
@@ -108,7 +108,7 @@ in
       requires = [ "gpsd.socket" ];
       serviceConfig = {
         ExecStart = ''
-          ${pkgs.gpsd}/sbin/gpsd -D "${toString cfg.debugLevel}"  \
+          ${pkgs.gpsd3}/sbin/gpsd -D "${toString cfg.debugLevel}"  \
             -S "${toString cfg.port}" -N                          \
             ${if cfg.readonly then "-b" else ""}                  \
             ${if cfg.device != "" then cfg.device else "-F /run/gpsd.sock"}
