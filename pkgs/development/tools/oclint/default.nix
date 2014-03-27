@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, cmake, clang, clangUnwrapped, llvm }:
+{ stdenv, fetchurl, cmake, clang, llvm }:
 
 stdenv.mkDerivation rec {
   name = "oclint-0.7";
@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
                  -D CMAKE_CXX_COMPILER=${clang}/bin/clang++ \
                  -D CMAKE_C_COMPILER=${clang}/bin/clang \
                  -D LLVM_ROOT=${llvm} \
-                 -D CLANG_ROOT=${clangUnwrapped} \
+                 -D CLANG_ROOT=${clang} \
                  ../oclint-core \
         && make
     )
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
                  -D CMAKE_CXX_COMPILER=${clang}/bin/clang++ \
                  -D CMAKE_C_COMPILER=${clang}/bin/clang \
                  -D LLVM_ROOT=${llvm} \
-                 -D CLANG_ROOT=${clangUnwrapped} \
+                 -D CLANG_ROOT=${clang} \
                  ../oclint-metrics \
         && make
     )
@@ -55,7 +55,7 @@ stdenv.mkDerivation rec {
                  -D CMAKE_CXX_COMPILER=${clang}/bin/clang++ \
                  -D CMAKE_C_COMPILER=${clang}/bin/clang \
                  -D LLVM_ROOT=${llvm} \
-                 -D CLANG_ROOT=${clangUnwrapped} \
+                 -D CLANG_ROOT=${clang} \
                  -D OCLINT_SOURCE_DIR=../oclint-core \
                  -D OCLINT_BUILD_DIR=../oclint-core-build \
                  -D OCLINT_METRICS_SOURCE_DIR=../oclint-metrics \
