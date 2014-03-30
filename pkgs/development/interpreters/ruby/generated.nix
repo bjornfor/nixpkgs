@@ -12,6 +12,7 @@ g: # Get dependencies from patched gems
     activesupport = g.activesupport_4_0_0;
     addressable = g.addressable_2_3_5;
     arel = g.arel_4_0_0;
+    atk = g.atk_2_2_0;
     atomic = g.atomic_1_1_14;
     atoulme_Antwrap = g.atoulme_Antwrap_0_7_4;
     autotest_rails = g.autotest_rails_4_1_2;
@@ -21,6 +22,7 @@ g: # Get dependencies from patched gems
     builder = g.builder_3_2_2;
     buildr = g.buildr_1_4_12;
     bundler = g.bundler_1_3_5;
+    cairo = g.cairo_1_12_8;
     celluloid = g.celluloid_0_15_2;
     childprocess = g.childprocess_0_3_9;
     chronic = g.chronic_0_10_1;
@@ -52,9 +54,12 @@ g: # Get dependencies from patched gems
     file_tail = g.file_tail_1_0_12;
     foreman = g.foreman_0_63_0;
     formatador = g.formatador_0_2_4;
+    gdk_pixbuf2 = g.gdk_pixbuf2_2_2_0;
     gettext = g.gettext_3_0_0;
     gh = g.gh_0_12_0;
     gherkin = g.gherkin_2_12_1;
+    glib2 = g.glib2_2_2_0;
+    gtk2 = g.gtk2_2_2_0;
     guard = g.guard_2_2_4;
     highline = g.highline_1_6_19;
     hike = g.hike_1_2_3;
@@ -96,9 +101,11 @@ g: # Get dependencies from patched gems
     nix = g.nix_0_1_1;
     nokogiri = g.nokogiri_1_6_0;
     ntlm_http = g.ntlm_http_0_1_1;
+    pango = g.pango_2_2_0;
     papertrail = g.papertrail_0_9_7;
     papertrail_cli = g.papertrail_cli_0_9_3;
     parallel = g.parallel_0_7_1;
+    pkg_config = g.pkg_config_1_1_5;
     polyglot = g.polyglot_0_3_3;
     posix_spawn = g.posix_spawn_0_3_6;
     pry = g.pry_0_9_12_2;
@@ -305,6 +312,17 @@ database compatibility and query generation.'';
       requiredGems = [  ];
       sha256 = ''19xzg8jhp4p18xlf6sp4yhf6vdpc3hl8lm23n6glikclm7rvgick'';
     };
+    atk_2_2_0 = {
+      basename = ''atk'';
+      meta = {
+        description = ''Ruby/ATK is a Ruby binding of ATK-1.0.x.'';
+        homepage = ''http://ruby-gnome2.sourceforge.jp/'';
+        longDescription = ''Ruby/ATK is a Ruby binding of ATK-1.0.x.'';
+      };
+      name = ''atk-2.2.0'';
+      requiredGems = [ g.glib2_2_2_0 ];
+      sha256 = ''0dxqhg9rp0l7s46az8r3d82vc2mq3xh0q15bw0hskqrhik9r2j74'';
+    };
     atomic_1_1_13 = {
       basename = ''atomic'';
       meta = {
@@ -468,6 +486,17 @@ for those one-off tasks, with a language that's a joy to use.
       name = ''bundler-1.3.5'';
       requiredGems = [  ];
       sha256 = ''1r7zx8qfwzr3pbgrjbsml7z5qgscwyyv33x2jzhz6adqyx3r1f08'';
+    };
+    cairo_1_12_8 = {
+      basename = ''cairo'';
+      meta = {
+        description = ''Ruby bindings for cairo'';
+        homepage = ''http://cairographics.org/rcairo'';
+        longDescription = ''Ruby bindings for cairo'';
+      };
+      name = ''cairo-1.12.8'';
+      requiredGems = [ g.pkg_config_1_1_5 ];
+      sha256 = ''1yrchz1gnn1abdnr7llrskq633r3xcqp68ff2anb6xlpf55gajym'';
     };
     celluloid_0_15_2 = {
       basename = ''celluloid'';
@@ -908,6 +937,17 @@ using TCP/IP, especially if custom protocols are required.'';
       requiredGems = [ g.thor_0_18_1 g.dotenv_0_9_0 ];
       sha256 = ''0yqyjix9jm4iwyc4f3wc32vxr28rpjcw1c9ni5brs4s2a24inzlk'';
     };
+    gdk_pixbuf2_2_2_0 = {
+      basename = ''gdk_pixbuf2'';
+      meta = {
+        description = ''Ruby/GdkPixbuf2 is a Ruby binding of GdkPixbuf-2.x.'';
+        homepage = ''http://ruby-gnome2.sourceforge.jp/'';
+        longDescription = ''Ruby/GdkPixbuf2 is a Ruby binding of GdkPixbuf-2.x.'';
+      };
+      name = ''gdk_pixbuf2-2.2.0'';
+      requiredGems = [ g.glib2_2_2_0 ];
+      sha256 = ''1w89ycjlipz2ccnabkkn4j84r5jswbh1yz0gs2v38i7v8gfy34yl'';
+    };
     formatador_0_2_4 = {
       basename = ''formatador'';
       meta = {
@@ -965,6 +1005,28 @@ So you can use GNU gettext tools for maintaining.
       name = ''guard-2.2.4'';
       requiredGems = [ g.thor_0_18_1 g.listen_2_2_0 g.pry_0_9_12_3 g.lumberjack_1_0_4 g.formatador_0_2_4 ];
       sha256 = ''0z427rkcpzy82g21cgq7i5sn1vxn8hm8j4d78kj9vlaqgilcybhq'';
+    };
+    glib2_2_2_0 = {
+      basename = ''glib2'';
+      meta = {
+        description = ''Ruby/GLib2 is a Ruby binding of GLib-2.x.'';
+        homepage = ''http://ruby-gnome2.sourceforge.jp/'';
+        longDescription = ''Ruby/GLib2 is a Ruby binding of GLib-2.x.'';
+      };
+      name = ''glib2-2.2.0'';
+      requiredGems = [ g.pkg_config_1_1_5 ];
+      sha256 = ''0lqvggc5ggq2x4j4qiirsqfnlsjfgzjf4l7kxj9wzhd2yirh1imq'';
+    };
+    gtk2_2_2_0 = {
+      basename = ''gtk2'';
+      meta = {
+        description = ''Ruby/GTK2 is a Ruby binding of GTK+-2.x.'';
+        homepage = ''http://ruby-gnome2.sourceforge.jp/'';
+        longDescription = ''Ruby/GTK2 is a Ruby binding of GTK+-2.x.'';
+      };
+      name = ''gtk2-2.2.0'';
+      requiredGems = [ g.atk_2_2_0 g.pango_2_2_0 g.gdk_pixbuf2_2_2_0 ];
+      sha256 = ''17h9wqdd7y8klg83slh78ry5wfgngyh066xg71sjxvj0jq3snq1c'';
     };
     highline_1_6_19 = {
       basename = ''highline'';
@@ -1682,6 +1744,17 @@ enough of it.'';
       requiredGems = [  ];
       sha256 = ''0yx01ffrw87wya1syivqzf8hz02axk7jdpw6aw221xwvib767d36'';
     };
+    pango_2_2_0 = {
+      basename = ''pango'';
+      meta = {
+        description = ''Ruby/Pango is a Ruby binding of pango-1.x.'';
+        homepage = ''http://ruby-gnome2.sourceforge.jp/'';
+        longDescription = ''Ruby/Pango is a Ruby binding of pango-1.x.'';
+      };
+      name = ''pango-2.2.0'';
+      requiredGems = [ g.cairo_1_12_8 g.glib2_2_2_0 ];
+      sha256 = ''0wqm8hicqmgf39abab177dvcsnp2j921kss4dcq4b2gadbw9nkw8'';
+    };
     papertrail_0_9_7 = {
       basename = ''papertrail'';
       meta = {
@@ -1713,6 +1786,17 @@ enough of it.'';
       name = ''parallel-0.7.1'';
       requiredGems = [  ];
       sha256 = ''1kzz6ydg7r23ks2b7zbpx4vz3h186n19vhgnjcwi7xwd6h2f1fsq'';
+    };
+    pkg_config_1_1_5 = {
+      basename = ''pkg_config'';
+      meta = {
+        description = ''A pkg-config implementation for Ruby'';
+        homepage = ''https://github.com/rcairo/pkg-config'';
+        longDescription = ''pkg-config can be used in your extconf.rb to properly detect need libraries for compiling Ruby native extensions'';
+      };
+      name = ''pkg-config-1.1.5'';
+      requiredGems = [  ];
+      sha256 = ''19q6mdy2wppxblnhr4n9vhq6amhxd8mw3mrrarkfjixlg63a08f8'';
     };
     polyglot_0_3_3 = {
       basename = ''polyglot'';

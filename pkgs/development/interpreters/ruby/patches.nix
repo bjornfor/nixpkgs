@@ -1,6 +1,6 @@
 { fetchurl, writeScript, ruby, ncurses, sqlite, libxml2, libxslt, libffi
 , zlib, libuuid, gems, jdk, python, stdenv, libiconvOrEmpty, imagemagick
-, pkgconfig }:
+, pkgconfig, cairo, gobjectIntrospection, glib }:
 
 let
 
@@ -20,6 +20,8 @@ in
     extraWrapperFlags = "--prefix RUBYLIB : .";
   };
 
+  cairo = { propagatedBuildInputs = [ cairo ]; };
+
   fakes3 = {
     postInstall = ''
       cd $out/${ruby.gemPath}/gems/*
@@ -32,6 +34,8 @@ in
     buildFlags = ["--with-ffi-dir=${libffi}"];
     NIX_POST_EXTRACT_FILES_HOOK = patchUsrBinEnv;
   };
+
+  glib2 = { propagatedBuildInputs = [ gobjectIntrospection glib ]; };
 
   iconv = { buildInputs = [ libiconvOrEmpty ]; };
 
