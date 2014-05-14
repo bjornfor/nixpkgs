@@ -2607,6 +2607,28 @@ let
     propagatedBuildInputs = with self; [ rpkg offtrac urlgrabber fedora_cert ];
   });
 
+
+  flufl_enum = buildPythonPackage rec {
+    name = "flufl.enum-4.0";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/f/flufl.enum/${name}.tar.gz";
+      md5 = "b29447a850a3c26a3144168120bf353f";
+    };
+
+    preConfigure = ''
+      sed -i -e '/distribute/d' setup.py
+    '';
+
+    meta = with stdenv.lib; {
+      description = "Python enumeration package";
+      homepage = http://launchpad.net/flufl.enum;
+      license = licenses.lgpl3;
+      maintainers = [ maintainers.bjornfor ];
+    };
+  };
+
+
   fudge = buildPythonPackage rec {
     name = "fudge-0.9.6";
     src = pkgs.fetchurl {
