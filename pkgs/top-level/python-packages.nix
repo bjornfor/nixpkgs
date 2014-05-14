@@ -4789,6 +4789,29 @@ let
     };
   };
 
+
+  instrumentkit = self.buildPythonPackage rec {
+    name = "instrumentkit-20140407";
+
+    # There are no tags/releases, use latest from github.
+    src = fetchurl {
+      url = "https://github.com/Galvant/InstrumentKit/archive/e3ac44a7b9aa9ae5ca42bfb5b06388d7a4db51f2.tar.gz";
+      sha256 = "1pjaly1ksmi9y4wv7yl26ms68sf1lb3k41pacsl3jc7f49xgnd1w";
+    };
+
+    propagatedBuildInputs = with self; [ flufl_enum pyserial numpy quantities pyusb usbtmc pyvisa pyyaml ];
+
+    preConfigure = "cd python";
+
+    meta = {
+      description = "Interact with laboratory equipment over serial, GPIB, sockets, VISA, USB TMC";
+      homepage = https://github.com/Galvant/InstrumentKit;
+      license = licenses.agpl3;
+      maintainers = [ maintainers.bjornfor ];
+    };
+  };
+
+
   iptools = buildPythonPackage rec {
     version = "0.6.1";
     name = "iptools-${version}";
@@ -8186,7 +8209,9 @@ let
     };
   };
 
-  quantities = buildPythonPackage rec {
+  # FIXME: this expression was out of tree for a long time, compare with above
+  # expression and remove/merge.
+  quantities2 = buildPythonPackage rec {
     name = "quantities-0.10.1";
 
     src = fetchurl {
