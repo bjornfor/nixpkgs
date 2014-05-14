@@ -8186,6 +8186,25 @@ let
     };
   };
 
+  quantities = buildPythonPackage rec {
+    name = "quantities-0.10.1";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/q/quantities/${name}.tar.gz";
+      md5 = "e924e21c0a5ddc9ebcdacbbe511b8ec7";
+    };
+
+    propagatedBuildInputs = [ numpy ];
+
+    meta = with stdenv.lib; {
+      description = "Support for physical quantities with units, based on numpy";
+      homepage = http://packages.python.org/quantities;
+      license = "BSD"; # they don't specify *which* BSD variant
+      maintainers = [ maintainers.bjornfor ];
+    };
+  };
+
+
   qutip = buildPythonPackage rec {
     name = "qutip-2.2.0";
 
