@@ -1937,6 +1937,29 @@ let
     };
   };
 
+
+  pyvisa = buildPythonPackage rec {
+    name = "pyvisa-1.4";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/P/PyVISA/PyVISA-1.4.tar.gz";
+      md5 = "5a391c8d0bca3c9d58ee1bbe573bc6b9";
+    };
+
+    buildInputs = [ sphinx mock ];
+
+    preConfigure = ''
+      sed -i -e '/distribute/d' -e '/use_setuptools/d' setup.py
+    '';
+
+    meta = with stdenv.lib; {
+      description = "A Python package for support of the Virtual Instrument Software Architecture (VISA)";
+      homepage = https://github.com/hgrecco/pyvisa/;
+      license = licenses.mit;
+    };
+  };
+
+
   cssselect = buildPythonPackage rec {
     name = "cssselect-0.7.1";
     src = pkgs.fetchurl {
