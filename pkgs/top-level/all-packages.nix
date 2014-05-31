@@ -6051,6 +6051,8 @@ in
 
   avrgcclibc = callPackage ../development/misc/avr-gcc-with-avr-libc {};
 
+  avr-gdb = gdbCross.override { target.config = "avr"; };
+
   avr8burnomat = callPackage ../development/misc/avr8-burn-omat { };
 
   sourceFromHead = callPackage ../build-support/source-from-head-fun.nix {};
