@@ -5105,6 +5105,8 @@ let
 
   libharu = callPackage ../development/libraries/libharu { };
 
+  libhid = callPackage ../development/libraries/libhid { };
+
   libical = callPackage ../development/libraries/libical { };
 
   libicns = callPackage ../development/libraries/libicns { };
