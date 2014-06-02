@@ -6716,6 +6716,8 @@ in
 
   sigrok-cli = callPackage ../development/tools/sigrok-cli { };
 
+  simulavr = callPackage ../development/tools/simulavr { };
+
   simpleTpmPk11 = callPackage ../tools/security/simple-tpm-pk11 { };
 
   slimerjs = callPackage ../development/tools/slimerjs {};
