@@ -5649,6 +5649,7 @@ let
   openct = callPackage ../development/libraries/openct { };
 
   opencv = callPackage ../development/libraries/opencv { };
+  opencv-without-examples = callPackage ../development/libraries/opencv { buildExamples = false; };
 
   opencv_2_1 = callPackage ../development/libraries/opencv/2.1.nix {
     libpng = libpng12;

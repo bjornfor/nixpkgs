@@ -1,5 +1,7 @@
 { stdenv, fetchurl, cmake, gtk, libjpeg, libpng, libtiff, jasper, ffmpeg
-, pkgconfig, gstreamer, xineLib, glib, python27, python27Packages }:
+, pkgconfig, gstreamer, xineLib, glib, python27, python27Packages
+, buildExamples ? true
+}:
 
 let v = "2.4.7"; in
 
@@ -15,6 +17,18 @@ stdenv.mkDerivation rec {
     python27 python27Packages.numpy ];
 
   nativeBuildInputs = [ cmake pkgconfig ];
+
+  cmakeFlags = stdenv.lib.optionals buildExamples [
+    "-DBUILD_EXAMPLES=ON"
+    "-DINSTALL_C_EXAMPLES=ON"
+    "-DINSTALL_PYTHON_EXAMPLES=ON"
+  ];
+
+  # Python examples are not installed, despite -DINSTALL_PYTHON_EXAMPLES=ON.
+  # Install them ourself.
+  postInstall = stdenv.lib.optionalString buildExamples ''
+    cp -r ../src/samples/python ../src/samples/python2 $out/share/OpenCV/samples/
+  '';
 
   enableParallelBuilding = true;
 
