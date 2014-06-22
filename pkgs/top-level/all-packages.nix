@@ -4350,7 +4350,15 @@ let
     }));
 
   bison2 = callPackage ../development/tools/parsing/bison/2.x.nix { };
-  bison3 = callPackage ../development/tools/parsing/bison/3.x.nix { };
+  bison3 = callPackage ../development/tools/parsing/bison/3.x.nix {
+    # A copy of autoreconfHook with automake 1.14 instead of 1.12 (required to
+    # unbreak build)
+    autoreconfHook = makeSetupHook
+    { substitutions = { inherit autoconf automake114x libtool; }; }
+    ../build-support/setup-hooks/autoreconf.sh;
+    # Ugh, it *also* needs automake in buildInputs
+    automake = automake114x;
+  };
   bison = bison3;
 
   bossa = callPackage ../development/tools/misc/bossa {

@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, m4, perl }:
+{ stdenv, fetchurl, m4, perl, autoreconfHook, automake, gettext }:
 
 stdenv.mkDerivation rec {
   name = "bison-3.0.2";
@@ -10,6 +10,16 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ m4 perl ];
   propagatedBuildInputs = [ m4 ];
+
+  crossAttrs = {
+    # Apply patch from Buildroot to fix this (cross-compilation) build error:
+    #   building doc/bison.help
+    #   GEN      doc/bison.help
+    #   .../bin/bash: src/bison: cannot execute binary file
+    patches = [ ./bison-no-docs-regen.patch ];
+    # And now it wants automake etc., because we touched autohell files...
+    nativeBuildInputs = nativeBuildInputs ++ [ autoreconfHook automake gettext ];
+  };
 
   meta = {
     homepage = "http://www.gnu.org/software/bison/";
