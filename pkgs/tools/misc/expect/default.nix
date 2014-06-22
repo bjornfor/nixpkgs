@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, tcl, makeWrapper }:
+{ stdenv, fetchurl, tcl, makeWrapper, autoconf }:
 
 stdenv.mkDerivation rec {
   version = "5.45";
@@ -30,6 +30,31 @@ stdenv.mkDerivation rec {
         ${stdenv.lib.optionalString stdenv.isDarwin "--prefix DYLD_LIBRARY_PATH : $out/lib/expect${version}"}
     done
   '';
+
+  # Uhm, cross-compilation seems to fail randomly with
+  # "checking if WNOHANG requires _POSIX_SOURCE... configure: error: Expect can't be cross compiled"
+  # ...as if the below patch isn't applied(!)
+  crossAttrs = {
+    patches = [
+      # From Buildroot.
+      # Fixes lots of configure errors: "Expect can't be cross compiled".
+      ./expect-enable-cross-compilation.patch
+    ];
+
+    # We patched configure.in, must re-generate ./configure
+    preConfigure = ''
+      ${autoconf}/bin/autoreconf
+    '';
+
+    configureFlags = [
+      "--with-tcl=${tcl.crossDrv}/lib"
+      "--with-tclinclude=${tcl.crossDrv}/include"
+      "--exec-prefix=$out"
+    ];
+
+    # full "install" tries to run cross-compiled binaries
+    installTargets = "install-binaries";
+  };
 
   meta = with stdenv.lib; {
     description = "A tool for automating interactive applications";
