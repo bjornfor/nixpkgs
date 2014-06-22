@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, tcl }:
+{ stdenv, fetchurl, tcl, autoconf }:
 
 let version = "5.45";
 in
@@ -19,7 +19,7 @@ stdenv.mkDerivation {
   #  substituteInPlace exp_inter.c --replace tcl.h tclInt.h
   #'';
 
-  patchPhase = ''
+  postPatch = ''
     substituteInPlace configure --replace /bin/stty "$(type -tP stty)"
     sed -e '1i\#include <tclInt.h>' -i exp_inter.c
     export NIX_LDFLAGS="-rpath $out/lib $NIX_LDFLAGS"
@@ -35,6 +35,31 @@ stdenv.mkDerivation {
 
   postInstall = let libSuff = if stdenv.isDarwin then "dylib" else "so";
     in "cp expect $out/bin; mkdir -p $out/lib; cp *.${libSuff} $out/lib";
+
+  # Uhm, cross-compilation seems to fail randomly with
+  # "checking if WNOHANG requires _POSIX_SOURCE... configure: error: Expect can't be cross compiled"
+  # ...as if the below patch isn't applied(!)
+  crossAttrs = {
+    patches = [
+      # From Buildroot.
+      # Fixes lots of configure errors: "Expect can't be cross compiled".
+      ./expect-enable-cross-compilation.patch
+    ];
+
+    # We patched configure.in, must re-generate ./configure
+    preConfigure = ''
+      ${autoconf}/bin/autoreconf
+    '';
+
+    configureFlags = [
+      "--with-tcl=${tcl.crossDrv}/lib"
+      "--with-tclinclude=${tcl.crossDrv}/include"
+      "--exec-prefix=$out"
+    ];
+
+    # full "install" tries to run cross-compiled binaries
+    installTargets = "install-binaries";
+  };
 
   meta = {
     description = "A tool for automating interactive applications";
