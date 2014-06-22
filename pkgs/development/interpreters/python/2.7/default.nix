@@ -56,7 +56,7 @@ let
 
   # Build the basic Python interpreter without modules that have
   # external dependencies.
-  python = stdenv.mkDerivation {
+  python = stdenv.mkDerivation rec {
     name = "python-${version}";
 
     inherit majorVersion version src patches buildInputs preConfigure;
@@ -103,6 +103,34 @@ let
     };
 
     enableParallelBuilding = true;
+
+    crossAttrs = {
+      # Python doesn't cross-compile with IPv6:
+      # [...]
+      # checking getaddrinfo bug... yes
+      # Fatal: You must get working getaddrinfo() function.
+      #        or you can specify "--disable-ipv6".
+      configureFlags = configureFlags + " --disable-ipv6 --disable-pyo-build";
+      # Copied from Buildroot:
+      ac_cv_file__dev_ptmx = "yes";
+      ac_cv_file__dev_ptc = "yes";
+
+      patches = patches ++ [
+        ./pyc-pyo-conditional.patch  # copied from Buildroot
+      ];
+
+      buildInputs = buildInputs ++ [ python.nativeDrv ];
+
+      # This is needed to make sure the Python build process doesn't try to
+      # regenerate those files with the pgen program. Otherwise, it builds pgen
+      # for the target, and tries to run it on the host.
+      postPatch = ''
+        touch Include/graminit.h Python/graminit.c
+      '';
+
+      # Cannot run tests when cross-compiling (host != target architecture)
+      doCheck = false;
+    };
 
     meta = {
       homepage = "http://python.org";
