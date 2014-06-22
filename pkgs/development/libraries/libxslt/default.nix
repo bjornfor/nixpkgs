@@ -1,5 +1,15 @@
 { stdenv, fetchurl, libxml2 }:
 
+let
+  commonConfigureFlags = [
+    "--without-python"
+    "--without-crypto"
+    "--without-debug"
+    "--without-mem-debug"
+    "--without-debugger"
+  ];
+in
+
 stdenv.mkDerivation rec {
   name = "libxslt-1.1.28";
 
@@ -12,19 +22,20 @@ stdenv.mkDerivation rec {
 
   patches = stdenv.lib.optionals stdenv.isSunOS [ ./patch-ah.patch ];
 
-  configureFlags = [
+  configureFlags = commonConfigureFlags ++ [
     "--with-libxml-prefix=${libxml2}"
-    "--without-python"
-    "--without-crypto"
-    "--without-debug"
-    "--without-mem-debug"
-    "--without-debugger"
   ];
 
   postInstall = ''
     mkdir -p $out/nix-support
     ln -s ${libxml2}/nix-support/setup-hook $out/nix-support/
   '';
+
+  crossAttrs = {
+    configureFlags = commonConfigureFlags ++ [
+      "--with-libxml-prefix=${libxml2.crossDrv}"
+    ];
+  };
 
   meta = {
     homepage = http://xmlsoft.org/XSLT/;
