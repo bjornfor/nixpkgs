@@ -27,6 +27,10 @@ stdenv.mkDerivation rec {
 
   postInstall = passthru.postinst name;
 
+  crossAttrs = {
+    makeFlags = makeFlags + " BUILD_CC=gcc CC=${stdenv.cross.config}-gcc AR=${stdenv.cross.config}-ar RANLIB=${stdenv.cross.config}-ranlib";
+  };
+
   meta = {
     description = "Library for working with POSIX capabilities";
     platforms = stdenv.lib.platforms.linux;
