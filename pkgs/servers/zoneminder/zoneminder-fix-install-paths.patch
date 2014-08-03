@@ -1,0 +1,42 @@
+From 0d172c51d44249de4155f0d6526a0869bd6af2a5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Sun, 3 Aug 2014 20:18:42 +0200
+Subject: [PATCH] cmake: don't override user's choice of install paths
+
+Don't prepent '/' in front of user controllable install paths. This way
+-DCMAKE_INSTALL_PREFIX= actually works.
+---
+ CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a093dba..68ac858 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -478,12 +478,12 @@ message(STATUS "Using web group: ${ZM_WEB_GROUP}")
+ 
+ # Some variables that zm expects
+ set(ZM_PID "${ZM_RUNDIR}/zm.pid")
+-set(ZM_CONFIG "/${CMAKE_INSTALL_SYSCONFDIR}/zm.conf")
++set(ZM_CONFIG "${CMAKE_INSTALL_FULL_SYSCONFDIR}/zm.conf")
+ set(VERSION "${zoneminder_VERSION}")
+ set(PKGDATADIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/zoneminder")
+ set(BINDIR "${CMAKE_INSTALL_FULL_BINDIR}")
+ set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
+-set(SYSCONFDIR "/${CMAKE_INSTALL_SYSCONFDIR}")
++set(SYSCONFDIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}")
+ set(WEB_PREFIX "${ZM_WEBDIR}")
+ set(CGI_PREFIX "${ZM_CGIDIR}")
+ set(WEB_USER "${ZM_WEB_USER}")
+@@ -528,7 +528,7 @@ else(zmconfgen_result EQUAL 0)
+ endif(zmconfgen_result EQUAL 0)
+ 
+ # Install zm.conf
+-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zm.conf" DESTINATION "/${CMAKE_INSTALL_SYSCONFDIR}")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zm.conf" DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}")
+ 
+ # Uninstall target
+ configure_file(
+-- 
+2.0.2
+
