@@ -30,8 +30,7 @@ stdenv.mkDerivation {
       --add-flags "--jdkhome ${jdk}/lib/openjdk"
       
     # Create desktop item, so we can pick it from the KDE/GNOME menu
-    mkdir -p $out/share/applications
-    cp ${desktopItem}/share/applications/* $out/share/applications
+    cp -a "${desktopItem}"/* "$out"
   '';
   
   buildInputs = [ unzip makeWrapper ];

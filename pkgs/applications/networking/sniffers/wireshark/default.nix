@@ -37,9 +37,8 @@ stdenv.mkDerivation {
   };
 
   postInstall = ''
-    mkdir -p "$out"/share/applications/
     mkdir -p "$out"/share/icons/
-    cp "$desktopItem/share/applications/"* "$out/share/applications/"
+    cp -a "$desktopItem"/* "$out"
     cp image/wsicon.svg "$out"/share/icons/wireshark.svg
   '';
 

@@ -29,8 +29,7 @@ stdenv.mkDerivation rec {
     chmod +x $out/bin/keepass
     echo $out
     cp -r ./* $out/
-    mkdir -p "$out/share/applications"
-    cp ${desktopItem}/share/applications/* $out/share/applications
+    cp -a "${desktopItem}"/* "$out"
   '';
 
   buildInputs = [ unzip ];

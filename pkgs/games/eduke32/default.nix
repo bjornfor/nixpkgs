@@ -55,8 +55,7 @@ stdenv.mkDerivation rec {
     chmod 755 $out/bin/eduke32-wrapper
     
     # Install desktop item
-    mkdir -p $out/share/applications
-    cp ${desktopItem}/share/applications/* $out/share/applications
+    cp -a "${desktopItem}"/* "$out"
   '';
   
   meta = {

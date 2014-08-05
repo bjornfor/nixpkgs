@@ -70,8 +70,7 @@ stdenv.mkDerivation rec {
     chmod a+x "$out"/bin/eagle
 
     # Make desktop item
-    mkdir -p "$out"/share/applications
-    cp "$desktopItem"/share/applications/* "$out"/share/applications/
+    cp -a "$desktopItem"/* "$out"
     mkdir -p "$out"/share/icons
     ln -s "$out/eagle-${version}/bin/eagleicon50.png" "$out"/share/icons/eagle.png
   '';

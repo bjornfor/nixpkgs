@@ -21,7 +21,7 @@ let
 
     buildPhase = ''
       ant furniture textures help
-      mkdir -p $out/share/{java,applications}
+      mkdir -p $out/share/java
       mv build/*.jar $out/share/java/.
       ant
     '';
@@ -29,7 +29,7 @@ let
     installPhase = ''
       mkdir -p $out/bin
       cp install/${module}-${version}.jar $out/share/java/.
-      cp ${sweethome3dItem}/share/applications/* $out/share/applications
+      cp -a "${sweethome3dItem}"/* "$out"
       makeWrapper ${jre}/bin/java $out/bin/$exec \
         --add-flags "-jar $out/share/java/${module}-${version}.jar -cp $out/share/java/Furniture.jar:$out/share/java/Textures.jar:$out/share/java/Help.jar ${if stdenv.system == "x86_64-linux" then "-d64" else "-d32"}"
     '';

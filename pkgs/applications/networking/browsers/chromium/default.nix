@@ -67,7 +67,7 @@ in stdenv.mkDerivation {
     browserBinary = "${chromium.browser}/libexec/chromium/chromium";
     sandboxBinary = "${chromium.sandbox}/bin/chromium-sandbox";
   in ''
-    mkdir -p "$out/bin" "$out/share/applications"
+    mkdir -p "$out/bin"
 
     ln -s "${chromium.browser}/share" "$out/share"
     makeWrapper "${browserBinary}" "$out/bin/chromium" \
@@ -75,7 +75,7 @@ in stdenv.mkDerivation {
       --add-flags "${chromium.plugins.flagsEnabled}"
 
     ln -s "${chromium.browser}/share/icons" "$out/share/icons"
-    cp -v "${desktopItem}/share/applications/"* "$out/share/applications"
+    cp -av "${desktopItem}"/* "$out"
   '';
 
   inherit (chromium.browser) meta packageName;

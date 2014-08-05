@@ -54,8 +54,7 @@ in stdenv.mkDerivation rec {
       --prefix "LD_LIBRARY_PATH" : "${atomEnv}/lib:${atomEnv}/lib64"
 
     # Create a desktop item.
-    mkdir -p "$out/share/applications"
-    cp "${desktopItem}"/share/applications/* "$out/share/applications/"  
+    cp -a "$desktopItem"/* "$out"
   '';
 
   meta = with stdenv.lib; {

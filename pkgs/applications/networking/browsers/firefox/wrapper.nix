@@ -34,8 +34,7 @@ stdenv.mkDerivation {
         --suffix-each LD_PRELOAD ':' "$(cat $(filterExisting $(addSuffix /extra-ld-preload $plugins)))" \
         --prefix-contents PATH ':' "$(filterExisting $(addSuffix /extra-bin-path $plugins))"
 
-    mkdir -p $out/share/applications
-    cp $desktopItem/share/applications/* $out/share/applications
+    cp -a "$desktopItem"/* "$out"
 
     # For manpages, in case the program supplies them
     mkdir -p $out/nix-support

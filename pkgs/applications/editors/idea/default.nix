@@ -50,8 +50,7 @@ let
         --prefix JDK_HOME : $jdk \
         --prefix IDEA_JDK : $jdk
 
-        mkdir -p $out/share/applications
-        cp "${ideaItem}/share/applications/"* $out/share/applications
+        cp -a "${ideaItem}"/* "$out"
         patchShebangs $out
     '';
 

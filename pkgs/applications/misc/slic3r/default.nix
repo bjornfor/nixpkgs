@@ -51,8 +51,7 @@ stdenv.mkDerivation rec {
     ln -s "$out/share/slic3r/slic3r.pl" "$out/bin/slic3r"
     mkdir -p "$out/share/pixmaps/"
     ln -s "$out/share/slic3r/var/Slic3r.png" "$out/share/pixmaps/slic3r.png"
-    mkdir -p "$out/share/applications"
-    cp "$desktopItem"/share/applications/* "$out/share/applications/"
+    cp -a "$desktopItem"/* "$out"
   '';
 
   meta = with stdenv.lib; {

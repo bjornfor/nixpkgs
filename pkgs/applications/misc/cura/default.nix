@@ -56,8 +56,7 @@ stdenv.mkDerivation rec {
     echo "def getEngineFilename(): return '${curaengine}/bin/CuraEngine'" >> $site_packages/Cura/util/sliceEngine.py
 
     # Install desktop item.
-    mkdir -p "$out"/share/applications
-    cp "$desktopItem"/share/applications/* "$out"/share/applications/
+    cp -a "$desktopItem"/* "$out"
     mkdir -p "$out"/share/icons
     ln -s "$resources/images/c.png" "$out"/share/icons/cura.png
   '';

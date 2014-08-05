@@ -31,8 +31,7 @@ stdenv.mkDerivation rec {
   NIX_LDFLAGS = "-lX11 -L${libX11}/lib";
   
   postInstall = ''
-    mkdir -p $out/share/applications
-    cp ${desktopItem}/share/applications/* $out/share/applications
+    cp -a "${desktopItem}"/* "$out"
   '';
   
   meta = {

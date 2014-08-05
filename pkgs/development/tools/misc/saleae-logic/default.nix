@@ -79,8 +79,7 @@ stdenv.mkDerivation rec {
     chmod a+x "$out"/bin/saleae-logic
 
     # Copy the generated .desktop file
-    mkdir -p "$out/share/applications"
-    cp "$desktopItem"/share/applications/* "$out/share/applications/"
+    cp -a "$desktopItem"/* "$out"
 
     # Install provided udev rules
     mkdir -p "$out/etc/udev/rules.d"

@@ -35,8 +35,7 @@ buildPythonPackage rec {
 
   # Create desktop item
   postInstall = ''
-    mkdir -p $out/share/applications
-    cp $desktopItem/share/applications/* $out/share/applications/
+    cp -a "$desktopItem"/* "$out"
 
     mkdir -p $out/share/icons
     cp spyderlib/images/spyder.svg $out/share/icons/

@@ -41,8 +41,7 @@ stdenv.mkDerivation rec {
     rmdir "$out/data"
 
     # Install desktop file
-    mkdir -p "$out/share/applications"
-    cp "$desktopItem"/share/applications/* "$out/share/applications/"
+    cp -a "$desktopItem"/* "$out"
 
     # Use substitutions instead of wrapper scripts
     for file in "$out"/bin/*; do

@@ -48,8 +48,7 @@ let
           --add-flags "-configuration \$HOME/.eclipse/''${productId}_$productVersion/configuration"
 
         # Create desktop item.
-        mkdir -p $out/share/applications
-        cp ${desktopItem}/share/applications/* $out/share/applications
+        cp -a "${desktopItem}"/* "$out"
         mkdir -p $out/share/pixmaps
         ln -s $out/eclipse/icon.xpm $out/share/pixmaps/eclipse.xpm
       ''; # */

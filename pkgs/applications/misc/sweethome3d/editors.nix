@@ -36,9 +36,9 @@ let
 
     installPhase = ''
       mkdir -p $out/bin
-      mkdir -p $out/share/{java,applications}
+      mkdir -p $out/share/java
       cp ${module}-${version}.jar $out/share/java/.
-      cp ${editorItem}/share/applications/* $out/share/applications
+      cp -a "${editorItem}"/* "$out"
       makeWrapper ${jre}/bin/java $out/bin/$exec \
         --add-flags "-jar $out/share/java/${module}-${version}.jar ${if stdenv.system == "x86_64-linux" then "-d64" else "-d32"}"
     '';

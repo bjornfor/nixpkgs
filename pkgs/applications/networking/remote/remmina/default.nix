@@ -34,9 +34,8 @@ stdenv.mkDerivation {
   patches = [ ./lgthread.patch ];
 
   postInstall = ''
-    mkdir -pv $out/share/applications
     mkdir -pv $out/share/icons
-    cp ${desktopItem}/share/applications/* $out/share/applications
+    cp -a "${desktopItem}"/* "$out"
     cp -r $out/share/remmina/icons/* $out/share/icons
     wrapProgram $out/bin/remmina --prefix LD_LIBRARY_PATH : "${libX11}/lib"
   '';

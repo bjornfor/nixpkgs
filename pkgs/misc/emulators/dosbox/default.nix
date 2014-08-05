@@ -30,8 +30,7 @@ stdenv.mkDerivation rec {
   };
 
   postInstall = ''
-     mkdir -p $out/share/applications
-     cp ${desktopItem}/share/applications/* $out/share/applications
+     cp -a "${desktopItem}"/* "$out"
   '';
 
   meta = {

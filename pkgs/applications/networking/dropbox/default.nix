@@ -81,8 +81,7 @@ in stdenv.mkDerivation {
     find "$out/${appdir}" -type f -a -perm +0100 \
       -print -exec patchelf --force-rpath --set-rpath "$RPATH" {} \;
 
-    mkdir -p "$out/share/applications"
-    cp "${desktopItem}/share/applications/"* $out/share/applications
+    cp -a "${desktopItem}"/* "$out"
   '';
 
   meta = {
