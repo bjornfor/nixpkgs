@@ -1933,6 +1933,11 @@ let
 
   qshowdiff = callPackage ../tools/text/qshowdiff { };
 
+  qstopmotion = callPackage ../applications/video/qstopmotion {
+    inherit gstreamer gst_plugins_base gst_python gst_plugins_good
+                        gst_plugins_bad;
+  };
+
   quilt = callPackage ../development/tools/quilt { };
 
   radvd = callPackage ../tools/networking/radvd { };
