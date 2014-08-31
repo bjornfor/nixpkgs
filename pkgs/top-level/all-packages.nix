@@ -9078,6 +9078,8 @@ let
 
   irssi_otr = callPackage ../applications/networking/irc/irssi/otr { };
 
+  iwscanner = callPackage ../applications/networking/iwscanner { };
+
   bip = callPackage ../applications/networking/irc/bip { };
 
   jack_capture = callPackage ../applications/audio/jack-capture { };
