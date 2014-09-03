@@ -9,12 +9,9 @@ let
   # Put all the system cronjobs together.
   systemCronJobsFile = pkgs.writeText "system-crontab"
     ''
-      SHELL=${pkgs.bash}/bin/bash
-      PATH=${config.system.path}/bin:${config.system.path}/sbin
       ${optionalString (config.services.cron.mailto != null) ''
         MAILTO="${config.services.cron.mailto}"
       ''}
-      NIX_CONF_DIR=/etc/nix
       ${lib.concatStrings (map (job: job + "\n") config.services.cron.systemCronJobs)}
     '';
 
@@ -108,6 +105,12 @@ in
                 touch /var/cron/cron.deny
             fi
           '';
+
+        environment = {
+          SHELL="${pkgs.bash}/bin/bash";
+          PATH="${config.system.path}/bin:${config.system.path}/sbin";
+          NIX_CONF_DIR="/etc/nix";
+        };
 
         exec = "cron -n";
       };
