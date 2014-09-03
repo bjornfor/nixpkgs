@@ -8083,6 +8083,27 @@ let
   };
 
 
+  # FIXME: this package doesn't provide any setup.py file or anything, all have
+  # to be installed manually. Should probably be moved out of this file.
+  robotframework-robottools = buildPythonPackage rec {
+    name = "robotframework-robottools-20140228";  # commit date
+
+    src = fetchgit {
+      url = "https://bitbucket.org/robotframework/robottools.git";
+      rev = "e3ebe280e1ac2e85803abcb8176a85883b25f4b3";
+      sha256 = "19mz2yg266vxdi0k1sqxcjx3z9fl69sb7m00yywpcxddm45nklp8";
+    };
+
+    meta = with stdenv.lib; {
+      description = "Support tools for working with Robot Framework";
+      homepage = https://bitbucket.org/robotframework/robottools;
+      # license info only found in source file headers
+      license = licenses.asl20;
+      platforms = platforms.linux;
+    };
+  };
+
+
   robotsuite = buildPythonPackage rec {
     version = "1.4.2";
     name = "robotsuite-${version}";
