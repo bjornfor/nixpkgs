@@ -1,5 +1,6 @@
-{ stdenv, fetchurl, fetchcvs, makeWrapper, makeDesktopItem, jdk, jre, ant
-, p7zip, sweethome3dApp }:
+{ stdenv, fetchurl, makeWrapper, makeDesktopItem, jdk, jre, ant
+, unzip, sweethome3dAppSrc
+}:
 
 let
 
@@ -13,7 +14,15 @@ let
   { name, module, version, src, license, description }:
 
   stdenv.mkDerivation rec {
-    application = sweethome3dApp;
+    sweethome3d_sourcetree = stdenv.mkDerivation {
+      name = "sweethome3d-source";
+      src = sweethome3dAppSrc;
+      buildInputs = [ unzip ];
+      installPhase = ''
+        mkdir -p "$out/src"
+        cp -r "$src" "$out/src"
+      '';
+    };
     inherit name module version src description;
     exec = sweetExec module;
     editorItem = makeDesktopItem {
@@ -24,14 +33,14 @@ let
       categories = "Application;CAD;";
     };
 
-    buildInputs = [ ant jre jdk makeWrapper ];
+    buildInputs = [ ant jre jdk makeWrapper unzip ];
 
     patchPhase = ''
-      sed -i -e 's,../SweetHome3D,${application.src},g' build.xml
+      sed -i -e 's,../SweetHome3D,${sweethome3d_sourcetree},g' build.xml
     '';
 
     buildPhase = ''
-      ant -lib ${application.src}/libtest -lib ${application.src}/lib -lib ${jdk}/lib
+      ant -lib ${sweethome3d_sourcetree}/libtest -lib ${sweethome3d_sourcetree}/lib -lib ${jdk}/lib
     '';
 
     installPhase = ''
@@ -55,8 +64,6 @@ let
 
   };
 
-  d2u = stdenv.lib.replaceChars ["."] ["_"];
-
 in rec {
 
   textures-editor = mkEditorProject rec {
@@ -65,11 +72,9 @@ in rec {
     name = sweetName module version;
     description = "Easily create SH3T files and edit the properties of the texture images it contain";
     license = stdenv.lib.licenses.gpl2Plus;
-    src = fetchcvs {
-      cvsRoot = ":pserver:anonymous@sweethome3d.cvs.sourceforge.net:/cvsroot/sweethome3d";
-      sha256 = "1j1ygb32dca48hng5bsna9f84vyin5qc3ds44xi39057izmw8499";
-      module = module;
-      tag = "V_" + d2u version;
+    src = fetchurl {
+      url = "mirror://sourceforge/project/sweethome3d/TexturesLibraryEditor-source/TexturesLibraryEditor-${version}-src.zip";
+      sha256 = "00000000000j5dr7w2swnlbvkb3q1jdjr1zgjn1k07d0fxh0ikbx";
     };
   };
 
@@ -79,11 +84,9 @@ in rec {
     name = sweetName module version;
     description = "Quickly create SH3F files and edit the properties of the 3D models it contain";
     license = stdenv.lib.licenses.gpl2;
-    src = fetchcvs {
-      cvsRoot = ":pserver:anonymous@sweethome3d.cvs.sourceforge.net:/cvsroot/sweethome3d";
-      sha256 = "0rdcd8vjbcv9jdms2xr3y7ykm2a9bkmwj4y7ybk9zcldayqsgn6z";
-      module = module;
-      tag = "V_" + d2u version;
+    src = fetchurl {
+      url = "mirror://sourceforge/project/sweethome3d/FurnitureLibraryEditor-source/FurnitureLibraryEditor-${version}-src.zip";
+      sha256 = "07qahqxwmfp94ppmqxy4hr12vfb675rfg7g2svkqpz85isgcjbsm";
     };
   };
 

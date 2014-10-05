@@ -10149,7 +10149,7 @@ let
 
   sweethome3d = recurseIntoAttrs (  (callPackage ../applications/misc/sweethome3d { })
                                  // (callPackage ../applications/misc/sweethome3d/editors.nix {
-                                      sweethome3dApp = sweethome3d.application;
+                                      sweethome3dAppSrc = sweethome3d.application.src;
                                     })
                                  );
 

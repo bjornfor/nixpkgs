@@ -1,5 +1,4 @@
-{ stdenv, fetchurl, fetchcvs, makeWrapper, makeDesktopItem, jdk, jre, ant
-, p7zip }:
+{ stdenv, fetchurl, makeWrapper, makeDesktopItem, jdk, jre, ant, unzip }:
 
 let
 
@@ -17,7 +16,7 @@ let
       categories = "Application;CAD;";
     };
 
-    buildInputs = [ ant jdk jre makeWrapper p7zip ];
+    buildInputs = [ ant jdk jre makeWrapper unzip ];
 
     buildPhase = ''
       ant furniture textures help
@@ -45,8 +44,6 @@ let
     };
   };
 
-  d2u = stdenv.lib.replaceChars ["."] ["_"];
-
 in rec {
 
   application = mkSweetHome3D rec {
@@ -55,11 +52,9 @@ in rec {
     name = stdenv.lib.toLower module + "-application-" + version;
     description = "Design and visualize your future home";
     license = stdenv.lib.licenses.gpl2Plus;
-    src = fetchcvs {
-      cvsRoot = ":pserver:anonymous@sweethome3d.cvs.sourceforge.net:/cvsroot/sweethome3d";
-      sha256 = "1ziqq8wm6la7bsqya6gc8cc2vz02phl88msqjgqqfl2jf8bz9afv";
-      module = module;
-      tag = "V_" + d2u version;
+    src = fetchurl {
+      url = "mirror://sourceforge/project/sweethome3d/SweetHome3D-source/SweetHome3D-${version}-src/SweetHome3D-${version}-src.zip";
+      sha256 = "1ncszh73kglj94kd71hg2l6j4l23yp6p3wcbs7r9ah002cflqi45";
     };
   };
 
