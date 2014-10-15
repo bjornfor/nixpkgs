@@ -2528,6 +2528,51 @@ let
   };
 
 
+  pypcap = buildPythonPackage rec {
+    name = "pypcap-1.1.1";
+
+    src = pkgs.fetchurl {
+      url = "http://pypi.python.org/packages/source/p/pypcap/${name}.tar.gz";
+      sha256 = "0yq1gc2r93v1mlasrshmni2n7rgwdw46inkz47s8xmpm6spxa45k";
+    };
+
+    buildInputs = [ pkgs.libpcap ];
+
+    # Search in @PCAP_DIR@ for pcap.h
+    pypcapPatch = pkgs.writeText "pypcap.patch" ''
+      diff --git a/setup.py b/setup.py
+      index 5887350..b8042d0 100644
+      --- a/setup.py
+      +++ b/setup.py
+      @@ -23,10 +23,7 @@ def recursive_search(path, target_files):
+                       return os.path.join(root, filename)
+
+
+      -dirs = ['/usr', sys.prefix] + glob.glob('/opt/libpcap*') + \
+      -    glob.glob('../libpcap*') + glob.glob('../wpdpack*') + \
+      -    ['/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/'] + \
+      -     glob.glob('/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/*')
+      +dirs = ["@PCAP_DIR@"]
+
+       for d in dirs:
+           # This makes sure that we first search inside of */include/pcap
+    '';
+
+    preConfigure = ''
+      patch -p1 < ${pypcapPatch}
+      sed -i -e "s,@PCAP_DIR@,${pkgs.libpcap}," setup.py
+    '';
+
+    meta = with stdenv.lib; {
+      description = "Packet capture library";
+      homepage = https://code.google.com/p/pypcap/;
+      license = licenses.bsd3;
+      platforms = platforms.linux;
+      maintainers = [ maintainers.bjornfor ];
+    };
+  };
+
+
   pyramid = buildPythonPackage rec {
     name = "pyramid-1.5.1";
 
