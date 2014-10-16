@@ -11024,6 +11024,23 @@ let
     };
   };
 
+  pylibpcap = buildPythonPackage rec {
+    name = "pylibpcap-${version}";
+    version = "0.6.4";
+    src = pkgs.fetchurl {
+      url = "mirror://sourceforge/project/pylibpcap/pylibpcap/${version}/${name}.tar.gz";
+      sha256 = "1cd33j1k964gris658zavdfjm4zgkxw73kyad94qcybsf3r6bhyg";
+    };
+    buildInputs = [ pkgs.libpcap ];
+    meta = with stdenv.lib; {
+      description = "Network packet capture module (python bindings for libpcap)";
+      homepage = http://pylibpcap.sourceforge.net/;
+      license = licenses.bsd2;
+      platforms = platforms.linux;
+      maintainers = [ maintainers.bjornfor ];
+    };
+  };
+
   pythonefl_1_11 = buildPythonPackage rec {
     name = "python-efl-${version}";
     version = "1.11.0";
