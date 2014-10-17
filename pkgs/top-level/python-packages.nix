@@ -5901,6 +5901,31 @@ let
     };
   };
 
+  pcapy = buildPythonPackage rec {
+    name = "pcapy-${version}";
+    version = "0.10.8";
+
+    src = pkgs.fetchzip {
+      inherit name;
+      url = "https://github.com/CoreSecurity/pcapy/archive/${version}.tar.gz";
+      sha256 = "1z3cdci5yi4xwrwcwmg9gjjpjdb0jvvj4knzhm5sldqh8zl3ll7x";
+    };
+
+    buildInputs = [ pkgs.libpcap ];
+
+    meta = with stdenv.lib; {
+      description = "Network packet capture module (wraps libpcap)";
+      homepage = http://corelabs.coresecurity.com/index.php?module=Wiki&action=view&type=tool&name=Pcapy;
+      license = {
+        shortName = "Modified-Apache-1.1";
+        fullName = "Slightly Modified Apache License 1.1";
+        url = "https://github.com/CoreSecurity/pcapy/blob/${version}/LICENSE";
+      };
+      platforms = platforms.linux;
+      maintainers = [ maintainers.bjornfor ];
+    };
+  };
+
   pelican = buildPythonPackage rec {
     name = "pelican-${version}";
     version = "3.4.0";
