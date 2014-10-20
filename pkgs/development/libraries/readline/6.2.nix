@@ -25,6 +25,10 @@ stdenv.mkDerivation (rec {
      in
        import ./readline-6.2-patches.nix patch);
 
+  crossAttrs = {
+    configureFlags = "bash_cv_func_sigsetjmp=yes bash_cv_wcwidth_broken=no";
+  };
+
   meta = {
     description = "Library for interactive line editing";
 

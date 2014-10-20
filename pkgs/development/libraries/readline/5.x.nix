@@ -11,5 +11,8 @@ stdenv.mkDerivation {
   propagatedBuildInputs = [ncurses];
 
   patches = stdenv.lib.optional stdenv.isDarwin ./shobj-darwin.patch;
-}
 
+  crossAttrs = {
+    configureFlags = "bash_cv_func_sigsetjmp=yes bash_cv_wcwidth_broken=no";
+  };
+}
