@@ -30,6 +30,10 @@ stdenv.mkDerivation rec {
   dontStrip = stdenv ? cross;
   bash_cv_func_sigsetjmp = if stdenv.isCygwin then "missing" else null;
 
+  crossAttrs = {
+    configureFlags = "bash_cv_func_sigsetjmp=yes bash_cv_wcwidth_broken=no";
+  };
+
   meta = with stdenv.lib; {
     description = "Library for interactive line editing";
 
