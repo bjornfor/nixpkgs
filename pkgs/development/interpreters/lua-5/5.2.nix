@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
     sha1 = "926b7907bc8d274e063d42804666b40a3f3c124c";
   };
 
-  nativeBuildInputs = [ readline ];
+  buildInputs = [ readline ];
 
   patches = if stdenv.isDarwin then [ ./5.2.darwin.patch ] else [ dsoPatch ];
 
@@ -67,10 +67,11 @@ stdenv.mkDerivation rec {
         RANLIB=${stdenv.cross.config}-ranlib
         V=${luaversion}
         R=${version}
-        ${if isMingw then "mingw" else stdenv.lib.optionalString isDarwin ''
         AR="${stdenv.cross.config}-ar rcu"
-        macosx
-        ''}
+        ${if isMingw then "mingw"
+          else if isDarwin then "macosx"
+          else "linux"
+        }
       )
     '' + stdenv.lib.optionalString isMingw ''
       installFlagsArray=(
