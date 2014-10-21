@@ -1,5 +1,6 @@
 { stdenv, fetchurl, pkgconfig, gettext, perl, python
 , libiconvOrEmpty, libintlOrEmpty, zlib, libffi, pcre, libelf
+, glib ? null  # self-reference for cross-compilation; host glib is needed during cross-build of itself(!)
 
 # this is just for tests (not in closure of any regular package)
 , coreutils, dbus_daemon, libxml2, tzdata, desktop_file_utils, shared_mime_info, doCheck ? false
@@ -55,10 +56,9 @@ stdenv.mkDerivation rec {
 
   setupHook = ./setup-hook.sh;
 
-  buildInputs = [ libelf ]
-    ++ optionals doCheck [ tzdata libxml2 desktop_file_utils shared_mime_info ];
+  buildInputs = optionals doCheck [ tzdata libxml2 desktop_file_utils shared_mime_info ];
 
-  nativeBuildInputs = [ pkgconfig gettext perl python ];
+  nativeBuildInputs = [ pkgconfig gettext perl python libelf ];
 
   propagatedBuildInputs = [ pcre zlib libffi ]
     ++ optional (!stdenv.isDarwin) libiconvOrEmpty
@@ -104,6 +104,19 @@ stdenv.mkDerivation rec {
   passthru = {
      gioModuleDir = "lib/gio/modules";
      inherit flattenInclude;
+  };
+
+  crossAttrs = {
+    configureFlags = configureFlags
+      ++ [ # inspired by Buildroot
+           "glib_cv_uscore=no"
+           "glib_cv_stack_grows=no"
+           "ac_cv_func_posix_getpwuid_r=yes"
+           "ac_cv_func_posix_getgrgid_r=no"
+           "ac_cv_path_GLIB_GENMARSHAL=${glib}/bin/glib-genmarshal"
+           "ac_cv_path_GLIB_COMPILE_SCHEMAS=${glib}/bin/glib-compile-schemas"
+           "ac_cv_path_GLIB_COMPILE_RESOURCES=${glib}/bin/glib-compile-resources"
+         ];
   };
 
   meta = with stdenv.lib; {
