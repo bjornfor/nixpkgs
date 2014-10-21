@@ -10,6 +10,10 @@ stdenv.mkDerivation (rec {
 
   doCheck = true;
 
+  crossAttrs = {
+    preConfigure = "export CC=${stdenv.cross.config}-gcc";
+  };
+
   meta = {
     description = "ELF object file access library";
 
