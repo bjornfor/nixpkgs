@@ -15,6 +15,10 @@ stdenv.mkDerivation (rec {
     nativeBuildInputs = [ glibc ];
   };
 
+  crossAttrs = {
+    preConfigure = "export CC=${stdenv.cross.config}-gcc";
+  };
+
   meta = {
     description = "ELF object file access library";
 
