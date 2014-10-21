@@ -10,7 +10,8 @@ stdenv.mkDerivation rec {
 
   patches = [ ./wrapped-runtest-program-name.patch ];
 
-  buildInputs = [ expect makeWrapper ];
+  buildInputs = [ makeWrapper ];
+  nativeBuildInputs = [ expect ];
 
   doCheck = true;
 
@@ -31,6 +32,13 @@ stdenv.mkDerivation rec {
     wrapProgram "$out/bin/runtest" \
       --prefix PATH ":" "${expect}/bin"
   '';
+
+  crossAttrs = {
+    postInstall = ''
+      wrapProgram "$out/bin/runtest" \
+        --prefix PATH ":" "${expect.crossDrv}/bin"
+    '';
+  };
 
   meta = {
     description = "Framework for testing other programs";
