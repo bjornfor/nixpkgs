@@ -52,7 +52,7 @@ let
   # Build the basic Python interpreter without modules that have
   # external dependencies.
   python = stdenv.mkDerivation {
-    name = "python${if includeModules then "" else "-minimal"}-${version}";
+    name = "python${majorVersion}${if includeModules then "" else "-minimal"}-${version}";
 
     inherit majorVersion version src patches buildInputs preConfigure;
 
