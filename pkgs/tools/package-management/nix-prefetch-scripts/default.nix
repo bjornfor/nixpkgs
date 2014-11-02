@@ -1,4 +1,4 @@
-{ stdenv, makeWrapper, git, subversion, mercurial, bazaar, cvs, unzip, curl, gnused }:
+{ stdenv, makeWrapper, git, subversion, mercurial, bazaar, cvs, unzip, curl, gnused, libfaketime }:
 
 stdenv.mkDerivation {
   name = "nix-prefetch-scripts";
@@ -11,13 +11,20 @@ stdenv.mkDerivation {
     function copyScript {
       local name=nix-prefetch-$1;
       local src=$2;
-      local wrapArgs=""
+      local wrapArgs=()
       cp $src $out/bin/$name;
       for dep in ''${@:3}; do
-        wrapArgs="$wrapArgs --prefix PATH : $dep/bin"
+        wrapArgs+=(--prefix PATH : "$dep/bin")
       done
-      wrapArgs="$wrapArgs --prefix PATH : ${gnused}/bin"
-      wrapProgram $out/bin/$name $wrapArgs
+      wrapArgs+=(--prefix PATH : "${gnused}/bin")
+      # TODO: Use libfaketime for all scripts?
+      if [ "$1" = "git" ]; then
+        fakelib="${libfaketime}/lib/libfaketime.so.1"
+        test -f "$fakelib" || { echo "$fakelib doesn't exist; please update nix expression."; exit 1; }
+        wrapArgs+=(--prefix LD_PRELOAD : "$fakelib")
+        wrapArgs+=(--set FAKETIME \""1970-01-01 00:00:00\"")
+      fi
+      wrapProgram $out/bin/$name "''${wrapArgs[@]}"
     }
 
     copyScript "hg" ${../../../build-support/fetchhg/nix-prefetch-hg} ${mercurial}

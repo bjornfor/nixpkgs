@@ -1,4 +1,4 @@
-{stdenv, git, cacert}:
+{stdenv, git, cacert, libfaketime}:
 {url, rev ? "HEAD", md5 ? "", sha256 ? "", leaveDotGit ? false, fetchSubmodules ? true
 , name ? "git-export"
 }:
@@ -40,6 +40,10 @@ stdenv.mkDerivation {
   inherit url rev leaveDotGit fetchSubmodules;
 
   GIT_SSL_CAINFO = "${cacert}/etc/ca-bundle.crt";
+
+  # For deterministic timestamps in git index
+  LD_PRELOAD = "${libfaketime}/lib/libfaketime.so.1";
+  FAKETIME = "1970-01-01 00:00:00";
 
   impureEnvVars = [
     # We borrow these environment variables from the caller to allow

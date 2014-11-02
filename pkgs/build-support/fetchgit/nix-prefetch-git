@@ -209,7 +209,7 @@ make_deterministic_repo(){
     cd "$repo"
     # Remove files that contain timestamps or otherwise have non-deterministic
     # properties.
-    rm -rf .git/logs/ .git/hooks/ .git/index .git/FETCH_HEAD .git/ORIG_HEAD \
+    rm -rf .git/logs/ .git/hooks/ .git/FETCH_HEAD .git/ORIG_HEAD \
         .git/refs/remotes/origin/HEAD .git/config
 
     # Remove all remote branches.
