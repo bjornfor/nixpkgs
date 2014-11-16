@@ -32,7 +32,7 @@ stdenv.mkDerivation {
     if stdenv.platform ? kernelArch then stdenv.platform.kernelArch else
     abort "don't know what the kernel include directory is called for this platform";
 
-  buildInputs = [perl];
+  nativeBuildInputs = [ perl ];
 
   extraIncludeDirs =
     if cross != null then
