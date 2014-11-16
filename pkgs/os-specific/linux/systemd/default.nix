@@ -3,7 +3,7 @@
 , glib, kbd, libxslt, coreutils, libgcrypt, sysvtools, docbook_xsl
 , kexectools, libmicrohttpd, linuxHeaders
 , pythonPackages ? null, pythonSupport ? false
-, autoreconfHook
+, autoreconfHook, automake
 }:
 
 assert stdenv.isLinux;
@@ -26,11 +26,12 @@ stdenv.mkDerivation rec {
     ];
 
   buildInputs =
-    [ pkgconfig intltool gperf libcap kmod xz pam acl
-      /* cryptsetup */ libuuid m4 glib libxslt libgcrypt docbook_xsl
+    [ pkgconfig pam acl libcap
+      /* cryptsetup */ libuuid glib libxslt docbook_xsl
       libmicrohttpd linuxHeaders
-      autoreconfHook
     ] ++ stdenv.lib.optionals pythonSupport [pythonPackages.python pythonPackages.lxml];
+
+  nativeBuildInputs = [ xz kmod autoreconfHook automake m4 libgcrypt intltool gperf glib ];
 
   configureFlags =
     [ "--localstatedir=/var"
@@ -127,6 +128,13 @@ stdenv.mkDerivation rec {
 
       rm -rf $out/etc/rpm
     ''; # */
+
+  crossAttrs = {
+    configureFlags = configureFlags ++
+      [ "--enable-gcrypt" "--with-libgcrypt-prefix=${libgcrypt.crossDrv}"
+        "ac_cv_func_malloc_0_nonnull=yes"  # assume gnu compatible malloc
+      ];
+  };
 
   enableParallelBuilding = true;
 
