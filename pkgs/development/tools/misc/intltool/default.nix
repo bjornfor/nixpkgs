@@ -9,7 +9,7 @@ let
     url="https://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz";
     sha256="01j4yd7i84n9nk4ccs6yifg84pp68nr9by57jdbhj7dpdxf5rwk7";
   };
-  propagatedBuildInputs = [perl perlXMLParser];
+  propagatedNativeBuildInputs = [ perl perlXMLParser ];
   buildInputs = [];
   in
 stdenv.mkDerivation {
@@ -17,10 +17,10 @@ stdenv.mkDerivation {
   src = fetchurl {
     inherit (s) url sha256;
   };
-  inherit buildInputs;
+  inherit buildInputs propagatedNativeBuildInputs;
 
   # not needed by intltool itself but (probably) needed for its usage
-  propagatedBuildInputs = propagatedBuildInputs ++ [ gettext ];
+  propagatedBuildInputs = propagatedNativeBuildInputs ++ [ gettext ];
 
   meta = {
     description = "Translation helper tool";
