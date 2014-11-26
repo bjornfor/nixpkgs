@@ -8083,16 +8083,29 @@ let
   };
 
 
-  # FIXME: this package doesn't provide any setup.py file or anything, all have
-  # to be installed manually. Should probably be moved out of this file.
-  robotframework-robottools = buildPythonPackage rec {
+  robotframework-robottools = self.buildPythonPackage rec {
     name = "robotframework-robottools-20140228";  # commit date
 
-    src = fetchgit {
+    src = pkgs.fetchgit {
       url = "https://bitbucket.org/robotframework/robottools.git";
       rev = "e3ebe280e1ac2e85803abcb8176a85883b25f4b3";
       sha256 = "19mz2yg266vxdi0k1sqxcjx3z9fl69sb7m00yywpcxddm45nklp8";
     };
+
+    propagatedBuildInputs = with self; [ /*wrapPython*/ modules.tkinter ];
+
+    # This package doesn't provide any setup.py file or anything, everything
+    # must be installed manually.
+    # TODO: move out of python-packages.nix?
+    configurePhase = "true";
+    buildPhase = "true";
+    installPhase = ''
+      mkdir -p "$out/bin/"
+      cp fileviewer/fileviewer.py "$out/bin/fileviewer"
+    '';
+
+    # There are no tests
+    doCheck = false;
 
     meta = with stdenv.lib; {
       description = "Support tools for working with Robot Framework";
