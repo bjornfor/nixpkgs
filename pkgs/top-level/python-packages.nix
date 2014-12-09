@@ -2741,6 +2741,21 @@ let
     };
   };
 
+  hgdistver = self.buildPythonPackage rec {
+    name = "hgdistver-0.23";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/h/hgdistver/hgdistver-0.23.tar.gz";
+      md5 = "9f5f772248626fca3f8684946328cec4";
+    };
+
+    meta = with stdenv.lib; {
+      description = "Utility to generate python package version infos from mercurial/git tags";
+      homepage = http://bitbucket.org/RonnyPfannschmidt/hgdistver/;
+      license = licenses.mit;
+    };
+  };
+
   itsdangerous = buildPythonPackage rec {
     name = "itsdangerous-0.24";
 
@@ -5471,14 +5486,14 @@ let
   });
 
   moretools = buildPythonPackage rec {
-    name = "moretools-0.1a41";
+    name = "moretools-0.1.4";
 
     src = pkgs.fetchurl {
       url = "https://pypi.python.org/packages/source/m/moretools/${name}.tar.gz";
-      sha256 = "1n442wprbl3cmg08233m1sr3g4z0i8hv9g6bhch7kzdmbl21399f";
+      sha256 = "1zrbqf79zl87yzk5jz7shr9wccz273f71b14wk7hlv1mbniayi8k";
     };
 
-    buildInputs = with self; [ six pathpy setuptools ];
+    buildInputs = with self; [ six pathpy setuptools zetup ];
     propagatedBuildInputs = with self; [ decorator ];
 
     meta = with stdenv.lib; {
@@ -6393,12 +6408,14 @@ let
   };
 
   pathpy = buildPythonPackage rec {
-    name = "path.py-5.2";
+    name = "path.py-7.0";
 
     src = pkgs.fetchurl {
       url = "https://pypi.python.org/packages/source/p/path.py/${name}.zip";
-      sha256 = "0n1kpbbm1dg5f484yzxr7gb3ak6vjp92j70nw3bgjzsj9fh26afq";
+      sha256 = "125gxnb8rvlhpdvhr8rv2c6qmzhzi84i95115wmv7rhc5ziyhqj9";
     };
+
+    buildInputs = with self; [ pytest ];
 
     meta = with stdenv.lib; {
       description = "A module wrapper for os.path";
@@ -8345,15 +8362,15 @@ let
 
 
   robotframework-tools = buildPythonPackage rec {
-    version = "0.1a115";
+    version = "0.1a121";
     name = "robotframework-tools-${version}";
 
     src = pkgs.fetchurl {
       url = "https://pypi.python.org/packages/source/r/robotframework-tools/${name}.tar.gz";
-      sha256 = "04gkn1zpf3rsvbqdxrrjqqi8sa0md9gqwh6n5w2m03fdwjg4lc7q";
+      sha256 = "0g46f2m3ld3rgrm522a2s1cf192rrhrx94djg2bafkpd2n99hqsk";
     };
 
-    propagatedBuildInputs = with self; [ robotframework moretools pathpy six setuptools ];
+    propagatedBuildInputs = with self; [ robotframework moretools pathpy six zetup ];
 
     meta = with stdenv.lib; {
       description = "Python Tools for Robot Framework and Test Libraries";
@@ -10688,6 +10705,23 @@ let
     meta = with stdenv.lib; {
       description = "xdot.py is an interactive viewer for graphs written in Graphviz's dot";
       homepage = https://github.com/jrfonseca/xdot.py;
+      license = licenses.lgpl3Plus;
+    };
+  };
+
+  zetup = self.buildPythonPackage rec {
+    name = "zetup-0.2.5";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/z/zetup/zetup-0.2.5.tar.gz";
+      md5 = "f27d4799a2bf856c68a3e9b05915ad93";
+    };
+
+    propagatedBuildInputs = with self; [ setuptools hgdistver pathpy /* jinjatools, must be packaged.. are there more undeclared deps?? */ ];
+
+    meta = with stdenv.lib; {
+      description = "";  # FIXME
+      homepage = https://bitbucket.org/userzimmermann/zetup.py;
       license = licenses.lgpl3Plus;
     };
   };
