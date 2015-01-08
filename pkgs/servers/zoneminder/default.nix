@@ -1,4 +1,4 @@
-{ stdenv, fetchzip, cmake, libjpeg, mysql, gnutls, perl, zlib, makeWrapper, polkit, pkgconfig
+{ stdenv, fetchzip, cmake, libjpeg, mysql, gnutls, perl, zlib, makeWrapper, polkit, pkgconfig, glib
 # optional
 , ffmpeg ? null, curl ? null, openssl ? null, pcre ? null # AVFormat AVCodec AVDevice AVUtil SWScale libVLC
 
@@ -29,9 +29,9 @@ stdenv.mkDerivation rec {
   cmakeFlags = "-DZM_WEB_USER=nobody -DZM_WEB_GROUP=nogroup";
 
   buildInputs = [
-    cmake libjpeg mysql gnutls perl zlib makeWrapper polkit pkgconfig
+    cmake libjpeg mysql gnutls perl zlib makeWrapper polkit pkgconfig glib
     # optional:
-    ffmpeg # curl openssl pcre
+    ffmpeg curl openssl pcre
 
     # perl modules:
     DBI DBDmysql DateManip LWPUserAgent SysMmap
