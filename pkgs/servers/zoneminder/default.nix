@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, cmake, libjpeg, mysql, gnutls, perl, zlib, makeWrapper
+{ stdenv, fetchzip, cmake, libjpeg, mysql, gnutls, perl, zlib, makeWrapper
 # optional
 , ffmpeg ? null, curl ? null, openssl ? null, pcre ? null # AVFormat AVCodec AVDevice AVUtil SWScale libVLC
 
@@ -14,11 +14,11 @@
 # ./result/bin/zmdc.pl startup   # succeeds
 
 stdenv.mkDerivation rec {
-  name = "zoneminder-1.27.0";
+  name = "zoneminder-1.28.0";
 
-  src = fetchurl {
-    url = "https://github.com/ZoneMinder/ZoneMinder/archive/v1.27.0.tar.gz";
-    sha256 = "1wiyn2zk3rnl8yhpgyyzbf71c6zgfjhdz3phm7gswc2rdh7c2c9g";
+  src = fetchzip {
+    url = "https://github.com/ZoneMinder/ZoneMinder/archive/v1.28.0.tar.gz";
+    sha256 = "1ghf48sz8abavzs34hqcmwxi2ppmw58dx2vw2xm45wrs1q0m6466";
   };
 
   patches = [
