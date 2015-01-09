@@ -24,6 +24,7 @@ stdenv.mkDerivation rec {
   patches = [
     ./zoneminder-fix-install-paths.patch
     ./dont-touch-path-and-shell-env-vars.patch
+    ./0001-cmake-install-polkit-files-to-zoneminder-DATAROOTDIR.patch
   ];
 
   cmakeFlags = "-DZM_WEB_USER=nobody -DZM_WEB_GROUP=nogroup";

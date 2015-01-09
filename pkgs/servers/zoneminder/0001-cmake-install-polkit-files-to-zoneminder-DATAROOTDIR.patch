@@ -1,0 +1,27 @@
+From e5b9bed5f9a59736de5e0f063fe5a348bfb29f2e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Fri, 9 Jan 2015 08:01:05 +0100
+Subject: [PATCH] cmake: install polkit files to zoneminder DATAROOTDIR
+
+Instead of to polkit DATAROOTDIR, which fails on NixOS (because it is
+not pure; one package cannot/should not modify another package).
+---
+ misc/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/misc/CMakeLists.txt b/misc/CMakeLists.txt
+index c09f630..cc8a43b 100644
+--- a/misc/CMakeLists.txt
++++ b/misc/CMakeLists.txt
+@@ -12,6 +12,6 @@ configure_file(zoneminder.service.in "${CMAKE_CURRENT_BINARY_DIR}/zoneminder.ser
+ #install(FILES "${CMAKE_CURRENT_BINARY_DIR}/apache.conf" "${CMAKE_CURRENT_BINARY_DIR}/logrotate.conf" "${CMAKE_CURRENT_BINARY_DIR}/syslog.conf" DESTINATION "${CMAKE_INSTALL_DATADIR}/zoneminder/misc")
+ 
+ # Install Policykit rules and actions into the proper folders
+-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/com.zoneminder.systemctl.policy" DESTINATION "${PC_POLKIT_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions")
+-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/com.zoneminder.systemctl.rules" DESTINATION "${PC_POLKIT_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/rules.d")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/com.zoneminder.systemctl.policy" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/com.zoneminder.systemctl.rules" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/rules.d")
+ 
+-- 
+2.1.3
+
