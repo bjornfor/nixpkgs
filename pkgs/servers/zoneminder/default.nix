@@ -13,6 +13,9 @@
 # ./result/bin/zmpkg.pl start    # fails
 # ./result/bin/zmdc.pl startup   # succeeds
 
+# TODO: fixup /usr/bin/perl hardcoding in polkit file
+# TODO: zoneminder 1.28.0 ships systemd service file, but it is only installed for certain distros (cmake checks)
+
 stdenv.mkDerivation rec {
   name = "zoneminder-1.28.0";
 
