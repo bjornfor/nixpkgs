@@ -30,6 +30,10 @@ in
     environment.systemPackages = [ pkgs.zoneminder ];
 
     environment.etc."zm.conf".source = "${pkgs.zoneminder}/etc/zm.conf";
+    # FIXME: Blah, zoneminder wants a writeable ZM_PATH_WEB. Provide a
+    # writeable zm.conf so we can manipulate it before zoneminder starts.
+    environment.etc."zm.conf".mode = "0660";
+    environment.etc."zm.conf".gid = 65534; # nogroup (zoneminder)
 
     # declare module dependencies
     services.lighttpd.enableModules = [ "mod_fastcgi" "mod_alias" ];
@@ -84,6 +88,11 @@ in
       preStart = ''
         mkdir -p /tmp/zm
         chown nobody /tmp/zm
+
+        # zoneminder wants a writeable ZM_PATH_WEB ...
+        ${pkgs.rsync}/bin/rsync -r ${pkgs.zoneminder}/ /var/lib/zoneminder/
+        chown -R nobody /var/lib/zoneminder
+        sed -i -e "s|ZM_PATH_WEB=.*|ZM_PATH_WEB=/var/lib/zoneminder/share/zoneminder/www|" -i /etc/zm.conf
       '';
       serviceConfig = {
         ExecStart = "${pkgs.zoneminder}/bin/zmpkg.pl start";
