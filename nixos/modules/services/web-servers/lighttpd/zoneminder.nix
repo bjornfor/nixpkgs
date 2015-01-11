@@ -84,9 +84,6 @@ in
       preStart = ''
         mkdir -p /tmp/zm
         chown nobody /tmp/zm
-
-        mkdir -p /run/zoneminder
-        chown nobody /run/zoneminder
       '';
       serviceConfig = {
         ExecStart = "${pkgs.zoneminder}/bin/zmpkg.pl start";
