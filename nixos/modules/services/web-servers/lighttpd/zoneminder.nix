@@ -70,6 +70,12 @@ in
       #package = pkgs.mysql;
     };
 
+    # FIXME: Handle creating the initial database and granting privileges to
+    # 'zmuser'.
+
+    # FIXME: Need to use have a proper user (not 'nobody') for zoneminder. This
+    # user will need to be in the 'video' group to get access to video cameras.
+
     systemd.services.zoneminder = {
       description = "ZoneMinder Video Security And Surveillance System";
       after = [ "mysql.target" ];
