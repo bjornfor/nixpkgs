@@ -73,7 +73,7 @@ in
     # FIXME: Handle creating the initial database and granting privileges to
     # 'zmuser'.
 
-    # FIXME: Need to use have a proper user (not 'nobody') for zoneminder. This
+    # FIXME: Need to have a proper user (not 'nobody') for zoneminder. This
     # user will need to be in the 'video' group to get access to video cameras.
 
     # FIXME: zoneminder seems to start up OK, but it doesn't write the pidfile.
