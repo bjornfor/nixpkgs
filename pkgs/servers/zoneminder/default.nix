@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
     sha256 = "05wxvg1zp20hbwkw1awp1jraw9s685xx8abyazji5l5fd8yl9zyb";
   };
 
-  #patches = [
+  patches = [
   #  # ./zoneminder-fix-install-paths.patch
   #  #./dont-touch-path-and-shell-env-vars.patch
   #  #./0001-cmake-install-polkit-files-to-zoneminder-DATAROOTDIR.patch
@@ -41,7 +41,8 @@ stdenv.mkDerivation rec {
   #  ./0001-cmake-install-polkit-files-to-zoneminder-DATAROOTDIR.patch
   #  ./0002-Stop-overwriting-PATH.patch
   #  ./0003-cmake-install-zm.conf-to-out.patch
-  #];
+     ./zoneminder.patch
+  ];
 
   cmakeFlags = "-DZM_WEB_USER=nobody -DZM_WEB_GROUP=nogroup";
 

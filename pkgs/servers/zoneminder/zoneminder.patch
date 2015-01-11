@@ -1,0 +1,13 @@
+diff --git a/web/skins/classic/views/monitorprobe.php b/web/skins/classic/views/monitorprobe.php
+index cc915d7..eca0e7f 100644
+--- a/web/skins/classic/views/monitorprobe.php
++++ b/web/skins/classic/views/monitorprobe.php
+@@ -37,7 +37,7 @@ if ( ZM_HAS_V4L2 )
+ 
+     $result = exec( escapeshellcmd($command), $output, $status );
+     if ( $status )
+-        Fatal( "Unable to probe local cameras, status is '$status'" );
++        Fatal( "Unable to probe local cameras with command '$command', status is '$status'" );
+ 
+     $monitors = array();
+     foreach ( dbFetchAll( "select Id, Name, Device,Channel from Monitors where Type = 'Local' order by Device, Channel" ) as $monitor )
