@@ -63,6 +63,13 @@ in
         pm.max_requests = 500
       '';
     };
+
+    services.mysql = {
+      enable = true;
+      # uhm, selecting a package is probably mandatory...
+      #package = pkgs.mysql;
+    };
+
   };
 
 }
