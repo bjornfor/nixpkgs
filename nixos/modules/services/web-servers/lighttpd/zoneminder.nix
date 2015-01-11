@@ -74,6 +74,11 @@ in
       description = "ZoneMinder Video Security And Surveillance System";
       after = [ "mysql.target" ];
       wantedBy = [ "multi-user.target" ];
+      # zmdc.pl wants to create a unix socket in /tmp/zm
+      preStart = ''
+        mkdir -p /tmp/zm
+        chown nobody /tmp/zm
+      '';
       serviceConfig = {
         ExecStart = "${pkgs.zoneminder}/bin/zmpkg.pl start";
         ExecReload = "${pkgs.zoneminder}/bin/zmpkg.pl reload";
