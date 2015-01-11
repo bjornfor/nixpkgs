@@ -70,6 +70,23 @@ in
       #package = pkgs.mysql;
     };
 
+    systemd.services.zoneminder = {
+      description = "ZoneMinder Video Security And Surveillance System";
+      after = [ "mysql.target" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.zoneminder}/bin/zmpkg.pl start";
+        ExecReload = "${pkgs.zoneminder}/bin/zmpkg.pl reload";
+        Type = "forking";
+        PIDFile = "/run/zoneminder/zm.pid";
+        # To get /var/setuid-wrappers into PATH, we have to duplicate the
+        # default PATH (systemd.services.<name>.path doesn't work, since it
+        # adds /bin to the path). We actually just want to prepend
+        # /var/setuid-wrappers, procps and mysql (for mysqldump).
+        Environment = "PATH=/var/setuid-wrappers:${with pkgs; makeSearchPath "bin" [ procps mysql coreutils findutils gnugrep gnused systemd ]}";
+      };
+    };
+
   };
 
 }
