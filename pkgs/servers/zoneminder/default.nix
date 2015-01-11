@@ -1,4 +1,4 @@
-{ stdenv, fetchzip, cmake, libjpeg, mysql, gnutls, perl, zlib, makeWrapper, polkit, pkgconfig, glib
+{ stdenv, fetchzip, fetchgit, cmake, libjpeg, mysql, gnutls, perl, zlib, makeWrapper, polkit, pkgconfig, glib
 # optional
 , ffmpeg ? null, curl ? null, openssl ? null, pcre ? null # AVFormat AVCodec AVDevice AVUtil SWScale libVLC
 
@@ -19,16 +19,29 @@
 stdenv.mkDerivation rec {
   name = "zoneminder-1.28.0";
 
-  src = fetchzip {
-    url = "https://github.com/ZoneMinder/ZoneMinder/archive/v1.28.0.tar.gz";
-    sha256 = "1ghf48sz8abavzs34hqcmwxi2ppmw58dx2vw2xm45wrs1q0m6466";
+  #src = fetchzip {
+  #  name = "zoneminder-1.28.0.tar.gz";
+  #  url = "https://github.com/ZoneMinder/ZoneMinder/archive/v1.28.0.tar.gz";
+  #  sha256 = "1ghf48sz8abavzs34hqcmwxi2ppmw58dx2vw2xm45wrs1q0m6466";
+  #};
+
+  # Ugh, my patches don't apply... simplify things for testing by using my
+  # zoneminder "fork" directly.
+  src = fetchgit {
+    url = "https://github.com/bjornfor/ZoneMinder";
+    rev = "ee09877a48e8bce733afed5bff3d3ea2848426d2";
+    sha256 = "1flh6jfmgssv62aa816fx67a4z4jdq3skq03g3kj4c4nhdhr5kjs";
   };
 
-  patches = [
-    ./zoneminder-fix-install-paths.patch
-    ./dont-touch-path-and-shell-env-vars.patch
-    ./0001-cmake-install-polkit-files-to-zoneminder-DATAROOTDIR.patch
-  ];
+  #patches = [
+  #  # ./zoneminder-fix-install-paths.patch
+  #  #./dont-touch-path-and-shell-env-vars.patch
+  #  #./0001-cmake-install-polkit-files-to-zoneminder-DATAROOTDIR.patch
+
+  #  ./0001-cmake-install-polkit-files-to-zoneminder-DATAROOTDIR.patch
+  #  ./0002-Stop-overwriting-PATH.patch
+  #  ./0003-cmake-install-zm.conf-to-out.patch
+  #];
 
   cmakeFlags = "-DZM_WEB_USER=nobody -DZM_WEB_GROUP=nogroup";
 
