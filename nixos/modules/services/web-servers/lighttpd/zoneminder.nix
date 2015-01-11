@@ -105,7 +105,7 @@ in
         chown nobody /tmp/zm
 
         # zoneminder wants a writeable ZM_PATH_WEB ...
-        ${pkgs.rsync}/bin/rsync -r ${pkgs.zoneminder}/ /var/lib/zoneminder/
+        ${pkgs.rsync}/bin/rsync -rl ${pkgs.zoneminder}/ /var/lib/zoneminder/
         chown -R nobody /var/lib/zoneminder
         sed -i -e "s|ZM_PATH_WEB=.*|ZM_PATH_WEB=/var/lib/zoneminder/share/zoneminder/www|" -i /etc/zm.conf
       '';
