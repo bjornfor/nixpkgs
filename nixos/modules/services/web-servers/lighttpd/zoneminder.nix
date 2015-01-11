@@ -76,9 +76,6 @@ in
     # FIXME: Need to have a proper user (not 'nobody') for zoneminder. This
     # user will need to be in the 'video' group to get access to video cameras.
 
-    # FIXME: zoneminder seems to start up OK, but it doesn't write the pidfile.
-    # So systemd thinks it has failed and shuts it down.
-
     systemd.services.zoneminder = {
       description = "ZoneMinder Video Security And Surveillance System";
       after = [ "mysql.target" ];
@@ -95,7 +92,7 @@ in
         ExecStart = "${pkgs.zoneminder}/bin/zmpkg.pl start";
         ExecReload = "${pkgs.zoneminder}/bin/zmpkg.pl reload";
         Type = "forking";
-        PIDFile = "/run/zoneminder/zm.pid";
+        PIDFile = "/run/zm/zm.pid";
         # To get /var/setuid-wrappers into PATH, we have to duplicate the
         # default PATH (systemd.services.<name>.path doesn't work, since it
         # adds /bin to the path). We actually just want to prepend
