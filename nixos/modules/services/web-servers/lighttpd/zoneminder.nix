@@ -96,8 +96,8 @@ in
         # To get /var/setuid-wrappers into PATH, we have to duplicate the
         # default PATH (systemd.services.<name>.path doesn't work, since it
         # adds /bin to the path). We actually just want to prepend
-        # /var/setuid-wrappers, procps and mysql (for mysqldump).
-        Environment = "PATH=/var/setuid-wrappers:${with pkgs; makeSearchPath "bin" [ procps mysql coreutils findutils gnugrep gnused systemd ]}";
+        # /var/setuid-wrappers, and a few other paths.
+        Environment = "PATH=/var/setuid-wrappers:${with pkgs; makeSearchPath "bin" [ procps mysql psmisc coreutils findutils gnugrep gnused systemd ]}";
       };
     };
 
