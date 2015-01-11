@@ -29,8 +29,8 @@ stdenv.mkDerivation rec {
   # zoneminder "fork" directly.
   src = fetchgit {
     url = "https://github.com/bjornfor/ZoneMinder";
-    rev = "ee09877a48e8bce733afed5bff3d3ea2848426d2";
-    sha256 = "1flh6jfmgssv62aa816fx67a4z4jdq3skq03g3kj4c4nhdhr5kjs";
+    rev = "8aa397749929866b3ea4cf7c9a5eed74180377bd";
+    sha256 = "1i16xgi10vxnllx5r11l4gmfhi4jfisfcrhnyc59n9i6w37ph9mr";
   };
 
   #patches = [
