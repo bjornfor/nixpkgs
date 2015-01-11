@@ -32,7 +32,7 @@ in
     environment.etc."zm.conf".source = "${pkgs.zoneminder}/etc/zm.conf";
     # FIXME: Blah, zoneminder wants a writeable ZM_PATH_WEB. Provide a
     # writeable zm.conf so we can manipulate it before zoneminder starts.
-    environment.etc."zm.conf".mode = "0660";
+    environment.etc."zm.conf".mode = "0664";  # needs to be readable by webserver + zoneminder user.
     environment.etc."zm.conf".gid = 65534; # nogroup (zoneminder)
 
     # declare module dependencies
