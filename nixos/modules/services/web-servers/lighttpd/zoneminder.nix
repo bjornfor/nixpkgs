@@ -24,6 +24,11 @@ in
 
   config = mkIf cfg.enable {
 
+    # zoneminder suggests (in the log) to run "zmupdate.pl -f" to reload
+    # config. Remove it once we have the config under control (that message
+    # shouldn't be there in the first place).
+    environment.systemPackages = [ pkgs.zoneminder ];
+
     environment.etc."zm.conf".source = "${pkgs.zoneminder}/etc/zm.conf";
 
     # declare module dependencies
