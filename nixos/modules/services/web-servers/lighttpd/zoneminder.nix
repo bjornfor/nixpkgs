@@ -14,8 +14,8 @@ in
       type = types.bool;
       default = false;
       description = ''
-        Whether to enable ZoneMinder, the camera security and surveillance
-        solution. If true, you can access ZoneMinder at
+        Whether to enable ZoneMinder, the video security and surveillance
+        system. If true, you can access ZoneMinder at
         http://yourserver/zoneminder.
       '';
     };
