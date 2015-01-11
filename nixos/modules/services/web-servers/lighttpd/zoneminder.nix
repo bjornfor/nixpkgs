@@ -36,9 +36,24 @@ in
     environment.etc."zm.conf".gid = 65534; # nogroup (zoneminder)
 
     # declare module dependencies
-    services.lighttpd.enableModules = [ "mod_fastcgi" "mod_alias" ];
+    services.lighttpd.enableModules = [ "mod_fastcgi" "mod_alias" "mod_cgi" ];
 
     services.lighttpd.extraConfig = ''
+      $HTTP["url"] =~ "^/cgi-bin" {
+        cgi.assign = (
+          "zms" => "${pkgs.zoneminder}/libexec/zoneminder/cgi-bin/zms",
+          "nph-zms" => "${pkgs.zoneminder}/libexec/zoneminder/cgi-bin/nph-zms",
+          "" => ""
+        )
+      }
+      $HTTP["url"] =~ "^/zoneminder/cgi-bin" {
+        cgi.assign = (
+          "zms" => "${pkgs.zoneminder}/libexec/zoneminder/cgi-bin/zms",
+          "nph-zms" => "${pkgs.zoneminder}/libexec/zoneminder/cgi-bin/nph-zms",
+          "" => ""
+        )
+      }
+
       $HTTP["url"] =~ "^/zoneminder" {
         index-file.names += ( "index.php" )
 
