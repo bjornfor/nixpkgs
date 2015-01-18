@@ -1,11 +1,11 @@
 { stdenv, fetchurl, cmake, clang, llvm }:
 
 stdenv.mkDerivation rec {
-  name = "oclint-0.7";
+  name = "oclint-0.8.1";
 
   src = fetchurl {
-    url = "http://archives.oclint.org/releases/0.7/oclint-0.7-src.tar.gz";
-    sha256 = "01dm2r3i4nibqzacblxcwg4hjq6vvfyd2vlk6rhk3bg29y8gk6rf";
+    url = "http://archives.oclint.org/releases/0.8/${name}-src.tar.gz";
+    sha256 = "043m3yzw11krp19g7v9ccj0fch7wgha6jr758bmczfhrqsdanvgv";
   };
 
   buildInputs = [ cmake clang ];
