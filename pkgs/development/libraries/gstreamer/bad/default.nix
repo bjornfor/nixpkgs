@@ -5,7 +5,7 @@
 , openjpeg, libopus, librsvg
 , wildmidi, fluidsynth, libvdpau, wayland
 , libwebp, xvidcore, gnutls
-, mesa
+, mesa, opencv
 }:
 
 assert faacSupport -> faac != null;
@@ -40,6 +40,6 @@ stdenv.mkDerivation rec {
     libmodplug mpeg2dec mpg123
     openjpeg libopus librsvg
     wildmidi fluidsynth libvdpau wayland
-    libwebp xvidcore gnutls mesa
+    libwebp xvidcore gnutls mesa opencv
   ] ++ stdenv.lib.optional faacSupport faac;
 }
