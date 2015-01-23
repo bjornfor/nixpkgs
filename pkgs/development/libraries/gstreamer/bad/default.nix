@@ -5,7 +5,7 @@
 , openjpeg, libopus, librsvg
 , wildmidi, fluidsynth, libvdpau, wayland
 , libwebp, xvidcore, gnutls
-, mesa, opencv
+, mesa, opencv, autoreconfHook, libcap, gdbm
 }:
 
 assert faacSupport -> faac != null;
@@ -32,6 +32,13 @@ stdenv.mkDerivation rec {
     sha256 = "0g4q9yqq71z32pz7zj54wigkcf438a2mcv5kvvwp4gb8a1rasbqm";
   };
 
+  # Patches from Debian, fixes opencv linking issue (requires autoreconfHook
+  # though).
+  patches = [
+    ./01_fix-modplug-linking.patch
+    ./02_opencv-linking.patch
+  ];
+
   nativeBuildInputs = [ pkgconfig python ];
 
   buildInputs = [
@@ -40,6 +47,6 @@ stdenv.mkDerivation rec {
     libmodplug mpeg2dec mpg123
     openjpeg libopus librsvg
     wildmidi fluidsynth libvdpau wayland
-    libwebp xvidcore gnutls mesa opencv
+    libwebp xvidcore gnutls mesa opencv autoreconfHook libcap gdbm
   ] ++ stdenv.lib.optional faacSupport faac;
 }
