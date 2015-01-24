@@ -5,7 +5,7 @@
 , openjpeg, libopus, librsvg
 , wildmidi, fluidsynth, libvdpau, wayland
 , libwebp, xvidcore, gnutls
-, mesa, opencv, autoreconfHook, libcap, gdbm
+, mesa, opencv, autoreconfHook, libcap, gdbm, automake114x
 }:
 
 assert faacSupport -> faac != null;
@@ -47,6 +47,6 @@ stdenv.mkDerivation rec {
     libmodplug mpeg2dec mpg123
     openjpeg libopus librsvg
     wildmidi fluidsynth libvdpau wayland
-    libwebp xvidcore gnutls mesa opencv autoreconfHook libcap gdbm
+    libwebp xvidcore gnutls mesa opencv autoreconfHook libcap gdbm automake114x
   ] ++ stdenv.lib.optional faacSupport faac;
 }
