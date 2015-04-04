@@ -1148,6 +1148,8 @@ let
 
   disper = callPackage ../tools/misc/disper { };
 
+  djmount = callPackage ../tools/networking/djmount { };
+
   dmd = callPackage ../development/compilers/dmd { };
 
   dmg2img = callPackage ../tools/misc/dmg2img { };
