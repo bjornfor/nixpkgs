@@ -1,5 +1,5 @@
 { stdenv, autoreconfHook, fetchurl, libcap, apparmor, perl, docbook2x
-, docbook_xml_dtd_45, gnutls, pkgconfig
+, docbook_xml_dtd_45, gnutls, pkgconfig, cgmanager
 }:
 
 stdenv.mkDerivation rec {
@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
     sha256 = "075i5h136b3dnf8nk6mpailz6i18yv1zcsj0jdpr9kg2i6d1ksia";
   };
 
-  buildInputs = [ libcap apparmor perl docbook2x gnutls autoreconfHook pkgconfig ];
+  buildInputs = [ libcap apparmor perl docbook2x gnutls autoreconfHook pkgconfig cgmanager ];
 
   patches = [ ./install-localstatedir-in-store.patch ./support-db2x.patch ];
 
