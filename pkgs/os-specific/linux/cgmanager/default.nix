@@ -10,11 +10,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ pkgconfig libnih dbus autoreconfHook ];
 
-  # FIXME: replace with a patch that should be sent upstream (/usr => $PREFIX)
-  # FIXME: doesn't work!
-  # Upstream issue: https://github.com/lxc/cgmanager/issues/7
+  # Patch already merged upstream (https://github.com/lxc/cgmanager/pulls/8)
   postPatch = ''
-    sed -i -e 's|$(DESTDIR)/usr/|$(PREFIX)/|' Makefile.am
+    sed -i -e 's|$(DESTDIR)/usr/share|$(datarootdir)|' Makefile.am
   '';
 
   meta = with stdenv.lib; {
