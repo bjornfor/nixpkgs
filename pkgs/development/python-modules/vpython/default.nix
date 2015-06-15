@@ -4,6 +4,31 @@
 
 # TODO:
 #
+# Fix runtime error:
+#
+#   In [1]: import visual
+#   ---------------------------------------------------------------------------
+#   ImportError                               Traceback (most recent call last)
+#   <ipython-input-1-fd17148eefe6> in <module>()
+#   ----> 1 import visual
+#
+#   /home/bfo/nixpkgs/result/lib/python2.7/site-packages/visual/__init__.py in <module>()
+#         1 from __future__ import print_function
+#         2
+#   ----> 3 from visual.visual_all import * # this statement not included in vis/__init__.py
+#         4 from visual_common.create_display import *
+#         5
+#
+#   /home/bfo/nixpkgs/result/lib/python2.7/site-packages/visual/visual_all.py in <module>()
+#         8 ##    pass
+#         9
+#   ---> 10 from visual_common.cvisual import vector
+#        11
+#        12 ### _fix_symbols() is called from modules in the package that (unfortunately)
+#
+#   ImportError: /nix/store/3crxgbmnj4jal2vj61k344fpphsargsg-boost-1.57.0-lib/lib/libboost_python.so.1.57.0: undefined symbol: PyUnicodeUCS2_FromEncodedObject
+#
+#
 # Does it work for all python versions?
 #  disabled = isPy3k;
 #
