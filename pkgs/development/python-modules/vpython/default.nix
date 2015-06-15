@@ -4,9 +4,6 @@
 
 # TODO:
 #
-# Build errors:
-# * /nix/store/b8qhjrwf8sf9ggkjxqqav7f1m6w83bh0-binutils-2.23.1/bin/ld: cannot find -lboost_python-py27
-#
 # Does it work for all python versions?
 #  disabled = isPy3k;
 #
@@ -23,6 +20,11 @@ buildPythonPackage rec {
   };
 
   buildInputs = [ pkgconfig pangox_compat boost libXmu numpy wxPython30 gtkglextmm ];
+
+  # rename library dependency: boost_python-py + version => boost_python
+  preBuild = ''
+    sed -i -e "s/boost_python-py.*/boost_python')/" setup.py
+  '';
 
   # figure out what should be in propagatedBuildInputs
   #propagatedBuildInputs = [ numpy wxPython30 gtkglextmm ];
