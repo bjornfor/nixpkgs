@@ -35,7 +35,7 @@ buildPythonPackage rec {
       called "Visual" originated by David Scherer in 2000. VPython makes it
       easy to create navigable 3D displays and animations, even for those with
       limited programming experience. Because it is based on Python, it also
-      has much to offer for experienced programmers and researchers."""
+      has much to offer for experienced programmers and researchers.
     '';
     #license = licenses...  # TODO
     platforms = platforms.all;
