@@ -2,8 +2,9 @@
 # interpreter file names (`#!  /path') to paths found in $PATH.  E.g.,
 # /bin/sh will be rewritten to /nix/store/<hash>-some-bash/bin/sh.
 # /usr/bin/env gets special treatment so that ".../bin/env python" is
-# rewritten to /nix/store/<hash>/bin/python.  Interpreters that are
-# already in the store are left untouched.
+# rewritten to "/nix/store/<hash>/bin/env /nix/store/<hash>/bin/python" (both
+# "env" and "python" get absolute paths). Interpreters that are already in the
+# store are left untouched.
 
 fixupOutputHooks+=('if [ -z "$dontPatchShebangs" ]; then patchShebangs "$prefix"; fi')
 
@@ -35,7 +36,9 @@ patchShebangs() {
                 echo "unsupported interpreter directive \"$oldInterpreterLine\" (set dontPatchShebangs=1 and handle shebang patching yourself)"
                 exit 1
             fi
+            envPath="$(command -v env)"
             newPath="$(command -v "$arg0" || true)"
+            newInterpreterLine="$envPath $newPath $args"
         else
             if [ "$oldPath" = "" ]; then
                 # If no interpreter is specified linux will use /bin/sh. Set
@@ -44,9 +47,8 @@ patchShebangs() {
             fi
             newPath="$(command -v "$(basename "$oldPath")" || true)"
             args="$arg0 $args"
+            newInterpreterLine="$newPath $args"
         fi
-
-        newInterpreterLine="$newPath $args"
 
         if [ -n "$oldPath" -a "${oldPath:0:${#NIX_STORE}}" != "$NIX_STORE" ]; then
             if [ -n "$newPath" -a "$newPath" != "$oldPath" ]; then
