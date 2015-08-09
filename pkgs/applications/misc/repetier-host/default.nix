@@ -1,7 +1,4 @@
-#with import <nixpkgs> {};
-with import /home/bfo/code/forks/nixpkgs {};
-
-#{ stdenv, fetchurl, mono, makeDesktopItem }:
+{ stdenv, fetchurl, bash, mono, makeDesktopItem }:
 
 stdenv.mkDerivation rec {
   name = "repetier-host-1.0.6";
