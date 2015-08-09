@@ -12859,6 +12859,8 @@ let
 
   printrun = callPackage ../applications/misc/printrun { };
 
+  repetier-host = callPackage ../applications/misc/repetier-host { };
+
   sddm = callPackage ../applications/display-managers/sddm { };
 
   slim = callPackage ../applications/display-managers/slim {
