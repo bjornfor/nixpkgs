@@ -14203,6 +14203,8 @@ in
 
   printrun = callPackage ../applications/misc/printrun { };
 
+  repetier-host = callPackage ../applications/misc/repetier-host { };
+
   sddm = kde5.sddm;
 
   slim = callPackage ../applications/display-managers/slim {
