@@ -5,7 +5,7 @@
 , openjpeg, libopus, librsvg
 , wildmidi, fluidsynth, libvdpau, wayland
 , libwebp, xvidcore, gnutls, mjpegtools
-, mesa, libintlOrEmpty
+, mesa, libintlOrEmpty, opencv
 }:
 
 assert faacSupport -> faac != null;
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
     openjpeg libopus librsvg
     fluidsynth libvdpau
     libwebp xvidcore gnutls mesa
-    mjpegtools
+    mjpegtools opencv
   ]
     ++ libintlOrEmpty
     ++ optional faacSupport faac
