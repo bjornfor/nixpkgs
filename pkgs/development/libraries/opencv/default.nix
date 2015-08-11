@@ -20,6 +20,14 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
+  cmakeFlags = [
+    "-DCMAKE_BUILD_TYPE=Release"
+  ];
+
+  postInstall = ''
+    mv "$out/share/OpenCV" "$out/share/opencv"
+  '';
+
   meta = {
     description = "Open Computer Vision Library with more than 500 algorithms";
     homepage = http://opencv.org/;
