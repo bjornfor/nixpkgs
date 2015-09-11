@@ -45,7 +45,8 @@ in
       };
     storageDriver =
       mkOption {
-        type = types.enum ["aufs" "btrfs" "devicemapper" "overlay" "zfs"];
+        type = types.nullOr (types.enum ["aufs" "btrfs" "devicemapper" "overlay" "zfs"]);
+        default = null;
         description =
           ''
             This option determines which Docker storage driver to use.
@@ -86,6 +87,14 @@ in
   ###### implementation
 
   config = mkIf cfg.enable (mkMerge [
+    { assertions = [ {
+        assertion = cfg.storageDriver != null;
+        message = ''
+          Option services.docker.storageDriver is not defined (required because
+          services.docker.enable is true).
+        '';
+        } ];
+    }
     { environment.systemPackages = [ pkgs.docker ];
       users.extraGroups.docker.gid = config.ids.gids.docker;
     }
