@@ -1,15 +1,15 @@
-{ stdenv, fetchurl, gnome3, pkgconfig, intltool, glib, evolution_data_server }:
+{ stdenv, fetchurl, gnome3, pkgconfig, intltool, glib, evolution_data_server, gtk, libsoup, sqlite }:
 
 stdenv.mkDerivation rec {
-  name = "evolution-ews-${gnome3.version}.5";
+  name = "evolution-ews-${gnome3.version}.3";
 
   src = fetchurl {
     url = "mirror://gnome/sources/evolution-ews/${gnome3.version}/${name}.tar.xz";
-    sha256 = "0n7b4pxygqgxa23my9krpbkklhg13bb8zgq5a81vf3w0jjzhqznn";
+    sha256 = "1l3ab2q8zqa7acwqzx4rxdxascxl4xgxj1fhf6c14vbd5ak3m7aj";
   };
 
   buildInputs = with gnome3;
-     [ pkgconfig intltool glib evolution_data_server ];
+     [ pkgconfig intltool glib evolution_data_server gtk libsoup sqlite ];
   #  [ pkgconfig glib python intltool libsoup libxml2 gtk gnome_online_accounts
   #    gcr p11_kit libgweather libgdata gperf makeWrapper icu sqlite gsettings_desktop_schemas ]
   #  ++ stdenv.lib.optional valaSupport vala;
