@@ -27,6 +27,8 @@ stdenv.mkDerivation rec {
   #'';
 
   meta = with stdenv.lib; {
+    description = "MS Exchange integration through Exchange Web Services";
+    license = licensees.lgpl21;
     platforms = platforms.linux;
     maintainers = gnome3.maintainers;
   };
