@@ -5744,6 +5744,25 @@ let
     };
   };
 
+
+  fixtures = buildPythonPackage rec {
+    name = "fixtures-1.3.1";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/f/fixtures/${name}.tar.gz";
+      md5 = "72959be66e26b09641a1e3902f631e62";
+    };
+
+    propagatedBuildInputs = with self; [ pbr pip testtools six mock ];
+
+    meta = with stdenv.lib; {
+      description = "Fixtures, reusable state for writing clean tests and more";
+      homepage = https://launchpad.net/python-fixtures;
+      license = with licenses; [ asl20 bsd3 ];  # users can choose
+    };
+  };
+
+
   flake8 = buildPythonPackage (rec {
     name = "flake8-2.3.0";
 
