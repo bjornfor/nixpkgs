@@ -9263,11 +9263,11 @@ let
   };
 
   pbr = buildPythonPackage rec {
-    name = "pbr-0.9.0";
+    name = "pbr-1.8.0";
 
     src = pkgs.fetchurl {
       url = "https://pypi.python.org/packages/source/p/pbr/${name}.tar.gz";
-      sha256 = "e5a57c434b1faa509a00bf458d2c7af965199d9cced3d05a547bff9880f7e8cb";
+      sha256 = "1z1nh0rr65mzljhdhq7189nzgxx044d7890i8s7njndvjn9fz824";
     };
 
     # pip depend on $HOME setting
