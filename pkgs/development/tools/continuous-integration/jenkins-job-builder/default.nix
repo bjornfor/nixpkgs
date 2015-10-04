@@ -2,7 +2,7 @@
 
 let
   upstreamName = "jenkins-job-builder";
-  version = "1.2.0";
+  version = "1.3.0";
 
 in
 
@@ -12,7 +12,7 @@ buildPythonPackage rec {
 
   src = fetchurl {
     url = "https://pypi.python.org/packages/source/j/${upstreamName}/${name}.tar.gz";
-    sha256 = "09nxdhb0ilxpmk5gbvik6kj9b6j718j5an903dpcvi3r6vzk9b3p";
+    sha256 = "111vpf6hzzb2mcdqi0a9r1dkf28ln9w6sgfqri0qxwf1ffbdqx6x";
   };
 
   pythonPath = with pythonPackages; [ pip six pyyaml pbr python-jenkins mock
