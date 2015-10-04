@@ -13276,6 +13276,24 @@ let
   });
 
 
+  sphinxcontrib-programoutput = buildPythonPackage rec {
+    name = "sphinxcontrib-programoutput-0.8";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/s/sphinxcontrib-programoutput/${name}.tar.gz";
+      md5 = "bb0be17ef13f268378b2af51ff413c58";
+    };
+
+    propagatedBuildInputs = with self; [ sphinx ];
+
+    meta = with stdenv.lib; {
+      description = "Sphinx extension to include program output";
+      homepage = http://sphinxcontrib-programoutput.readthedocs.org/;
+      license = licenses.bsd;
+    };
+  };
+
+
   sphinx_pypi_upload = buildPythonPackage (rec {
     name = "Sphinx-PyPI-upload-0.2.1";
 
