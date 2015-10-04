@@ -15,8 +15,9 @@ buildPythonPackage rec {
     sha256 = "09nxdhb0ilxpmk5gbvik6kj9b6j718j5an903dpcvi3r6vzk9b3p";
   };
 
-  pythonPath = with pythonPackages; [ pip six pyyaml pbr python-jenkins ];
-  doCheck = false;  # Requires outdated Sphinx
+  pythonPath = with pythonPackages; [ pip six pyyaml pbr python-jenkins mock
+    sphinxcontrib-programoutput testrepository
+  ];
 
   meta = {
     description = "System for configuring Jenkins jobs using simple YAML files";
