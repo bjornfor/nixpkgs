@@ -23,5 +23,6 @@ buildPythonPackage rec {
     description = "System for configuring Jenkins jobs using simple YAML files";
     homepage = http://ci.openstack.org/jjb.html;
     license = stdenv.lib.licenses.asl20;
+    platforms = stdenv.lib.platforms.all;
   };
 }
