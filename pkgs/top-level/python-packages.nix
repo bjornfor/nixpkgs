@@ -13814,6 +13814,25 @@ let
     };
   };
 
+
+  testrepository = buildPythonPackage rec {
+    name = "testrepository-0.0.20";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/t/testrepository/${name}.tar.gz";
+      md5 = "f648b0aceeca4fcd5f8a62eeedea289b";
+    };
+
+    propagatedBuildInputs = with self; [ fixtures subunit testtools ];
+
+    meta = with stdenv.lib; {
+      description = "Test Repository";
+      homepage = https://launchpad.net/testrepository;
+      license = "unknown";
+    };
+  };
+
+
   testscenarios = buildPythonPackage rec {
     name = "testscenarios-${version}";
     version = "0.4";
