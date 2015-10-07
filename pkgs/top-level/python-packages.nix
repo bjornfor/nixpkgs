@@ -9050,6 +9050,20 @@ let
     };
   });
 
+  oslotest = buildPythonPackage (rec {
+    name = "oslotest-1.3.1";
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/o/oslotest/${name}.tar.gz";
+      md5 = "bd223366099ab104c35f5a45bc5a339b";
+    };
+    propagatedBuildInputs = with self; [ pbr mox ];
+    meta = {
+      description = "OpenStack test framework and test fixtures";
+      homepage = http://launchpad.net/oslo;
+      license = licenses.asl20;
+    };
+  });
+
   pagerduty = buildPythonPackage rec {
     name = "pagerduty-${version}";
     version = "0.2.1";
