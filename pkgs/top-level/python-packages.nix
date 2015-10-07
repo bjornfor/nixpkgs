@@ -2668,7 +2668,7 @@ let
       md5 = "d2c09c93346077ced675c9f718e6a0f1";
     };
 
-    propagatedBuildInputs = with self; [ extras testtools ];
+    propagatedBuildInputs = with self; [ extras testtools testscenarios ];
 
     meta = with stdenv.lib; {
       description = "A streaming protocol for test results";
