@@ -9036,6 +9036,20 @@ let
 
   });
 
+  oslosphinx = buildPythonPackage (rec {
+    name = "oslosphinx-3.2.0";
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/o/oslosphinx/${name}.tar.gz";
+      md5 = "3a52a52bf47fa41fb12419655de0b933";
+    };
+    propagatedBuildInputs = with self; [ pbr requests2 ];
+    # oslosphinx-3.2.0 tests require sphinx!=1.2.0,!=1.3b1,<1.3,>=1.1.2
+    doCheck = false;
+    meta = {
+      description = "OpenStack Sphinx Extensions and Theme";
+    };
+  });
+
   pagerduty = buildPythonPackage rec {
     name = "pagerduty-${version}";
     version = "0.2.1";
