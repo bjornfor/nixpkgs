@@ -7907,11 +7907,11 @@ let
   };
 
   mox3 = buildPythonPackage rec {
-    name = "mox3-0.11.0";
+    name = "mox3-0.7.0";
 
     src = pkgs.fetchurl {
       url = "https://pypi.python.org/packages/source/m/mox3/${name}.tar.gz";
-      md5 = "b08aa592f0f8ff016cdca1c177c589f4";
+      sha256 = "1qnxxqggq8hbfsk332rxkh4draxl6vv3rc3hysxicn6mfangzhkw";
     };
 
     propagatedBuildInputs = with self; [ pbr fixtures ];
