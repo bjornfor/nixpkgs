@@ -2660,6 +2660,23 @@ let
     };
   };
 
+  python-subunit = buildPythonPackage rec {
+    name = "python-subunit-1.1.0";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/p/python-subunit/${name}.tar.gz";
+      md5 = "d2c09c93346077ced675c9f718e6a0f1";
+    };
+
+    propagatedBuildInputs = with self; [ extras testtools ];
+
+    meta = with stdenv.lib; {
+      description = "A streaming protocol for test results";
+      homepage = http://launchpad.net/subunit;
+      license = "unknown";
+    };
+  };
+
   cssselect = buildPythonPackage rec {
     name = "cssselect-0.7.1";
     src = pkgs.fetchurl {
