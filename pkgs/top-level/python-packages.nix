@@ -12863,7 +12863,7 @@ let
       sha256 = "1msp79y2b9b6wvd74cg1y1r3jdiawnab4j6zr6pzwvmv23hrzgf6";
     };
 
-    buildInputs = with self; [ pbr pip six argparse ];
+    buildInputs = with self; [ pbr pip six argparse oslosphinx ];
 
     propagatedBuildInputs = with self; [ setuptools ];
 
