@@ -13840,7 +13840,7 @@ let
       md5 = "f648b0aceeca4fcd5f8a62eeedea289b";
     };
 
-    propagatedBuildInputs = with self; [ fixtures subunit testtools ];
+    propagatedBuildInputs = with self; [ fixtures python-subunit testtools ];
 
     meta = with stdenv.lib; {
       description = "Test Repository";
