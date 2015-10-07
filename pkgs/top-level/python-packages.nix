@@ -7906,6 +7906,25 @@ let
     };
   };
 
+  mox3 = buildPythonPackage rec {
+    name = "mox3-0.11.0";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/m/mox3/${name}.tar.gz";
+      md5 = "b08aa592f0f8ff016cdca1c177c589f4";
+    };
+
+    propagatedBuildInputs = with self; [ pbr fixtures ];
+    # tests require oslosphinx, which requires sphinx!=1.2.0,!=1.3b1,<1.3,>=1.1.2
+    doCheck = false;
+
+    meta = with stdenv.lib; {
+      description = "Mock object framework for Python 3";
+      homepage = http://www.openstack.org/;
+      license = "unknown";
+    };
+  };
+
   mozsvc = buildPythonPackage rec {
     name = "mozsvc-${version}";
     version = "0.8";
