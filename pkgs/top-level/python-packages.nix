@@ -9075,7 +9075,7 @@ let
       url = "https://pypi.python.org/packages/source/o/oslotest/${name}.tar.gz";
       md5 = "bd223366099ab104c35f5a45bc5a339b";
     };
-    propagatedBuildInputs = with self; [ pbr mox ];
+    propagatedBuildInputs = with self; [ pbr mox3 ];
     meta = {
       description = "OpenStack test framework and test fixtures";
       homepage = http://launchpad.net/oslo;
