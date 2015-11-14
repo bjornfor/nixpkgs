@@ -1,0 +1,155 @@
+From 5527eff912f63bb75c26737ad36b123bc616176d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>
+Date: Sun, 15 Nov 2015 00:14:27 +0100
+Subject: [PATCH] buildsys: make Nix friendly
+
+* Don't set user/group ownership on installed files
+* Don't touch /etc build time (move to $out/etc)
+---
+ x2goserver-compat/Makefile     |  6 +++---
+ x2goserver-extensions/Makefile |  6 +++---
+ x2goserver-fmbindings/Makefile |  6 +++---
+ x2goserver-printing/Makefile   |  6 +++---
+ x2goserver-pyhoca/Makefile     |  6 +++---
+ x2goserver-xsession/Makefile   |  6 +++---
+ x2goserver/Makefile            | 14 +++++++-------
+ 7 files changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/x2goserver-compat/Makefile b/x2goserver-compat/Makefile
+index 439ae59..4e2b23e 100755
+--- a/x2goserver-compat/Makefile
++++ b/x2goserver-compat/Makefile
+@@ -3,9 +3,9 @@
+ SRC_DIR=$(CURDIR)
+ SHELL=/bin/bash
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+diff --git a/x2goserver-extensions/Makefile b/x2goserver-extensions/Makefile
+index e84f0ea..dd4fa15 100755
+--- a/x2goserver-extensions/Makefile
++++ b/x2goserver-extensions/Makefile
+@@ -3,9 +3,9 @@
+ SRC_DIR=$(CURDIR)
+ SHELL=/bin/bash
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+diff --git a/x2goserver-fmbindings/Makefile b/x2goserver-fmbindings/Makefile
+index 9e4c983..70eb57d 100755
+--- a/x2goserver-fmbindings/Makefile
++++ b/x2goserver-fmbindings/Makefile
+@@ -3,9 +3,9 @@
+ SRC_DIR=$(CURDIR)
+ SHELL=/bin/bash
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+diff --git a/x2goserver-printing/Makefile b/x2goserver-printing/Makefile
+index 6b6743e..c41dba2 100755
+--- a/x2goserver-printing/Makefile
++++ b/x2goserver-printing/Makefile
+@@ -3,9 +3,9 @@
+ SRC_DIR=$(CURDIR)
+ SHELL=/bin/bash
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+diff --git a/x2goserver-pyhoca/Makefile b/x2goserver-pyhoca/Makefile
+index 1d05bd5..f53549f 100755
+--- a/x2goserver-pyhoca/Makefile
++++ b/x2goserver-pyhoca/Makefile
+@@ -3,9 +3,9 @@
+ SRC_DIR=$(CURDIR)
+ SHELL=/bin/bash
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+diff --git a/x2goserver-xsession/Makefile b/x2goserver-xsession/Makefile
+index a834a6f..84105b0 100755
+--- a/x2goserver-xsession/Makefile
++++ b/x2goserver-xsession/Makefile
+@@ -3,10 +3,10 @@
+ SRC_DIR=$(CURDIR)
+ SHELL=/bin/bash
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
+ INSTALL_SYMLINK=ln -s -f
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+diff --git a/x2goserver/Makefile b/x2goserver/Makefile
+index 730bf3a..d1abb07 100755
+--- a/x2goserver/Makefile
++++ b/x2goserver/Makefile
+@@ -7,9 +7,9 @@ CC      ?= gcc
+ CFLAGS  += -fPIE
+ LDFLAGS += -pie
+ 
+-INSTALL_DIR=install -d -o root -g root -m 755
+-INSTALL_FILE=install -o root -g root -m 644
+-INSTALL_PROGRAM=install -o root -g root -m 755
++INSTALL_DIR=install -d -m 755
++INSTALL_FILE=install -m 644
++INSTALL_PROGRAM=install -m 755
+ 
+ RM_FILE=rm -f
+ RM_DIR=rmdir -p --ignore-fail-on-non-empty
+@@ -86,10 +86,10 @@ install_config:
+ 	$(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/x2go_logout.d
+ 	$(INSTALL_FILE) etc/x2go_logout     $(DESTDIR)$(ETCDIR)/
+ 	$(INSTALL_FILE) etc/x2go_logout.d/* $(DESTDIR)$(ETCDIR)/x2go_logout.d/
+-	$(INSTALL_DIR) $(DESTDIR)/etc/sudoers.d || true
+-	$(INSTALL_FILE) etc/sudoers.d/x2goserver $(DESTDIR)/etc/sudoers.d/
+-	$(INSTALL_DIR) $(DESTDIR)/etc/logcheck/ignore.d.server || true
+-	$(INSTALL_FILE) etc/logcheck/ignore.d.server/x2goserver $(DESTDIR)/etc/logcheck/ignore.d.server/
++	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/etc/sudoers.d || true
++	$(INSTALL_FILE) etc/sudoers.d/x2goserver $(DESTDIR)$(PREFIX)/etc/sudoers.d/
++	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/etc/logcheck/ignore.d.server || true
++	$(INSTALL_FILE) etc/logcheck/ignore.d.server/x2goserver $(DESTDIR)$(PREFIX)/etc/logcheck/ignore.d.server/
+ 
+ install_man:
+ 	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)
+-- 
+2.5.2
+
