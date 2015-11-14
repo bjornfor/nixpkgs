@@ -2189,6 +2189,17 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
+  ConfigSimple = buildPerlPackage {
+    name = "Config-Simple-4.58";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/S/SH/SHERZODR/Config-Simple-4.58.tar.gz;
+      sha256 = "dd9995706f0f9384a15ccffe116c3b6e22f42ba2e58d8f24ed03c4a0e386edb4";
+    };
+    meta = {
+      description = "Simple configuration file class";
+    };
+  };
+
   ConfigStd = buildPerlPackage {
     name = "Config-Std-0.901";
     src = fetchurl {
