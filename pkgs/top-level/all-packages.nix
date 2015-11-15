@@ -14817,7 +14817,7 @@ in
   x2goclient = callPackage ../applications/networking/remote/x2goclient { };
 
   x2goserver = callPackage ../applications/networking/remote/x2goserver {
-    inherit (perlPackages) ConfigSimple DBI CaptureTiny FileBaseDir FileWhich;
+    inherit (perlPackages) ConfigSimple DBI DBDSQLite CaptureTiny FileBaseDir FileWhich;
   };
 
   x2vnc = callPackage ../tools/X11/x2vnc { };

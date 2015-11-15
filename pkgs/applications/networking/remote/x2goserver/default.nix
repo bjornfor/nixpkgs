@@ -1,5 +1,5 @@
 { stdenv, fetchurl, which, man, xwininfo, bc, makeWrapper
-, perl, ConfigSimple, DBI, CaptureTiny, FileBaseDir, FileWhich
+, perl, ConfigSimple, DBI, DBDSQLite, CaptureTiny, FileBaseDir, FileWhich
 }:
 
 stdenv.mkDerivation rec {
@@ -30,7 +30,7 @@ stdenv.mkDerivation rec {
     for prog in "$out/bin/"* "$out/sbin/"*; do
         wrapProgram "$prog" --prefix PATH : "$out/bin:${xwininfo}/bin:${bc}/bin" \
             --set PERL5LIB \
-            "$out/lib/x2go:${stdenv.lib.makePerlPath [ ConfigSimple DBI CaptureTiny FileBaseDir FileWhich ]}"
+            "$out/lib/x2go:${stdenv.lib.makePerlPath [ ConfigSimple DBI DBDSQLite CaptureTiny FileBaseDir FileWhich ]}"
     done
 
     sed -i -e "s|/usr|$out|" x2goserver.service
