@@ -36,18 +36,20 @@ in
 
     systemd.packages = [ pkgs.x2goserver ];
 
-    users.extraUsers.x2gouser = {
-      group = "x2gouser";
+    users.users.x2gouser = {
       description = "X2Go remote desktop user";
       uid = config.ids.uids.x2gouser;
-      gid = config.ids.gids.x2gouser;
+      #gid = config.ids.gids.x2gouser;
+      createHome = true;
+      home = "/var/lib/x2go";
     };
 
-    users.extraUsers.x2goprint = {
-      group = "x2goprint";
+    users.users.x2goprint = {
       description = "X2Go remote desktop print user";
       uid = config.ids.uids.x2goprint;
-      gid = config.ids.gids.x2goprint;
+      #gid = config.ids.gids.x2goprint;
+      createHome = true;
+      home = "/var/spool/x2goprint";
     };
 
   };
