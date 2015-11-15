@@ -270,6 +270,8 @@
       toxvpn = 247;
       squeezelite = 248;
       turnserver = 249;
+      x2gouser = 250;
+      x2goprint = 251;
 
       # When adding a uid, make sure it doesn't match an existing gid. And don't use uids above 399!
 
@@ -510,6 +512,8 @@
       #toxvpn = 247; # unused
       #squeezelite = 248; #unused
       turnserver = 249;
+      x2gouser = 250;
+      x2goprint = 251;
 
       # When adding a gid, make sure it doesn't match an existing
       # uid. Users and groups with the same name should have equal
