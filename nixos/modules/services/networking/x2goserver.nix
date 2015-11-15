@@ -28,6 +28,28 @@ in
 
   config = mkIf cfg.enable {
 
+    # Packaging inspiration:
+    # <x2goserver>/INSTALL file and Arch Linux PKGBUILD.
+
+    security.setuidOwners = [
+      { source = "${pkgs.x2goserver}/bin/x2gosqlitewrapper";
+        program = "x2gosqlitewrapper";
+        owner = "root";
+        group = "x2gouser";
+        setuid = true;
+        setgid = false;
+        permissions = "u+rx,g+x";
+      }
+      { source = "${pkgs.x2goserver}/bin/x2goprint";
+        program = "x2goprint";
+        owner = "root";
+        group = "x2goprint";
+        setuid = true;
+        setgid = false;
+        permissions = "u+rx,g+x";
+      }
+    ];
+
     environment.systemPackages = [ pkgs.x2goserver ];
 
     environment.etc."x2gosql/sql".text = ''
@@ -39,6 +61,11 @@ in
       # X2go homedir + printing spool dir
       install -dm 0770 --owner=x2gouser --group=x2gouser /var/lib/x2go
       install -dm 0770 --owner=x2goprint --group=x2goprint /var/spool/x2goprint
+
+      if ! [ -f /var/lib/x2go/x2go_sessions ]; then
+          echo "Creating initial X2Go database ('x2godbadmin --createdb')"
+          ${pkgs.x2goserver}/bin/x2godbadmin --createdb
+      fi
     '';
       ## load fuse module at system start
       #install -dm755 $pkgdir/usr/lib/modules-load.d
