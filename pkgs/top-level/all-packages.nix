@@ -12546,6 +12546,8 @@ in
   inherit (gnome3) evince;
   evolution_data_server = gnome3.evolution_data_server;
 
+  inherit (gnome3) evolution-ews;
+
   keepass = callPackage ../applications/misc/keepass { };
 
   keepass-keefox = callPackage ../applications/misc/keepass-plugins/keefox { };
