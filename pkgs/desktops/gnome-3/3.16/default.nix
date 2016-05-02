@@ -87,7 +87,9 @@ let
 
   evolution_data_server = callPackage ./core/evolution-data-server { };
 
-  evolution-ews = callPackage ./core/evolution-ews { };
+  evolution-ews = callPackage ./core/evolution-ews {
+    webkitgtk = webkitgtk24x;
+  };
 
   gconf = callPackage ./core/gconf { };
 

@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, gnome3, pkgconfig, intltool, glib, evolution_data_server, gtk, libsoup, sqlite, evolution /*, webkitgtk3*/ }:
+{ stdenv, fetchurl, gnome3, pkgconfig, intltool, glib, evolution_data_server, gtk, libsoup, sqlite, evolution, webkitgtk }:
 
 stdenv.mkDerivation rec {
   name = "evolution-ews-${gnome3.version}.3";
@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = with gnome3;
-     [ pkgconfig intltool glib evolution_data_server gtk libsoup sqlite evolution /*webkitgtk3*/ ];
+     [ pkgconfig intltool glib evolution_data_server gtk libsoup sqlite evolution webkitgtk ];
   #  [ pkgconfig glib python intltool libsoup libxml2 gtk gnome_online_accounts
   #    gcr p11_kit libgweather libgdata gperf makeWrapper icu sqlite gsettings_desktop_schemas ]
   #  ++ stdenv.lib.optional valaSupport vala;
