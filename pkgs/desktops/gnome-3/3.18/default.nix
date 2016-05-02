@@ -259,6 +259,11 @@ let
     webkitgtk = webkitgtk24x;
   };
 
+  evolution-ews = callPackage ./core/evolution-ews {
+    webkitgtk = webkitgtk24x;
+    #libmsgpack = pkgs.libmsgpack_0_5;
+  };
+
   file-roller = callPackage ./apps/file-roller { };
 
   gedit = callPackage ./apps/gedit { };
