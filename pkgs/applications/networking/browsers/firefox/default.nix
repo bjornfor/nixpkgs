@@ -18,14 +18,14 @@ assert stdenv.cc ? libc && stdenv.cc.libc != null;
 
 let
 
-common = { pname, version, sha1 }: stdenv.mkDerivation rec {
+common = { pname, version, sha256 }: stdenv.mkDerivation rec {
   name = "${pname}-${version}";
 
   src = fetchurl {
     url =
       let ext = if lib.versionAtLeast version "41.0" then "xz" else "bz2";
       in "http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${version}/source/firefox-${version}.source.tar.${ext}";
-    inherit sha1;
+    inherit sha256;
   };
 
   buildInputs =
@@ -34,7 +34,7 @@ common = { pname, version, sha1 }: stdenv.mkDerivation rec {
       xorg.libX11 xorg.libXrender xorg.libXft xorg.libXt file
       alsaLib nspr nss libnotify xorg.pixman yasm mesa
       xorg.libXScrnSaver xorg.scrnsaverproto pysqlite
-      xorg.libXext xorg.xextproto sqlite unzip makeWrapper
+      xorg.libXext xorg.xextproto /* sqlite */ unzip makeWrapper
       hunspell libevent libstartup_notification libvpx /* cairo */
       gstreamer gst_plugins_base icu libpng jemalloc
       libpulseaudio # only headers are needed
@@ -56,7 +56,7 @@ common = { pname, version, sha1 }: stdenv.mkDerivation rec {
       "--enable-system-ffi"
       "--enable-system-hunspell"
       "--enable-system-pixman"
-      "--enable-system-sqlite"
+      #"--enable-system-sqlite"
       #"--enable-system-cairo"
       "--enable-gstreamer"
       "--enable-startup-notification"
@@ -73,7 +73,7 @@ common = { pname, version, sha1 }: stdenv.mkDerivation rec {
     ++ lib.optional enableGTK3 "--enable-default-toolkit=cairo-gtk3"
     ++ (if debugBuild then [ "--enable-debug" "--enable-profiling" ]
                       else [ "--disable-debug" "--enable-release"
-                             "--enable-optimize${lib.optionalString (stdenv.system == "i686-linux") "=-O1"}"
+                             "--enable-optimize"
                              "--enable-strip" ])
     ++ lib.optional enableOfficialBranding "--enable-official-branding";
 
@@ -83,7 +83,11 @@ common = { pname, version, sha1 }: stdenv.mkDerivation rec {
     ''
       mkdir ../objdir
       cd ../objdir
-      configureScript=../mozilla-*/configure
+      if [ -e ../${name} ]; then
+        configureScript=../${name}/configure
+      else
+        configureScript=../mozilla-*/configure
+      fi
     '';
 
   preInstall =
@@ -129,14 +133,14 @@ in {
 
   firefox = common {
     pname = "firefox";
-    version = "41.0.2";
-    sha1 = "5e8243cbbd3ea306bd1e5f1b16079bdcc9af95a4";
+    version = "45.0";
+    sha256 = "1wbrygxj285vs5qbpv3cq26w36bd533779mgi8d0gpxin44hzarn";
   };
 
   firefox-esr = common {
     pname = "firefox-esr";
-    version = "38.3.0esr";
-    sha1 = "57d2c255348ac13b6ffbb952c5e0d57757aa0290";
+    version = "38.6.1esr";
+    sha256 = "1zyhzczhknplxfmk2r7cczavbsml8ckyimibj2sphwdc300ls5wi";
   };
 
 }

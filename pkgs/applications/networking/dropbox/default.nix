@@ -1,6 +1,6 @@
 { stdenv, fetchurl, makeDesktopItem, makeWrapper
 , dbus_libs, gcc, glib, libdrm, libffi, libICE, libSM
-, libX11, libXmu, ncurses, popt, qt5, zlib
+, libX11, libXmu, ncurses, popt, qt5, zlib, mesa_noglu
 }:
 
 # this package contains the daemon version of dropbox
@@ -19,11 +19,11 @@
 
 let
   # NOTE: When updating, please also update in current stable, as older versions stop working
-  version = "3.10.9";
+  version = "3.14.7";
   sha256 =
     {
-      "x86_64-linux" = "1kg6x1z8if63s15464xiz59qwncb5xhv108icicb5s2yhjzzyi29";
-      "i686-linux" = "172x9f7x425w5ljr6xa0srvv19qysmvr3gs3jkbmnxfwrfxyxf79";
+      "x86_64-linux" = "1pwmghpr0kyca2biysyk90kk9k6ffv4i95vs5rq96vc0zbckws6n";
+      "i686-linux" = "08yqrxh09cfd80kbiq1f2sirx9s85acij4khpklvvwrnf2x1i1zm";
     }."${stdenv.system}" or (throw "system ${stdenv.system} not supported");
 
   arch =
@@ -44,7 +44,7 @@ let
   ldpath = stdenv.lib.makeSearchPath "lib"
     [
       dbus_libs gcc glib libdrm libffi libICE libSM libX11
-      libXmu ncurses popt qt5.base qt5.declarative qt5.webkit
+      libXmu ncurses popt qt5.qtbase qt5.qtdeclarative qt5.qtwebkit
       zlib
     ];
 
@@ -114,7 +114,8 @@ in stdenv.mkDerivation {
 
     mkdir -p "$out/bin"
     makeWrapper "$out/${appdir}/dropbox" "$out/bin/dropbox" \
-      --prefix LD_LIBRARY_PATH : "${ldpath}"
+      --prefix LD_LIBRARY_PATH : "${ldpath}" \
+      --suffix LD_LIBRARY_PATH : "${mesa_noglu}/lib"
 
     mkdir -p "$out/share/icons"
     ln -s "$out/${appdir}/images/hicolor" "$out/share/icons/hicolor"

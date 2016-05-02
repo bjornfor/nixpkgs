@@ -1,7 +1,7 @@
-From af315c076c8626292075592fab1726fcd62c3169 Mon Sep 17 00:00:00 2001
+From 51ae02d8c9de1cb93bf22b2519efb119dd2e39d9 Mon Sep 17 00:00:00 2001
 From: Thomas Tuegel <ttuegel@gmail.com>
 Date: Mon, 1 Dec 2014 17:22:55 -0600
-Subject: [PATCH 2/9] dlopen-resolv
+Subject: [PATCH 02/11] dlopen-resolv
 
 ---
  qtbase/src/network/kernel/qdnslookup_unix.cpp | 2 +-
@@ -17,7 +17,7 @@ index fa782da..912ecc7 100644
  #endif
      {
 -        lib.setFileName(QLatin1String("resolv"));
-+        lib.setFileName(QLatin1String("@glibc/lib/resolv"));
++        lib.setFileName(QLatin1String("@glibc@/lib/resolv"));
          if (!lib.load())
              return;
      }
@@ -35,5 +35,5 @@ index 90a6f76..758407a 100644
              return;
      }
 -- 
-2.5.0
+2.5.2
 

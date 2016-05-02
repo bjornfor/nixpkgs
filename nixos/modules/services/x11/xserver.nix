@@ -487,7 +487,7 @@ in
     systemd.services.display-manager =
       { description = "X11 Server";
 
-        after = [ "systemd-udev-settle.service" "local-fs.target" "acpid.service" ];
+        after = [ "systemd-udev-settle.service" "local-fs.target" "acpid.service" "systemd-logind.service" ];
 
         restartIfChanged = false;
 
@@ -516,8 +516,7 @@ in
       };
 
     services.xserver.displayManager.xserverArgs =
-      [ "-ac"
-        "-terminate"
+      [ "-terminate"
         "-logfile" "/var/log/X.${toString cfg.display}.log"
         "-config ${configFile}"
         ":${toString cfg.display}" "vt${toString cfg.tty}"

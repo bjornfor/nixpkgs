@@ -5,7 +5,6 @@
 , enableSELinux ? false
 , enableNaCl ? false
 , enableHotwording ? false
-, useOpenSSL ? false
 , gnomeSupport ? false
 , gnomeKeyringSupport ? false
 , proprietaryCodecs ? true
@@ -20,14 +19,12 @@ let
   callPackage = newScope chromium;
 
   chromium = {
-    source = callPackage ./source {
-      inherit channel;
-      # XXX: common config
-      inherit useOpenSSL;
-    };
+    upstream-info = (import ./update.nix {
+      inherit (stdenv) system;
+    }).getChannel channel;
 
     mkChromiumDerivation = callPackage ./common.nix {
-      inherit enableSELinux enableNaCl enableHotwording useOpenSSL gnomeSupport
+      inherit enableSELinux enableNaCl enableHotwording gnomeSupport
               gnomeKeyringSupport proprietaryCodecs cupsSupport pulseSupport
               hiDPISupport;
     };
@@ -59,6 +56,9 @@ let
       "x-scheme-handler/unknown"
     ];
     categories = "Network;WebBrowser";
+    extraEntries = ''
+      StartupWMClass=chromium-browser
+    '';
   };
 
   suffix = if channel != "stable" then "-" + channel else "";

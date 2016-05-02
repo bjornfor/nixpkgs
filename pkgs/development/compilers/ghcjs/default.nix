@@ -23,6 +23,7 @@
 , ghc, gmp
 , jailbreak-cabal
 
+, runCommand
 , nodejs, stdenv, filepath, HTTP, HUnit, mtl, network, QuickCheck, random, stm
 , time
 , zlib, aeson, attoparsec, bzlib, hashable
@@ -36,31 +37,19 @@
 , haddock, hspec, xhtml, primitive, cacert, pkgs
 , coreutils
 , libiconv
+
+, ghcjsBoot ? import ./ghcjs-boot.nix { inherit fetchgit runCommand; }
+, shims ? import ./shims.nix { inherit fetchFromGitHub; }
 }:
-let
-  version = "0.1.0";
-  ghcjsBoot = fetchgit {
-    url = "git://github.com/ghcjs/ghcjs-boot.git";
-    rev = "ec9f795b42b40fd24933d1672db153df5a29cc00"; # master branch
-    sha256 = "0bkvqlsgb9n0faayi4k1dlkn9cbm99a66m9nnx1kykb44qcl40yg";
-    fetchSubmodules = true;
-  };
-  shims = fetchFromGitHub {
-    owner = "ghcjs";
-    repo = "shims";
-    rev = "01e01dee31a4786b3d01092e72350b0859a9f8c9"; # master branch
-    sha256 = "01m1yhq6l71azx0zqbpzmqc6rxxf654hgjibc0lz2cg5942wh1hf";
-  };
-in mkDerivation (rec {
+let version = "0.2.0"; in
+mkDerivation (rec {
   pname = "ghcjs";
   inherit version;
-  # `src` is ghcjs's a3157072c2593debf2e45e751e9a8aa90b860b4d plus this
-  # additional dependency bump: https://github.com/ghcjs/ghcjs/pull/408
   src = fetchFromGitHub {
-    owner = "k0001";
+    owner = "ghcjs";
     repo = "ghcjs";
-    rev = "1b767e0b3dabdd1561bd17314d472651bfd9b97c";
-    sha256 = "0j4vj47qljbcbrp3md3jwxwl2kz9k85visq6yi1x8wdch4wb2kgy";
+    rev = "561365ba1667053b5dc5846e2a8edb33eaa3f6dd";
+    sha256 = "1vfa7j0ql3sng29m944iznjw9hcmyl57nfkgxa33dvi2ival8dl2";
   };
   isLibrary = true;
   isExecutable = true;
@@ -112,10 +101,14 @@ in mkDerivation (rec {
       sed -i -e 's@ \(a\|b\)/boot/[^/]\+@ \1@g' $patch
     done
   '';
+  # We build with --quick so we can build stage 2 packages separately.
+  # This is necessary due to: https://github.com/haskell/cabal/commit/af19fb2c2d231d8deff1cb24164a2bf7efb8905a
+  # Cabal otherwise fails to build: http://hydra.nixos.org/build/31824079/nixlog/1/raw
   postInstall = ''
     PATH=$out/bin:$PATH LD_LIBRARY_PATH=${gmp}/lib:${stdenv.cc}/lib64:$LD_LIBRARY_PATH \
       env -u GHC_PACKAGE_PATH $out/bin/ghcjs-boot \
         --dev \
+        --quick \
         --with-cabal ${cabal-install}/bin/cabal \
         --with-gmp-includes ${gmp}/include \
         --with-gmp-libraries ${gmp}/lib
@@ -123,7 +116,7 @@ in mkDerivation (rec {
   passthru = {
     isGhcjs = true;
     nativeGhc = ghc;
-    inherit nodejs;
+    inherit nodejs ghcjsBoot;
   };
 
   homepage = "https://github.com/ghcjs/ghcjs";

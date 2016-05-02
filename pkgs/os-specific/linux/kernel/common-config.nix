@@ -36,6 +36,9 @@ with stdenv.lib;
   SCHEDSTATS n
   DETECT_HUNG_TASK y
 
+  # Unix domain sockets.
+  UNIX y
+
   # Power management.
   ${optionalString (versionOlder version "3.19") ''
     PM_RUNTIME y
@@ -140,7 +143,9 @@ with stdenv.lib;
 
   # Video configuration.
   # Enable KMS for devices whose X.org driver supports it.
-  DRM_I915_KMS y
+  ${optionalString (versionOlder version "4.3") ''
+    DRM_I915_KMS y
+  ''}
   # Allow specifying custom EDID on the kernel command line
   DRM_LOAD_EDID_FIRMWARE y
   ${optionalString (versionOlder version "3.9") ''
@@ -327,6 +332,7 @@ with stdenv.lib;
   SERIAL_8250 y # 8250/16550 and compatible serial support
   SLIP_COMPRESSED y # CSLIP compressed headers
   SLIP_SMART y
+  HWMON y
   THERMAL_HWMON y # Hardware monitoring support
   ${optionalString (versionAtLeast version "3.15") ''
     UEVENT_HELPER n
@@ -338,6 +344,9 @@ with stdenv.lib;
   USB_EHCI_TT_NEWSCHED y # Improved transaction translator scheduling
   X86_CHECK_BIOS_CORRUPTION y
   X86_MCE y
+
+  # PCI-Expresscard hotplug support
+  ${optionalString (versionAtLeast version "3.12") "HOTPLUG_PCI_PCIE y"}
 
   # Linux containers.
   NAMESPACES? y #  Required by 'unshare' used by 'nixos-install'
