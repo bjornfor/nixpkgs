@@ -26,6 +26,8 @@ stdenv.mkDerivation rec {
   #  done
   #'';
 
+  enableParallelBuilding = true;
+
   meta = with stdenv.lib; {
     description = "MS Exchange integration through Exchange Web Services";
     license = licensees.lgpl21;
