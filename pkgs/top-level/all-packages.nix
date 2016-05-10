@@ -2662,6 +2662,10 @@ in
 
   obnam = callPackage ../tools/backup/obnam { };
 
+  oclhashcat = callPackage ../tools/security/oclhashcat {
+    cudatoolkit = cudatoolkit7;
+  };
+
   odpdown = callPackage ../tools/typesetting/odpdown {
     inherit (pythonPackages) lpod lxml mistune pillow pygments;
   };
