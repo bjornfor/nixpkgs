@@ -1997,7 +1997,10 @@ let
 
   jnettop = callPackage ../tools/networking/jnettop { };
 
-  john = callPackage ../tools/security/john { };
+  john = callPackage ../tools/security/john {
+    cudatoolkit = cudatoolkit7;
+    cudaSupport = true;
+  };
 
   jq = callPackage ../development/tools/jq {};
 

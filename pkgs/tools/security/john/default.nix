@@ -1,6 +1,8 @@
 { stdenv, fetchurl, openssl, nss, nspr, kerberos, gmp, zlib, libpcap, re2
-, writeText
+, writeText, cudaSupport ? false, cudatoolkit ? null
 }:
+
+assert cudaSupport -> cudatoolkit != null;
 
 with stdenv.lib;
 
@@ -27,7 +29,8 @@ stdenv.mkDerivation rec {
   preConfigure = "cd src";
   configureFlags = [ "--disable-native-macro" ];
 
-  buildInputs = [ openssl nss nspr kerberos gmp zlib libpcap re2 ];
+  buildInputs = [ openssl nss nspr kerberos gmp zlib libpcap re2 ]
+    ++ optional cudaSupport cudatoolkit;
   enableParallelBuilding = true;
 
   NIX_CFLAGS_COMPILE = [ "-DJOHN_SYSTEMWIDE=1" ];
