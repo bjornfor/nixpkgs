@@ -1,8 +1,5 @@
-{ stdenv, fetchzip, perl, cudatoolkit }:
+{ stdenv, fetchzip, cudatoolkit }:
 
-let
-  bits = if stdenv.system == "x86_64-linux" then "64" else "32";
-in
 stdenv.mkDerivation rec {
   name = "oclhashcat-${version}";
   version = "2016-05-11";
@@ -13,15 +10,7 @@ stdenv.mkDerivation rec {
     sha256 = "0imk5b3bbnvh4mc59rnkhw9wcafxwz1pcv7vqcpa1g7i5nzcrb5x";
   };
 
-  buildInputs = [ perl cudatoolkit ];
-
-  ### Old stuff from 'hashcat' (not oclhashcat)
-  #preBuild = ''
-  #  export GCC=gcc
-  #  export CUDA=${cudatoolkit}
-  #'';
-  #buildFlags = [ "linux${bits}" "rules_optimize" "kernels_all" ];
-  #configureFlags = "--help"; 
+  buildInputs = [ cudatoolkit ];
 
   makeFlags = [ "PREFIX=$(out)" ];
   preInstall = ''
@@ -33,6 +22,6 @@ stdenv.mkDerivation rec {
     homepage  = "http://hashcat.net/oclhashcat/";
     license = licenses.mit;
     platforms = platforms.linux;
-    maintainers = [ bjornfor ];
+    maintainers = [ maintainers.bjornfor ];
   };
 }
