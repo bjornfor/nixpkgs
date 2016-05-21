@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, python, tcl, avrgcclibc }:
+{ stdenv, fetchurl, python, tcl, avrgcclibc, binutils }:
 
 stdenv.mkDerivation rec {
   name = "simulavr-1.0.0";
@@ -8,11 +8,11 @@ stdenv.mkDerivation rec {
     sha256 = "1rwvh23rzj84pfz2lanivmm3dm5liyjdcbb8bzhvxqpa7sm3zn9r";
   };
 
-  buildInputs = [ python tcl avrgcclibc ];
+  buildInputs = [ python tcl avrgcclibc binutils ];
 
   # TODO: binutils-avr (for libbfd)
 
-  #configureFlags = "--help";
+  configureFlags = [ "--with-bfd=${binutils.out}" "--help" ];
 
   meta = with stdenv.lib; {
     description = "Simulator for Atmel AVR microcontrollers";
