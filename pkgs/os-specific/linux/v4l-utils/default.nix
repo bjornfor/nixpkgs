@@ -41,6 +41,8 @@ stdenv.mkDerivation rec {
   postFixup = ''
     # Create symlink for V4l1 compatibility
     ln -s "$dev/include/libv4l1-videodev.h" "$dev/include/videodev.h"
+    mkdir -p "$dev/include/linux/"
+    ln -s "$dev/include/libv4l1-videodev.h" "$dev/include/linux/videodev.h"
   '';
 
   nativeBuildInputs = [ pkgconfig ];
