@@ -28,10 +28,10 @@ runCommand "evolution-with-plugins" {} ''
   #!${stdenv.shell}
   set -x
   i=\$1
-  cat "\$i" | ${perl}/bin/perl -p \
-      -e "s|${evolution}|$out|g" \
-      -e "s|${evolution_data_server}|$out|g" \
-      ${stdenv.lib.concatMapStringsSep " " (x: "-e \"s|${x}|$out|g\"") plugins} \
+  cat "\$i" \
+      | ${perl}/bin/perl -pe "s|${evolution}|$out|g" \
+      | ${perl}/bin/perl -pe "s|${evolution_data_server}|$out|g" \
+      | ${stdenv.lib.concatMapStringsSep " | " (x: "${perl}/bin/perl -pe \"s|${x}|$out|g\"") plugins} \
       > "\$i.tmp"
   if test -x "\$i"; then chmod +x "\$i.tmp"; fi
   mv "\$i.tmp" "\$i"
