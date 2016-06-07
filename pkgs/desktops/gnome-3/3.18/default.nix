@@ -263,6 +263,10 @@ let
     webkitgtk = webkitgtk24x;
   };
 
+  evolution-with-plugins = callPackage ./core/evolution-with-plugins {
+    plugins = [ evolution-ews ];
+  };
+
   file-roller = callPackage ./apps/file-roller { };
 
   gedit = callPackage ./apps/gedit { };

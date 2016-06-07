@@ -12174,6 +12174,8 @@ let
 
   inherit (gnome3) evolution-ews;
 
+  inherit (gnome3) evolution-with-plugins;
+
   keepass = callPackage ../applications/misc/keepass { };
 
   keepass-keefox = callPackage ../applications/misc/keepass-plugins/keefox { };
