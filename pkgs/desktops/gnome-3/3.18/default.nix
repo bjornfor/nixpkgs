@@ -264,7 +264,6 @@ let
 
   evolution-ews = callPackage ./core/evolution-ews {
     webkitgtk = webkitgtk24x;
-    #libmsgpack = pkgs.libmsgpack_0_5;
   };
 
   file-roller = callPackage ./apps/file-roller { };
