@@ -11606,6 +11606,8 @@ let
 
   bazaarTools = callPackage ../applications/version-management/bazaar/tools.nix { };
 
+  bbe = callPackage ../applications/editors/bbe { };
+
   beast = callPackage ../applications/audio/beast {
     inherit (gnome) libgnomecanvas libart_lgpl;
     guile = guile_1_8;
