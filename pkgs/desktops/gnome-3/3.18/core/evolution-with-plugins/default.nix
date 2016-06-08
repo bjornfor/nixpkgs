@@ -4,6 +4,8 @@
 
 # Getting evolution to find external requires patching. Brute force solution:
 # make a derivation with Evolution + EDS + plugins in one store path.
+#
+# DOESN'T WORK! Binary patching ELF files like this seems to be broken.
 
 runCommand "evolution-with-plugins" {} ''
   set -x
