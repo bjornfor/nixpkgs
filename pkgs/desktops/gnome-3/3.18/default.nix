@@ -270,6 +270,8 @@ let
     plugins = [ evolution-ews ];
   };
 
+  evolution-with-plugins2 = callPackage ./core/evolution-with-plugins/default2.nix { };
+
   file-roller = callPackage ./apps/file-roller { };
 
   gedit = callPackage ./apps/gedit { };
