@@ -16,21 +16,23 @@ stdenv.mkDerivation rec {
 
   #propagatedBuildInputs = [ libsecret nss nspr libical db ];
 
-  # Make EWS install to its own directory instead of the installation directory
-  # of evolution-data-server. Found by looking at config.log in a failed build.
-  preConfigure = ''
-    sed -e "s|\<ewsdatadir=.*|ewsdatadir=$out/share/evolution-data-server/ews|" \
-        -e "s|\<privincludedir=.*|privincludedir=$out/include/evolution-data-server/ews|" \
-        -e "s|\<privlibdir=.*|privlibdir=$out/lib/evolution-data-server/ews|" \
-        -e "s|\<camel_providerdir=.*|camel_providerdir=$out/lib/evolution-data-server/camel-providers|" \
-        -e "s|\<ebook_backenddir=.*|ebook_backenddir=$out/lib/evolution-data-server/addressbook-backend|" \
-        -e "s|\<ecal_backenddir=.*|ecal_backenddir=$out/lib/evolution-data-server/calendar-backends|" \
-        -e "s|\<edataserver_privincludedir=.*|edataserver_privincludedir=$out/include/evolution-data-server|" \
-        -e "s|\<eds_moduledir=.*|eds_moduledir=$out/lib/evolution-data-server/registry-modules|" \
-        -e "s|\<errordir=.*|errordir=$out/share/evolution/errors|" \
-        -e "s|\<evo_moduledir=.*|evo_moduledir=$out/lib/evolution/modules|" \
-        -i configure
-  '';
+# UPDATE: Giving up on the idea of having split EWS package, making a "super"
+# build instead (Evolution + EDS + EWS).
+#  # Make EWS install to its own directory instead of the installation directory
+#  # of evolution-data-server. Found by looking at config.log in a failed build.
+#  preConfigure = ''
+#    sed -e "s|\<ewsdatadir=.*|ewsdatadir=$out/share/evolution-data-server/ews|" \
+#        -e "s|\<privincludedir=.*|privincludedir=$out/include/evolution-data-server/ews|" \
+#        -e "s|\<privlibdir=.*|privlibdir=$out/lib/evolution-data-server/ews|" \
+#        -e "s|\<camel_providerdir=.*|camel_providerdir=$out/lib/evolution-data-server/camel-providers|" \
+#        -e "s|\<ebook_backenddir=.*|ebook_backenddir=$out/lib/evolution-data-server/addressbook-backend|" \
+#        -e "s|\<ecal_backenddir=.*|ecal_backenddir=$out/lib/evolution-data-server/calendar-backends|" \
+#        -e "s|\<edataserver_privincludedir=.*|edataserver_privincludedir=$out/include/evolution-data-server|" \
+#        -e "s|\<eds_moduledir=.*|eds_moduledir=$out/lib/evolution-data-server/registry-modules|" \
+#        -e "s|\<errordir=.*|errordir=$out/share/evolution/errors|" \
+#        -e "s|\<evo_moduledir=.*|evo_moduledir=$out/lib/evolution/modules|" \
+#        -i configure
+#  '';
 
   # uoa irrelevant for now
   #configureFlags = [ "--disable-uoa" ]
