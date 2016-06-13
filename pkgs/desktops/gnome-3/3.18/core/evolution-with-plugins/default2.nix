@@ -1,4 +1,4 @@
-{ stdenv, evolution_data_server, evolution, evolution-ews }:
+{ stdenv, evolution_data_server, evolution, evolution-ews, wrapGAppsHook }:
 
 # Getting evolution to find external plugins requires patching. Brute force
 # solution: make a derivation with Evolution + EDS + plugins all in one store
@@ -23,6 +23,7 @@ stdenv.mkDerivation rec {
       ++ evolution_data_server.nativeBuildInputs
       ++ evolution.nativeBuildInputs
       ++ evolution-ews.nativeBuildInputs
+      ++ [ wrapGAppsHook ]
     );
 
   propagatedBuildInputs = filter (x: x != evolution && x != evolution_data_server && x != evolution-ews)
@@ -66,14 +67,6 @@ stdenv.mkDerivation rec {
     make
     make install
     popd
-
-    # Only do one fixup, because they all do the same (and wrapping programs
-    # multiple times is silly). The preFixup from Evolution seems most
-    # complete, so use that.
-    export GSETTINGS_SCHEMAS_PATH="$GSETTINGS_SCHEMAS_PATH:$out/share/glib-2.0/schemas"
-    preFixup() {
-      ${evolution.preFixup or ""}
-    }
 
     fixupPhase
   '';
