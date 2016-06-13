@@ -1,4 +1,4 @@
-{ stdenv, evolution_data_server, evolution, evolution-ews, wrapGAppsHook }:
+{ stdenv, gnome3, evolution_data_server, evolution, evolution-ews, wrapGAppsHook }:
 
 # Getting evolution to find external plugins requires patching. Brute force
 # solution: make a derivation with Evolution + EDS + plugins all in one store
