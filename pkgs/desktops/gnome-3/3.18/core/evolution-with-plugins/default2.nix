@@ -52,11 +52,15 @@ stdenv.mkDerivation rec {
     echo "### Building evolution"
     echo
     pushd ${evolution.name}
-    export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE ${evolution.NIX_CFLAGS_COMPILE}"
+    # Save NIX_CFLAGS_COMPILE
+    export ORIG_NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE"
+    export NIX_CFLAGS_COMPILE="$ORIG_NIX_CFLAGS_COMPILE ${evolution.NIX_CFLAGS_COMPILE}"
     ./configure --prefix=$out ${concatStringsSep " " evolution.configureFlags or []}
     make
     make install
     popd
+    # Restore NIX_CFLAGS_COMPILE
+    export NIX_CFLAGS_COMPILE="$ORIG_NIX_CFLAGS_COMPILE"
 
     echo
     echo "### Building evolution-ews"
