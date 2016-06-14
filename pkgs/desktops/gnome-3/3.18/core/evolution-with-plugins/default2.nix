@@ -44,7 +44,7 @@ stdenv.mkDerivation rec {
     echo
     pushd ${evolution_data_server.name}
     ./configure --prefix=$out ${concatStringsSep " " evolution_data_server.configureFlags or []}
-    make
+    make -j $NIX_BUILD_CORES -l $NIX_BUILD_CORES
     make install
     popd
 
@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     export ORIG_NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE"
     export NIX_CFLAGS_COMPILE="$ORIG_NIX_CFLAGS_COMPILE ${evolution.NIX_CFLAGS_COMPILE}"
     ./configure --prefix=$out ${concatStringsSep " " evolution.configureFlags or []}
-    make
+    make -j $NIX_BUILD_CORES -l $NIX_BUILD_CORES
     make install
     popd
     # Restore NIX_CFLAGS_COMPILE
@@ -68,7 +68,7 @@ stdenv.mkDerivation rec {
     pushd ${evolution-ews.name}
     ${evolution-ews.preConfigure or ""}
     ./configure --prefix=$out ${concatStringsSep " " evolution-ews.configureFlags or []}
-    make
+    make -j $NIX_BUILD_CORES -l $NIX_BUILD_CORES
     make install
     popd
 
