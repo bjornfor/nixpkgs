@@ -66,7 +66,7 @@ stdenv.mkDerivation rec {
     echo "### Building evolution-ews"
     echo
     pushd ${evolution-ews.name}
-    ${evolution-ews.preConfigure}
+    ${evolution-ews.preConfigure or ""}
     ./configure --prefix=$out ${concatStringsSep " " evolution-ews.configureFlags or []}
     make -j $NIX_BUILD_CORES -l $NIX_BUILD_CORES
     make install
