@@ -33,9 +33,9 @@ in
 
   config = mkIf config.services.gnome3.evolution-data-server.enable {
 
-    environment.systemPackages = [ gnome3.evolution-with-plugins ];
+    environment.systemPackages = [ gnome3.evolution_data_server ];
 
-    services.dbus.packages = [ gnome3.evolution-with-plugins ];
+    services.dbus.packages = [ gnome3.evolution_data_server ];
 
   };
 
