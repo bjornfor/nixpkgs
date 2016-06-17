@@ -88,7 +88,7 @@ let
 
   evince = callPackage ./core/evince { }; # ToDo: dbus would prevent compilation, enable tests
 
-  evolution_data_server = callPackage ./core/evolution-data-server { };
+  evolution_data_server_plain = callPackage ./core/evolution-data-server { };
 
   gconf = callPackage ./core/gconf { };
 
@@ -258,19 +258,28 @@ let
 
   cheese = callPackage ./apps/cheese { };
 
-  evolution = callPackage ./apps/evolution {
+  evolution_plain = callPackage ./apps/evolution {
     webkitgtk = webkitgtk24x;
+    evolution_data_server = evolution_data_server_plain;
   };
 
-  evolution-ews = callPackage ./core/evolution-ews {
+  evolution-ews_plain = callPackage ./core/evolution-ews {
     webkitgtk = webkitgtk24x;
+    evolution = evolution_plain;
+    evolution_data_server = evolution_data_server_plain;
   };
 
-  evolution-with-plugins = callPackage ./core/evolution-with-plugins {
-    plugins = [ evolution-ews ];
-  };
+  #evolution-with-plugins = callPackage ./core/evolution-with-plugins {
+  #  plugins = [ evolution-ews ];
+  #};
 
-  evolution-with-plugins2 = callPackage ./core/evolution-with-plugins/default2.nix { };
+  evolution-with-plugins = callPackage ./core/evolution-with-plugins/default2.nix {
+    evolution_data_server = evolution_data_server_plain;
+    evolution = evolution_plain;
+    evolution-ews = evolution-ews_plain;
+  };
+  evolution = evolution-with-plugins;
+  evolution_data_server = evolution-with-plugins;
 
   file-roller = callPackage ./apps/file-roller { };
 
