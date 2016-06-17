@@ -30,6 +30,9 @@ stdenv.mkDerivation rec {
     (evolution_data_server.propagatedBuildInputs
       ++ evolution.propagatedBuildInputs
       ++ evolution-ews.propagatedBuildInputs
+      ++ evolution_data_server.propagatedNativeBuildInputs
+      ++ evolution.propagatedNativeBuildInputs
+      ++ evolution-ews.propagatedNativeBuildInputs
     );
 
   buildCommand = ''
