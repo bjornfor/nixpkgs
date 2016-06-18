@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, bash, mono, makeDesktopItem }:
+{ stdenv, fetchurl, bash, mono, makeDesktopItem, gtk }:
 
 stdenv.mkDerivation rec {
   name = "repetier-host-1.6.1";
@@ -32,6 +32,7 @@ stdenv.mkDerivation rec {
     # repetier developers wants the binary to be named 'repetierHost'
     cat > "$out/bin/repetierHost" << __EOF__
     #!${bash}/bin/bash
+    export LD_LIBRARY_PATH=${stdenv.lib.makeLibraryPath [gtk]}
     exec ${mono}/bin/mono "$out"/repetier-host/RepetierHost.exe -home "$out"
     __EOF__
     chmod a+x "$out/bin/"*
