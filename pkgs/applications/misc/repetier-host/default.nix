@@ -1,11 +1,11 @@
 { stdenv, fetchurl, bash, mono, makeDesktopItem }:
 
 stdenv.mkDerivation rec {
-  name = "repetier-host-1.5.4";
+  name = "repetier-host-1.6.1";
 
   src = fetchurl {
-    url = "http://download.repetier.com/files/host/linux/repetierHostLinux_1_5_4.tgz";
-    sha256 = "08j35n6d01gkfn6xy5j46cdlxa1yxqhmg0zjxbg9h43rgml01can";
+    url = "http://download.repetier.com/files/host/linux/repetierHostLinux_1_6_1.tgz";
+    sha256 = "1y7vkp7gxkygla27fh0z48qj0v91j53vxwcc3aidn2f515mhjq9k";
   };
 
   desktopItem = makeDesktopItem {
