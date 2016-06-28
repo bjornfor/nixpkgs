@@ -21,10 +21,14 @@ stdenv.mkDerivation rec {
     "ETCDIR=$(out)/etc"
   ];
 
-  # Should this stay impure?
-  #postPatch = ''
-  #  sed -i -e "s|/etc/x2go/|$out/etc/x2go/|g" x2goserver/lib/x2godbwrapper.pm
-  #'';
+  # * Should x2godbwrapper.pm stay impure?
+  # * The 'build-indep' Makefile target builds HTML files from manpages with
+  #   the man2html tool. Since we don't have that in nixpkgs, and it's not
+  #   strictly needed for the software to work, I'm patching it out.
+  postPatch = ''
+    sed -i -e "s|/etc/x2go/|$out/etc/x2go/|g" x2goserver/lib/x2godbwrapper.pm
+    sed -i -e "s|build: build-arch build-indep|build: build-arch|" Makefile
+  '';
 
   postInstall = ''
     for prog in "$out/bin/"* "$out/sbin/"*; do
