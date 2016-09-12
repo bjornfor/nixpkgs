@@ -12699,6 +12699,8 @@ with pkgs;
     guile = guile_1_8;
   };
 
+  beyondcompare = callPackage ../applications/version-management/beyondcompare { };
+
   bibletime = callPackage ../applications/misc/bibletime { };
 
   bitkeeper = callPackage ../applications/version-management/bitkeeper {
