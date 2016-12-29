@@ -1,6 +1,8 @@
 { fetchurl, stdenv, gettext, gdbm, libtool, pam, readline
 , ncurses, gnutls, sasl, fribidi, gss , mysql, guile, texinfo,
-  gnum4, dejagnu, nettools }:
+  gnum4, dejagnu, nettools
+, sendmailPath ? "/var/setuid-wrappers/sendmail"
+}:
 
 stdenv.mkDerivation rec {
   name = "mailutils-2.2";
@@ -17,6 +19,8 @@ stdenv.mkDerivation rec {
   configureFlags = [
     "--with-gsasl"
     "--with-gssapi=${gss}"
+    #"--with-path-sendmail=${sendmailPath}"
+    "--with-path-sendmail=search:sendmail:/var/setuid-wrappers:/usr/sbin:/sbin\ sendmail" # should have " sendmail" (mind the space) at the end
   ];
 
   buildInputs =
