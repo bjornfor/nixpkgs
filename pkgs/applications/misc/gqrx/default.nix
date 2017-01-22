@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, qt4, qmake4Hook, gnuradio, boost, gnuradio-osmosdr
+{ stdenv, fetchFromGitHub, qmakeHook, qtbase, qtsvg, gnuradio, boost, gnuradio-osmosdr
 # drivers (optional):
 , rtl-sdr, hackrf
 , pulseaudioSupport ? true, libpulseaudio
@@ -8,19 +8,19 @@ assert pulseaudioSupport -> libpulseaudio != null;
 
 stdenv.mkDerivation rec {
   name = "gqrx-${version}";
-  version = "2.5.3";
+  version = "2.6";
 
   src = fetchFromGitHub {
     owner = "csete";
     repo = "gqrx";
     rev = "v${version}";
-    sha256 = "02pavd1kc0gsnrl18bfa01r2f3j4j05zly4a8zwss9yrsgf8432x";
+    sha256 = "12hhvdr8icgmh6rds1awbx501xqxkqb9bpg9zasx4znf71hfrkx6";
   };
 
-  nativeBuildInputs = [ qmake4Hook ];
+  nativeBuildInputs = [ qmakeHook ];
 
   buildInputs = [
-    qt4 gnuradio boost gnuradio-osmosdr rtl-sdr hackrf
+    qtbase qtsvg gnuradio boost gnuradio-osmosdr rtl-sdr hackrf
   ] ++ stdenv.lib.optionals pulseaudioSupport [ libpulseaudio ];
 
   enableParallelBuilding = true;
