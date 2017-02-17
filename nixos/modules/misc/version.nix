@@ -6,7 +6,6 @@ let
   cfg = config.system;
 
   releaseFile  = "${toString pkgs.path}/.version";
-  suffixFile   = "${toString pkgs.path}/.version-suffix";
   revisionFile = "${toString pkgs.path}/.git-revision";
   gitRepo      = "${toString pkgs.path}/.git";
   gitCommitId  = lib.substring 0 7 (commitIdFromGitRepo gitRepo);
@@ -51,13 +50,6 @@ in
       type = types.str;
       default = fileContents releaseFile;
       description = "The NixOS release (e.g. <literal>16.03</literal>).";
-    };
-
-    nixosVersionSuffix = mkOption {
-      internal = true;
-      type = types.str;
-      default = if pathExists suffixFile then fileContents suffixFile else "pre-git";
-      description = "The NixOS version suffix (e.g. <literal>1160.f2d4ee1</literal>).";
     };
 
     nixosRevision = mkOption {

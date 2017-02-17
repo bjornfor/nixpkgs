@@ -2,7 +2,7 @@
 # and nixos-14.04). The channel is updated every time the ‘tested’ job
 # succeeds, and all other jobs have finished (they may fail).
 
-{ nixpkgs ? { outPath = ./..; revCount = 56789; shortRev = "gfedcba"; }
+{ nixpkgs ? { outPath = ./..; version = "0"; }
 , stableBranch ? false
 , supportedSystems ? [ "x86_64-linux" "i686-linux" ]
 }:

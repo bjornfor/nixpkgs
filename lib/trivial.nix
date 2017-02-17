@@ -91,9 +91,22 @@ rec {
 
   # Return the Nixpkgs version number.
   nixpkgsVersion =
-    let suffixFile = ../.version-suffix; in
-    fileContents ../.version
-    + (if pathExists suffixFile then fileContents suffixFile else "pre-git");
+    let
+      versionFile = ../.version;
+      suffixFile = ../.version-suffix;
+      gitDescribe = import ./git-describe.nix {
+        inherit (import ../. {}) runCommand git;
+      };
+      gitRepo = ./..;
+      gitRepoGitDir = gitRepo + "/.git";
+    in
+      if pathExists suffixFile then
+        (fileContents ../.version) + (fileContents suffixFile)
+      else
+        if pathExists gitRepoGitDir then
+          gitDescribe { repo = gitRepo; }
+        else
+          "0";
 
   # Whether we're being called by nix-shell.
   inNixShell = builtins.getEnv "IN_NIX_SHELL" != "";

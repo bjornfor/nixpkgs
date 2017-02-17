@@ -5,11 +5,7 @@
 { officialRelease ? false
 , buildInputs ? []
 , name ? "source-tarball"
-, version ? "0"
-, versionSuffix ?
-    if officialRelease
-    then ""
-    else "pre${toString (src.rev or src.revCount or "")}"
+, version ? (src.version or "0")
 , src, stdenv, autoconf, automake, libtool
 , # By default, provide all the GNU Build System as input.
   bootstrapBuildInputs ? [ autoconf automake libtool ]
@@ -37,12 +33,11 @@ stdenv.mkDerivation (
     # Autoconfiscate the sources.
     autoconfPhase = ''
       export VERSION=${version}
-      export VERSION_SUFFIX=${versionSuffix}
 
       # `svn-revision' is set for backwards compatibility with the old
       # Nix buildfarm.  (Stratego/XT's autoxt uses it.  We should
       # update it eventually.)
-      echo ${versionSuffix} | sed -e s/pre// > svn-revision
+      echo ${version} | sed -e s/pre// > svn-revision
 
       eval "$preAutoconf"
 
@@ -78,7 +73,7 @@ stdenv.mkDerivation (
 
   # And finally, our own stuff.
   {
-    name = name + "-" + version + versionSuffix;
+    name = name + "-" + version;
 
     buildInputs = buildInputs ++ bootstrapBuildInputs;
 
@@ -113,8 +108,7 @@ stdenv.mkDerivation (
     '';
 
     passthru = {
-      inherit src;
-      version = version + versionSuffix;
+      inherit src version;
     };
 
     meta = (if args ? meta then args.meta else {}) // {

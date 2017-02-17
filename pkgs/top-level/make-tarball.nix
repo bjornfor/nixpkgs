@@ -15,15 +15,13 @@ releaseTools.sourceTarball rec {
   src = nixpkgs;
 
   inherit officialRelease;
-  version = pkgs.lib.fileContents ../../.version;
-  versionSuffix = "pre${toString nixpkgs.revCount}.${nixpkgs.shortRev}";
+  version = nixpkgs.version;
 
   buildInputs = [ nix.out jq ];
 
   configurePhase = ''
     eval "$preConfigure"
-    releaseName=nixpkgs-$VERSION$VERSION_SUFFIX
-    echo -n $VERSION_SUFFIX > .version-suffix
+    releaseName=nixpkgs-$VERSION
     echo "release name is $releaseName"
   '';
 

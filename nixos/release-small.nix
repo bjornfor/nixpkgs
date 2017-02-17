@@ -2,7 +2,7 @@
 # small subset of Nixpkgs, mostly useful for servers that need fast
 # security updates.
 
-{ nixpkgs ? { outPath = ./..; revCount = 56789; shortRev = "gfedcba"; }
+{ nixpkgs ? { outPath = ./..; version = "0"; }
 , stableBranch ? false
 , supportedSystems ? [ "x86_64-linux" ] # no i686-linux
 }:

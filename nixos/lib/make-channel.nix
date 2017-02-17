@@ -1,4 +1,4 @@
-{ pkgs, nixpkgs, version, versionSuffix }:
+{ pkgs, nixpkgs, version }:
 
 pkgs.releaseTools.makeSourceTarball {
   name = "nixos-channel";
@@ -6,15 +6,14 @@ pkgs.releaseTools.makeSourceTarball {
   src = nixpkgs;
 
   officialRelease = false; # FIXME: fix this in makeSourceTarball
-  inherit version versionSuffix;
+  inherit version;
 
   buildInputs = [ pkgs.nix ];
 
   distPhase = ''
     rm -rf .git
-    echo -n $VERSION_SUFFIX > .version-suffix
     echo -n ${nixpkgs.rev or nixpkgs.shortRev} > .git-revision
-    releaseName=nixos-$VERSION$VERSION_SUFFIX
+    releaseName=nixos-$VERSION
     mkdir -p $out/tarballs
     cp -prd . ../$releaseName
     chmod -R u+w ../$releaseName

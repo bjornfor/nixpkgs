@@ -21,7 +21,6 @@ let
         ln -s . $out/nixos/nixpkgs
       fi
       rm -rf $out/nixos/.git
-      echo -n ${config.system.nixosVersionSuffix} > $out/nixos/.version-suffix
     '';
 
 in

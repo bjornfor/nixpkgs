@@ -1,4 +1,4 @@
-{ nixpkgs ? { outPath = ./..; revCount = 56789; shortRev = "gfedcba"; }
+{ nixpkgs ? { outPath = ./..; version = "0"; } #revCount = 56789; shortRev = "gfedcba"; }
 , stableBranch ? false
 , supportedSystems ? [ "x86_64-linux" "i686-linux" ]
 }:
@@ -7,9 +7,7 @@ with import ../lib;
 
 let
 
-  version = fileContents ../.version;
-  versionSuffix =
-    (if stableBranch then "." else "pre") + "${toString nixpkgs.revCount}.${nixpkgs.shortRev}";
+  version = version;
 
   forAllSystems = genAttrs supportedSystems;
 
@@ -37,8 +35,7 @@ let
 
 
   versionModule =
-    { system.nixosVersionSuffix = versionSuffix;
-      system.nixosRevision = nixpkgs.rev or nixpkgs.shortRev;
+    { system.nixosVersion = nixpkgs.version;
     };
 
 
