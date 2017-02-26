@@ -33,10 +33,38 @@ let
         family=$(sed -nr 's/.*#%#\s+family\s*=\s*(\S+)\s*/\1/p' $file)
         cap=$(sed -nr 's/.*#%#\s+capabilities\s*=\s*(.+)/\1/p' $file)
 
-        wrapProgram $file \
-          --set PATH "/run/wrappers/bin:/run/current-system/sw/bin:/run/current-system/sw/bin" \
-          --set MUNIN_LIBDIR "${pkgs.munin}/lib" \
-          --set MUNIN_PLUGSTATE "/var/run/munin"
+        path="/run/wrappers/bin:/run/current-system/sw/bin:/run/current-system/sw/bin"
+        munin_libdir="${pkgs.munin}/lib"
+        munin_plugstate="/var/run/munin"
+
+        # Wildcard plugins get broken by wrapProgram due to the modified argv0.
+        # Try our best to not use wrapProgram.
+        chmod +w "$file"
+        if [ "$(head -c+2 "$file")" = '#!' ]; then
+            case "$(head -1 "$file")" in
+                */bin/sh*|*/bin/bash*)
+                    sed -e "2i # Added by NixOS:" \
+                        -e "2i PATH=\"$path\"" \
+                        -e "2i MUNIN_LIBDIR=\"$munin_libdir\"" \
+                        -e "2i MUNIN_PLUGSTATE=\"$munin_plugstate\"" \
+                        -i "$file"
+                    ;;
+                */bin/perl*)
+                    sed -e "2i # Added by NixOS:" \
+                        -e "2i \$ENV{PATH}='$path';" \
+                        -e "2i \$ENV{MUNIN_LIBDIR}='$munin_libdir';" \
+                        -e "2i \$ENV{MUNIN_PLUGSTATE}='$munin_plugstate';" \
+                        -i "$file"
+                    ;;
+            esac
+        else
+            # missing shebang => not a script.
+            # fallback to wrapping
+            wrapProgram "$file" \
+                --set PATH "$path" \
+                --set MUNIN_LIBDIR "$munin_libdir" \
+                --set MUNIN_PLUGSTATE "$munin_plugstate"
+        fi
 
         # munin uses markers to tell munin-node-configure what a plugin can do
         echo "#%# family=$family" >> $file
