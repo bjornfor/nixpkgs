@@ -99,13 +99,13 @@ if [ -z "$NIX_QT5_TMP" ]; then
 
     mkdir -p "$NIX_QT5_TMP/nix-support"
     for subdir in bin include lib mkspecs share; do
-        mkdir "$NIX_QT5_TMP/$subdir"
+        mkdir -p "$NIX_QT5_TMP/$subdir"
         echo "$subdir/" >> "$NIX_QT5_TMP/nix-support/qt-inputs"
     done
 
     postHooks+=(_qtSetCMakePrefix)
 
-    cp "@dev@/bin/qmake" "$NIX_QT5_TMP/bin"
+    ln -sf "@dev@/bin/qmake" "$NIX_QT5_TMP/bin"
     echo "bin/qmake" >> "$NIX_QT5_TMP/nix-support/qt-inputs"
 
     cat >"$NIX_QT5_TMP/bin/qt.conf" <<EOF
