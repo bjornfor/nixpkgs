@@ -12,12 +12,17 @@ stdenv.mkDerivation rec {
 
   hardeningDisable = [ "format" ];
 
-  patches = [ ./path-to-cat.patch ./no-gets.patch ./scm_c_string.patch ];
+  patches = [ ./path-to-cat.patch ./no-gets.patch ./scm_c_string.patch
+    ./mailutils-find-sendmail-on-nixos.patch
+  ];
 
   configureFlags = [
     "--with-gsasl"
     "--with-gssapi=${gss}"
+    "--with-path-sendmail=sendmail"
   ];
+
+  #preBuild = "false";
 
   buildInputs =
    [ gettext gdbm libtool pam readline ncurses

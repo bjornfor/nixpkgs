@@ -1,0 +1,48 @@
+diff -uNr mailutils-2.2.orig/libproto/mailer/prog.c mailutils-2.2/libproto/mailer/prog.c
+--- mailutils-2.2.orig/libproto/mailer/prog.c	2010-01-13 15:16:02.000000000 +0100
++++ mailutils-2.2/libproto/mailer/prog.c	2016-12-25 21:13:33.027094291 +0100
+@@ -125,8 +125,8 @@
+   if ((status = mu_url_sget_path (mailer->url, &path)))
+     return status;
+   
+-  if (access (path, X_OK) == -1)
+-    return errno;
++  //if (access (path, X_OK) == -1)
++    //return errno;
+ 
+   mu_progmailer_set_debug (pm, mailer->debug);
+   status = mu_progmailer_set_command (pm, path);
+diff -uNr mailutils-2.2.orig/mail/send.c mailutils-2.2/mail/send.c
+--- mailutils-2.2.orig/mail/send.c	2010-02-18 10:37:08.000000000 +0100
++++ mailutils-2.2/mail/send.c	2016-12-25 19:53:36.067798573 +0100
+@@ -595,8 +595,9 @@
+ 		{
+ 		  char *sendmail;
+ 		  if (mailvar_get (&sendmail, "sendmail",
+-				   mailvar_type_string, 0) == 0)
++				   mailvar_type_string, 1) == 0)
+ 		    {
++		      util_error("sendmail == %s\n", sendmail);
+ 		      if (sendmail[0] == '/')
+ 			msg_to_pipe (sendmail, msg);
+ 		      else
+@@ -612,6 +613,7 @@
+ 				  mu_debug_set_level (debug,
+ 						      MU_DEBUG_LEVEL_UPTO (MU_DEBUG_PROT));
+ 				}
++			      util_error("mailer == %s\n", mailer);
+ 			      status = mu_mailer_open (mailer, MU_STREAM_RDWR);
+ 			      if (status == 0)
+ 				{
+diff -uNr mailutils-2.2.orig/paths mailutils-2.2/paths
+--- mailutils-2.2.orig/paths	2010-01-13 15:16:05.000000000 +0100
++++ mailutils-2.2/paths	2016-12-25 20:43:12.977760649 +0100
+@@ -64,7 +64,7 @@
+ # file <confpaths.h> (located in include/).
+ #
+ 
+-PATH_SENDMAIL	search:sendmail:/usr/sbin:/usr/lib:/etc /usr/sbin/sendmail
++PATH_SENDMAIL	search:sendmail
+ PATH_MAILDIR	d /var/mail /var/spool/mail
+ PATH_DEV	d /dev/
+ # PATH_TTY_PFX is a prefix that's removed to get a tty device's name
