@@ -106,42 +106,17 @@ stdenv.mkDerivation rec {
         ln -s $out/nix-support/propagated-native-build-inputs $out/nix-support/propagated-user-env-packages
     fi
 
-    perl5lib="$out/lib/perl5/site_perl:${with perlPackages; stdenv.lib.makePerlPath [
+    for file in "$out"/bin/munindoc "$out"/sbin/munin-* "$out"/lib/munin-* "$out"/www/cgi/*; do
+        # don't wrap .jar files
+        case "$file" in
+            *.jar) continue;;
+        esac
+        wrapProgram "$file" \
+          --set PERL5LIB "$out/lib/perl5/site_perl:${with perlPackages; stdenv.lib.makePerlPath [
                 Log4Perl IOSocketInet6 Socket6 URI DBFile DateManip
                 HTMLTemplate FileCopyRecursive FCGI NetCIDR NetSNMP NetServer
                 ListMoreUtils TimeHiRes DBDPg LWPUserAgent rrdtool
                 ]}"
-
-    # Parts of Munin get broken by wrapProgram due to the modified argv0.
-    # Try our best to not use wrapProgram.
-    for file in "$out"/bin/munindoc "$out"/sbin/munin-* "$out"/lib/munin-* "$out"/www/cgi/*; do
-        if [ "$(head -c+2 "$file")" = '#!' ]; then
-            case "$(head -1 "$file")" in
-                */bin/sh*|*/bin/bash*)
-                    sed -e "2i # Added by Nixpkgs:" \
-                        -e "2i PERL5LIB=\"$perl5lib\"" \
-                        -i "$file"
-                    ;;
-                */bin/perl*)
-                    sed -e "2i # Added by Nixpkgs:" \
-                        -e "2i use lib split(\":\", \"$perl5lib\");" \
-                        -i "$file"
-                    ;;
-            esac
-        else
-            # missing shebang => not a script.
-            case "$file" in
-                *.jar)
-                    # don't wrap .jar files
-                    continue
-                    ;;
-                *)
-                    # fallback to wrapping
-                    wrapProgram "$file" \
-                        --set PERL5LIB "$perl5lib"
-                    ;;
-            esac
-        fi
     done
   '';
 
