@@ -1,4 +1,5 @@
 { stdenv, fetchurl, bash, cabextract, curl, gnupg, libX11, mesa, perl, wineStaging
+, strace
  }:
 
 let
@@ -46,9 +47,17 @@ in stdenv.mkDerivation rec {
   };
 
   postInstall = ''
+    echo "Running pipelight-plugin --create-mozilla-plugins"
+    ${strace}/bin/strace -o$out/out.strace -f -s300 \
     $out/bin/pipelight-plugin --create-mozilla-plugins
+
+    cp config.make "$out"
+
+    cp -r $out/lib/pipelight/. $out/lib/mozilla/plugins/
   '';
 
+    #substituteInPlace $out/share/pipelight/install-dependency \
+    #  --replace cabextract ${cabextract}/bin/cabextract
   preFixup = ''
     sed -e "s|\<cabextract\>|${cabextract}/bin/cabextract|g" \
         -i "$out/share/pipelight/install-dependency"
