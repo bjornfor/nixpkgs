@@ -26,10 +26,14 @@ in stdenv.mkDerivation rec {
 
   configurePhase = ''
     patchShebangs .
+    grep -rl "/usr/bin/id" . | \
+        while read f; do
+            sed -i -e "s|/usr/bin/id|id|g" "$f"
+        done
     ./configure \
       --prefix=$out \
       --moz-plugin-path=$out/${mozillaPluginPath} \
-      --wine-path=${wine_custom} \
+      --wine-path=${wine_custom}/bin/wine \
       --gpg-exec=${gnupg}/bin/gpg2 \
       --bash-interp=${bash}/bin/bash \
       --downloader=${curl.bin}/bin/curl
@@ -46,8 +50,8 @@ in stdenv.mkDerivation rec {
   '';
 
   preFixup = ''
-    substituteInPlace $out/share/pipelight/install-dependency \
-      --replace cabextract ${cabextract}/bin/cabextract
+    sed -e "s|\<cabextract\>|${cabextract}/bin/cabextract|g" \
+        -i "$out/share/pipelight/install-dependency"
   '';
 
   enableParallelBuilding = true;
