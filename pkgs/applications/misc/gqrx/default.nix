@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, qmakeHook, qtbase, qtsvg, gnuradio, boost, gnuradio-osmosdr
+{ stdenv, fetchFromGitHub, cmake, qtbase, qtsvg, gnuradio, boost, gnuradio-osmosdr
 # drivers (optional):
 , rtl-sdr, hackrf
 , pulseaudioSupport ? true, libpulseaudio
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
     sha256 = "0lhma6wqkka007vq4jpxxz0ws9kvg0b5insgfbplqhpb0pp99rc9";
   };
 
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ cmake ];
 
   buildInputs = [
     qtbase qtsvg gnuradio boost gnuradio-osmosdr rtl-sdr hackrf
