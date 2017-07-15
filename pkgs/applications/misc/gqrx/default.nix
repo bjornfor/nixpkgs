@@ -25,17 +25,21 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  # Work around broken auto-detection in gqrx
+  # * Work around broken auto-detection in gqrx
+  # * Require Qt Svg module, or else there will be build time failure
   preConfigure = ''
     export GNURADIO_OSMOSDR_DIR="${gnuradio-osmosdr}"
+
+    sed -e "s/\(find_package(Qt5 COMPONENTS Core Network Widgets\)/\1 Svg/" \
+        -i CMakeLists.txt
   '';
 
   postInstall = ''
     mkdir -p "$out/share/applications"
     mkdir -p "$out/share/icons"
 
-    cp gqrx.desktop "$out/share/applications/"
-    cp resources/icons/gqrx.svg "$out/share/icons/"
+    cp ../gqrx.desktop "$out/share/applications/"
+    cp ../resources/icons/gqrx.svg "$out/share/icons/"
   '';
 
   meta = with stdenv.lib; {
