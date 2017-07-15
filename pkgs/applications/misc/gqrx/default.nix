@@ -25,6 +25,11 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
+  # Work around broken auto-detection in gqrx
+  preConfigure = ''
+    export GNURADIO_OSMOSDR_DIR="${gnuradio-osmosdr}"
+  '';
+
   postInstall = ''
     mkdir -p "$out/share/applications"
     mkdir -p "$out/share/icons"
