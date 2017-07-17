@@ -1,4 +1,5 @@
 { stdenv, fetchFromGitHub, cmake, qtbase, qtsvg, gnuradio, boost, gnuradio-osmosdr
+, lndir
 # drivers (optional):
 , rtl-sdr, hackrf
 , pulseaudioSupport ? true, libpulseaudio
@@ -40,6 +41,18 @@ stdenv.mkDerivation rec {
 
     cp ../gqrx.desktop "$out/share/applications/"
     cp ../resources/icons/gqrx.svg "$out/share/icons/"
+
+    # Make qtsvg plugin discoverable for gqrx (Qt) without needing to install
+    # it (qtsvg) in a profile. The trick relies on a nixpkgs Qt patch to look
+    # for plugins relative to $PATH/bin.
+    dst="$out/${qtbase.qtPluginPrefix}"
+    mkdir -p "$dst"
+    for pkg in "${qtsvg.bin}"; do
+        src="$pkg/${qtbase.qtPluginPrefix}"
+        if [ -d "$src" ]; then
+            "${lndir}/bin/lndir" "$src" "$dst"
+        fi
+    done
   '';
 
   meta = with stdenv.lib; {
