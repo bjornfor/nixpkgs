@@ -27,7 +27,8 @@ stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   # * Work around broken auto-detection in gqrx
-  # * Require Qt Svg module, or else there will be build time failure
+  # * Require Qt Svg module, or else there will be build time failure (REMOVE
+  #   ON NEXT VERSION BUMP)
   preConfigure = ''
     export GNURADIO_OSMOSDR_DIR="${gnuradio-osmosdr}"
 
