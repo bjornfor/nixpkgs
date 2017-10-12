@@ -5,8 +5,6 @@ with lib;
 let
 
   cfg = config.services.openldap;
-  openldap = pkgs.openldap;
-
   configFile = pkgs.writeText "slapd.conf" cfg.extraConfig;
 
 in
@@ -28,26 +26,26 @@ in
       };
 
       user = mkOption {
-        type = types.string;
+        type = types.str;
         default = "openldap";
         description = "User account under which slapd runs.";
       };
 
       group = mkOption {
-        type = types.string;
+        type = types.str;
         default = "openldap";
         description = "Group account under which slapd runs.";
       };
 
       urlList = mkOption {
-        type = types.listOf types.string;
+        type = types.listOf types.str;
         default = [ "ldap:///" ];
         description = "URL list slapd should listen on.";
         example = [ "ldaps:///" ];
       };
 
       dataDir = mkOption {
-        type = types.string;
+        type = types.path;
         default = "/var/db/openldap";
         description = "The database directory.";
       };
@@ -63,23 +61,23 @@ in
         type = types.lines;
         default = "";
         description = "
-          slapd.conf configuration
+          Text to be added to slapd.conf.
         ";
         example = literalExample ''
-            '''
+          '''
             include ${pkgs.openldap.out}/etc/schema/core.schema
             include ${pkgs.openldap.out}/etc/schema/cosine.schema
             include ${pkgs.openldap.out}/etc/schema/inetorgperson.schema
             include ${pkgs.openldap.out}/etc/schema/nis.schema
 
-            database bdb 
-            suffix dc=example,dc=org 
-            rootdn cn=admin,dc=example,dc=org 
+            database mdb
+            suffix dc=example,dc=org
+            rootdn cn=admin,dc=example,dc=org
             # NOTE: change after first start
             rootpw secret
-            directory /var/db/openldap
-            '''
-          '';
+            directory ''${config.services.openldap.dataDir}
+          '''
+        '';
       };
     };
 
@@ -90,7 +88,16 @@ in
 
   config = mkIf config.services.openldap.enable {
 
-    environment.systemPackages = [ openldap ];
+    assertions = [
+      { assertion = cfg.extraConfig != "" || cfg.configDir != null;
+        message = ''
+          Neither services.openldap.extraConfig nor services.openldap.configDir
+          is set, this cannot work.
+        '';
+      }
+    ];
+
+    environment.systemPackages = [ pkgs.openldap ];
 
     systemd.services.openldap = {
       description = "LDAP server";
@@ -102,7 +109,12 @@ in
         mkdir -p ${cfg.dataDir}
         chown -R ${cfg.user}:${cfg.group} ${cfg.dataDir}
       '';
-      serviceConfig.ExecStart = "${openldap.out}/libexec/slapd -u ${cfg.user} -g ${cfg.group} -d 0 -h \"${concatStringsSep " " cfg.urlList}\" ${if cfg.configDir == null then "-f "+configFile else "-F "+cfg.configDir}";
+      serviceConfig.ExecStart = "${pkgs.openldap.out}/libexec/slapd"
+        + " -u ${cfg.user} -g ${cfg.group} -d 0"
+        + " -h \"${concatStringsSep " " cfg.urlList}\""
+        + " ${if cfg.configDir == null
+              then "-f " + configFile
+              else "-F " + cfg.configDir}";
     };
 
     users.extraUsers.openldap =
