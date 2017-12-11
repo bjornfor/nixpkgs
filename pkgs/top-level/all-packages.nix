@@ -12311,6 +12311,8 @@ with pkgs;
     devicemapper = devicemapper.override {enable_dmeventd = true;};
   };
 
+  dracut = callPackage ../os-specific/linux/dracut { };
+
   drbd = callPackage ../os-specific/linux/drbd { };
 
   dstat = callPackage ../os-specific/linux/dstat { };

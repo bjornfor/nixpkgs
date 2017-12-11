@@ -1,0 +1,22 @@
+diff --git a/dracut.sh b/dracut.sh
+index 635fdb1c..b99cc066 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -34,6 +34,8 @@ readonly dracut_cmd="$(readlink -f $0)"
+ 
+ set -o pipefail
+ 
++dracutbasedir=@libdir@/dracut
++
+ usage() {
+     [[ $dracutbasedir ]] || dracutbasedir=/usr/lib/dracut
+     if [[ -f $dracutbasedir/dracut-version.sh ]]; then
+@@ -681,7 +683,7 @@ for f in $(dropindirs_sort ".conf" "$confdir" "$dracutbasedir/dracut.conf.d"); d
+     [[ -e $f ]] && . "$f"
+ done
+ 
+-DRACUT_PATH=${DRACUT_PATH:-/sbin /bin /usr/sbin /usr/bin}
++DRACUT_PATH=${PATH:-/sbin /bin /usr/sbin /usr/bin}
+ 
+ for i in $DRACUT_PATH; do
+     rl=$i
