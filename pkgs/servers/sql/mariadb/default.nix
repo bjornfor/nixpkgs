@@ -66,7 +66,7 @@ common = rec { # attributes common to both builds
     ;
 
   preConfigure = ''
-    cmakeFlags="$cmakeFlags -DINSTALL_INCLUDEDIR=''${!outputDev}/include/mysql"
+    cmakeFlags="$cmakeFlags -DINSTALL_INCLUDEDIR=include/mysql"
   '';
 
   postInstall = ''
@@ -110,6 +110,7 @@ client = stdenv.mkDerivation (common // {
   postInstall = common.postInstall + ''
     moveToOutput bin/mysql_config "$dev"
     moveToOutput bin/mariadb_config "$dev"
+    moveToOutput include/mysql "$dev"
   '';
 
   enableParallelBuilding = true; # the client should be OK
