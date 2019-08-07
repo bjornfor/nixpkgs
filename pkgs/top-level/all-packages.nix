@@ -6627,6 +6627,8 @@ in
 
   bash-completion = callPackage ../shells/bash/bash-completion { };
 
+  complete-alias = callPackage ../shells/bash/complete-alias { };
+
   gradle-completion = callPackage ../shells/zsh/gradle-completion { };
 
   nix-bash-completions = callPackage ../shells/bash/nix-bash-completions { };
