@@ -110,8 +110,8 @@ client = stdenv.mkDerivation (common // {
   postInstall = common.postInstall + ''
     moveToOutput bin/mysql_config "$dev"
     moveToOutput bin/mariadb_config "$dev"
-    moveToOutput include/mysql "$dev"
   '';
+    #moveToOutput include/mysql "$dev"
 
   enableParallelBuilding = true; # the client should be OK
 });
