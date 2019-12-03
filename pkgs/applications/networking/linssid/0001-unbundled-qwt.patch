@@ -1,43 +1,64 @@
-From e57f22a5089f194013534c9a9bbc42ee639297f1 Mon Sep 17 00:00:00 2001
-From: Thomas Tuegel <ttuegel@gmail.com>
-Date: Sat, 19 Sep 2015 11:10:32 -0500
-Subject: [PATCH] unbundled qwt
-
----
- linssid-app/linssid-app.pro | 4 +---
- linssid.pro                 | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
 diff --git a/linssid-app/linssid-app.pro b/linssid-app/linssid-app.pro
-index 26f61e7..7b80b60 100644
+index 13fd75e..111eb88 100644
 --- a/linssid-app/linssid-app.pro
 +++ b/linssid-app/linssid-app.pro
-@@ -19,13 +19,11 @@ QMAKE_CC = gcc
+@@ -3,7 +3,7 @@ DESTDIR = dist/Release/GNU-Linux-x86
+ TARGET = linssid
+ VERSION = 3.6
+ CONFIG -= debug_and_release app_bundle lib_bundle
+-CONFIG += release 
++CONFIG += release
+ PKGCONFIG +=
+ QT = core gui widgets svg
+ SOURCES += AboutBox.cpp Getter.cpp MainForm.cpp main.cpp prefsDialog.cpp
+@@ -12,35 +12,36 @@ FORMS += AboutBox.ui MainForm.ui prefsDialog.ui
+ RESOURCES +=
+ TRANSLATIONS +=
+ OBJECTS_DIR = build/Release/GNU-Linux-x86
+-MOC_DIR = 
+-RCC_DIR = 
+-UI_DIR = 
++MOC_DIR =
++RCC_DIR =
++UI_DIR =
+ QMAKE_CC = gcc
  QMAKE_CXX = g++
- DEFINES += 
- INCLUDEPATH += /usr/include/qt5
--# /usr/local/qwt-6.1.0/include
--INCLUDEPATH += ../qwt-lib/src
- # LIBS += /usr/lib/x86_64-linux-gnu/libboost_regex.a 
- # LIBS += -lboost_regex
- LIBS += -l:libboost_regex.a
- # /usr/local/qwt-6.1.0/lib/libqwt.a
--LIBS += ../qwt-lib/lib/libqwt.a
+-DEFINES += 
+-INCLUDEPATH += /usr/include/boost
+-INCLUDEPATH += /usr/include/qt5
+-INCLUDEPATH += /usr/include/qwt
++DEFINES +=
++#INCLUDEPATH += /usr/include/boost
++#INCLUDEPATH += /usr/include/qt5
++#INCLUDEPATH += /usr/include/qwt
+ LIBS += -lboost_regex
+-LIBS += /usr/lib/libqwt-qt5.so.6
++#LIBS += /usr/lib/libqwt-qt5.so.6
 +LIBS += -lqwt
  QMAKE_CXXFLAGS += -std=c++11
  #
  TARGET = linssid
-diff --git a/linssid.pro b/linssid.pro
-index 42dc277..26d1a2c 100644
---- a/linssid.pro
-+++ b/linssid.pro
-@@ -1,5 +1,3 @@
- TEMPLATE = subdirs
- CONFIG += ordered
--SUBDIRS = qwt-lib \
--          linssid-app
--linssid-app.depends = qwt-lib
-+SUBDIRS = linssid-app
--- 
-2.5.2
-
+-target.path = /usr/sbin
++target.path = $$PREFIX/sbin
+ INSTALLS += target
+-targetexec.path = /usr/bin
++targetexec.path = $$PREFIX/bin
+ targetexec.files=linssid-pkexec
+ INSTALLS += targetexec
+-dtop.path = /usr/share/applications
++dtop.path = $$PREFIX/share/applications
+ dtop.files = linssid.desktop
+ INSTALLS += dtop
+-icons.path = /usr/share/pixmaps
++icons.path = $$PREFIX/share/pixmaps
+ icons.files = *.png *.svg
+ INSTALLS += icons
+-data.path = /usr/share/linssid
++data.path = $$PREFIX/share/linssid
+ data.files = oui.datc linssid-pause.png linssid-start.png
+ INSTALLS += data
+-policy.path = /usr/share/polkit-1/actions
++policy.path = $$PREFIX/share/polkit-1/actions
+ policy.files = com.warsev.pkexec.linssid.policy
+ INSTALLS += policy
+ 
