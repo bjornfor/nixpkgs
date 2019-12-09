@@ -271,27 +271,7 @@ let
             # The test cannot access the network, so any packages we
             # need must be included in the VM.
             system.extraDependencies = with pkgs;
-              [ sudo
-                libxml2.bin
-                libxslt.bin
-                desktop-file-utils
-                docbook5
-                docbook_xsl_ns
-                unionfs-fuse
-                ntp
-                nixos-artwork.wallpapers.simple-dark-gray-bottom
-                perlPackages.XMLLibXML
-                perlPackages.ListCompare
-                shared-mime-info
-                texinfo
-                xorg.lndir
-
-                # add curl so that rather than seeing the test attempt to download
-                # curl's tarball, we see what it's trying to download
-                curl
-              ]
-              ++ optional (bootLoader == "grub" && grubVersion == 1) pkgs.grub
-              ++ optionals (bootLoader == "grub" && grubVersion == 2) [ pkgs.grub2 pkgs.grub2_efi ];
+              optional (bootLoader == "grub" && grubVersion == 1) pkgs.grub;
 
             nix.binaryCaches = mkForce [ ];
             nix.extraOptions =

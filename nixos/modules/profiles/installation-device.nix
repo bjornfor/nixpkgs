@@ -96,6 +96,28 @@ with lib;
         stdenvNoCC # for runCommand
         busybox
         jq # for closureInfo
+
+        # Deps needed for a minimal offline install
+        grub
+        grub2
+        grub2_efi
+        sudo
+        libxml2.bin
+        libxslt.bin
+        desktop-file-utils
+        docbook5
+        docbook_xsl_ns
+        unionfs-fuse
+        ntp
+        nixos-artwork.wallpapers.simple-dark-gray-bottom
+        perlPackages.XMLLibXML
+        perlPackages.ListCompare
+        shared-mime-info
+        texinfo
+        xorg.lndir
+        # add curl so that rather than seeing offline builds attempt to download
+        # curl's tarball, we see what it's trying to download
+        curl
       ];
 
     # Show all debug messages from the kernel but don't log refused packets
