@@ -10,6 +10,7 @@ use JSON::PP;
 
 STDOUT->autoflush(1);
 
+print "bjornf: was here\n";
 my $out = $ENV{"out"};
 
 my @pathsToLink = split ' ', $ENV{"pathsToLink"};
@@ -231,10 +232,10 @@ foreach my $relName (sort keys %symlinks) {
     my $abs = "$out" . "$extraPrefix" . "/$relName";
     next unless isInPathsToLink $relName;
     if ($target eq "") {
-        #print "creating directory $relName\n";
+        print "creating directory $relName\n";
         mkpath $abs or die "cannot create directory `$abs': $!";
     } else {
-        #print "creating symlink $relName to $target\n";
+        print "creating symlink $relName to $target\n";
         symlink $target, $abs ||
             die "error creating link `$abs': $!";
         $nrLinks++;
