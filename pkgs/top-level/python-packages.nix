@@ -3816,6 +3816,47 @@ in {
     inherit (pkgs) libasyncns;
   };
 
+  # FIXME: only llvmPackages_12 currently has the python changes required.
+  #libclang_latest = (toPythonModule (pkgs.llvmPackages_latest.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang = (toPythonModule (pkgs.llvmPackages.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_5 = (toPythonModule (pkgs.llvmPackages_5.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_6 = (toPythonModule (pkgs.llvmPackages_6.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_7 = (toPythonModule (pkgs.llvmPackages_7.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_8 = (toPythonModule (pkgs.llvmPackages_8.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_9 = (toPythonModule (pkgs.llvmPackages_9.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_10 = (toPythonModule (pkgs.llvmPackages_10.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  #libclang_11 = (toPythonModule (pkgs.llvmPackages_11.libclang.override {
+  #  python3 = python;
+  #})).python;
+
+  libclang_12 = (toPythonModule (pkgs.llvmPackages_12.libclang.override {
+    python3 = python;
+  })).python;
+
   libcloud = callPackage ../development/python-modules/libcloud { };
 
   libcst = callPackage ../development/python-modules/libcst { };

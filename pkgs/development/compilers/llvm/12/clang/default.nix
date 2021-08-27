@@ -2,10 +2,11 @@
 , buildLlvmTools
 , fixDarwinDylibNames
 , enableManpages ? false
+, callPackage
 }:
 
 let
-  self = stdenv.mkDerivation ({
+  self = stdenv.mkDerivation (rec {
     pname = "clang";
     inherit version;
 
@@ -48,6 +49,11 @@ let
         src = ../../clang-11-12-LLVMgold-path.patch;
         libllvmLibdir = "${libllvm.lib}/lib";
       })
+      ./cindex-library-path.patch
+      #(substituteAll {
+      #  src = ./cindex-library-path.patch;
+      #  libclangPath = LIBCLANG_PATH;
+      #})
     ];
 
     postPatch = ''
@@ -57,11 +63,23 @@ let
 
       # Patch for standalone doc building
       sed -i '1s,^,find_package(Sphinx REQUIRED)\n,' docs/CMakeLists.txt
+
+      # Fixup the @libclangPath@ added by ./cindex-library-path.patch
+      export libclangPath=${LIBCLANG_PATH}
+      substituteAllInPlace ./bindings/python/clang/cindex.py
     '' + lib.optionalString stdenv.hostPlatform.isMusl ''
       sed -i -e 's/lgcc_s/lgcc_eh/' lib/Driver/ToolChains/*.cpp
     '';
 
     outputs = [ "out" "lib" "dev" "python" ];
+
+    LIBCLANG_PATH = "${placeholder "lib"}/lib/libclang" +
+      stdenv.targetPlatform.extensions.sharedLibrary;
+
+    #preConfigure = ''
+    #  grep "library_path =" bindings/python/clang/cindex.py
+    #  false
+    #'';
 
     postInstall = ''
       ln -sv $out/bin/clang $out/bin/cpp
@@ -79,6 +97,14 @@ let
         mv $out/bin/set-xcode-analyzer $python/bin
       fi
       mv $out/share/clang/*.py $python/share/clang
+
+      mkdir -p $python/${python3.sitePackages}/
+      cp -r ../bindings/python/clang/ $python/${python3.sitePackages}/
+      if ! [ -f "$LIBCLANG_PATH" ]; then
+          echo "error: could not find libclang at $LIBCLANG_PATH" >&2
+          exit 1
+      fi
+
       rm $out/bin/c-index-test
 
       mkdir -p $dev/bin
@@ -88,6 +114,10 @@ let
     passthru = {
       isClang = true;
       inherit libllvm;
+      tests = {
+        # FIXME: make callPackage use the local libclang... somehow...
+        cindex-simple = callPackage ./test-cindex/default.nix {};
+      };
     };
 
     meta = llvm_meta // {

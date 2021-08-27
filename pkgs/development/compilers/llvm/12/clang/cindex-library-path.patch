@@ -1,0 +1,13 @@
+Author: Bjørn Forsman <bjorn.forsman@gmail.com>
+diff -uNr clang-12.0.1.src.orig/bindings/python/clang/cindex.py clang-12.0.1.src/bindings/python/clang/cindex.py
+--- clang-12.0.1.src.orig/bindings/python/clang/cindex.py	2021-08-23 21:07:57.028279200 +0200
++++ clang-12.0.1.src/bindings/python/clang/cindex.py	2021-08-24 13:10:34.788622326 +0200
+@@ -4096,7 +4096,7 @@
+ 
+ class Config(object):
+     library_path = None
+-    library_file = None
++    library_file = "@libclangPath@"
+     compatibility_check = True
+     loaded = False
+ 
