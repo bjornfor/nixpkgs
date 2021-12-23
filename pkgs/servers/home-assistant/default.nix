@@ -233,6 +233,15 @@ in with py.pkgs; buildPythonApplication rec {
     yarl
     # Not in setup.py, but used in homeassistant/util/package.py
     setuptools
+    # Not in setup.py, but used by NixOS services.home-assistant.enable = true.
+    aiodiscover
+    aiohttp-cors
+    gtts
+    hass-nabucasa
+    ifaddr
+    mutagen
+    pillow
+    sqlalchemy
   ] ++ lib.optionals (pythonOlder "3.9") [
     backports-zoneinfo
   ] ++ componentBuildInputs ++ extraBuildInputs;
