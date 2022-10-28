@@ -29,6 +29,22 @@ in
     (mkRenamedOptionModule [ "services" "codimd" ] [ "services" "hedgedoc" ])
     (mkRenamedOptionModule
       [ "services" "hedgedoc" "configuration" ] [ "services" "hedgedoc" "settings" ])
+    (mkRemovedOptionModule [ "services" "hedgedoc" "workDir" ] ''
+      If you want workDir != /var/lib/${name}, try bind mounts:
+
+      "/var/lib/${name}" = {
+        device = "/path/to/dir";
+        options = [ "bind" ];
+      };
+    '')
+    (mkRemovedOptionModule [ "services" "hedgedoc" "uploadsPath" ] ''
+      If you want uploadsPath != /var/lib/${name}/uploads, try bind mounts:
+
+      "/var/lib/${name}/uploads" = {
+        device = "/path/to/dir";
+        options = [ "bind" ];
+      };
+    '')
   ];
 
   options.services.hedgedoc = {
@@ -39,14 +55,6 @@ in
       default = [];
       description = lib.mdDoc ''
         Groups to which the service user should be added.
-      '';
-    };
-
-    workDir = mkOption {
-      type = types.path;
-      default = "/var/lib/${name}";
-      description = lib.mdDoc ''
-        Working directory for the HedgeDoc service.
       '';
     };
 
@@ -346,14 +354,6 @@ in
         description = lib.mdDoc ''
           Path to the slide template file.
           (Non-canonical paths are relative to HedgeDoc's base directory)
-        '';
-      };
-      uploadsPath = mkOption {
-        type = types.str;
-        default = "${cfg.workDir}/uploads";
-        defaultText = literalExpression "/var/lib/${name}/uploads";
-        description = lib.mdDoc ''
-          Path under which uploaded files are saved.
         '';
       };
       sessionName = mkOption {
@@ -1037,8 +1037,6 @@ in
       description = "HedgeDoc service user";
       group = name;
       extraGroups = cfg.groups;
-      home = cfg.workDir;
-      createHome = true;
       isSystemUser = true;
     };
 
@@ -1050,15 +1048,14 @@ in
         ${pkgs.envsubst}/bin/envsubst \
           -o ${cfg.workDir}/config.json \
           -i ${prettyJSON cfg.settings}
-        mkdir -p ${cfg.settings.uploadsPath}
       '';
       serviceConfig = {
-        WorkingDirectory = cfg.workDir;
-        StateDirectory = [ cfg.workDir cfg.settings.uploadsPath ];
+        WorkingDirectory = "/var/lib/${name}";
+        StateDirectory = [ name "${name}/uploads" ];
         ExecStart = "${cfg.package}/bin/hedgedoc";
         EnvironmentFile = mkIf (cfg.environmentFile != null) [ cfg.environmentFile ];
         Environment = [
-          "CMD_CONFIG_FILE=${cfg.workDir}/config.json"
+          "CMD_CONFIG_FILE=/var/lib/${name}/config.json"
           "NODE_ENV=production"
         ];
         Restart = "always";
