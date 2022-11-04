@@ -4,19 +4,22 @@ stdenv.mkDerivation rec {
   pname = "linssid";
   version = "3.6";
 
-  src2 = fetchurl {
+  src = fetchurl {
     url = "mirror://sourceforge/project/linssid/LinSSID_${version}/linssid_${version}.orig.tar.gz";
     sha256 = "1774wcr90jk0zil3psd545zz60l5f57bys366492b3vh7zliwc2p";
   };
-  src = ../../../../linssid-3.6/.;
+  #src = ~/inbox/linssid;
 
   nativeBuildInputs = [ pkg-config qmake wrapQtAppsHook ];
+
   buildInputs = [ qtbase qtsvg boost qwt6_1 ];
 
   #patches = [ ./0001-unbundled-qwt.patch ];
 
   #qmakeFlags = [ "PREFIX=/foobar" ];
+
   postUnpack = "set -x";
+
   preFixup = ''
     find "$out"
     ls -l "$out/bin/linssid" || true
