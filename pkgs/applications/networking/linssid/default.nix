@@ -10,6 +10,13 @@ stdenv.mkDerivation rec {
   };
   #src = ~/inbox/linssid;
 
+  postUnpack = ''
+    ls -l
+    false
+  '';
+
+  #sourceRoot = "linssid-app";
+
   nativeBuildInputs = [ pkg-config qmake wrapQtAppsHook ];
 
   buildInputs = [ qtbase qtsvg boost qwt6_1 ];
@@ -17,8 +24,6 @@ stdenv.mkDerivation rec {
   #patches = [ ./0001-unbundled-qwt.patch ];
 
   #qmakeFlags = [ "PREFIX=/foobar" ];
-
-  postUnpack = "set -x";
 
   preFixup = ''
     find "$out"
