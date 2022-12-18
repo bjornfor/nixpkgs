@@ -5,9 +5,10 @@
 
 stdenv.mkDerivation rec {
   pname = "pulseview";
-  version = "0.4.2";
+  version = "0.x.x-dev";
 
-  src = builtins.fetchGit /home/bf/inbox/pulseview;
+  #src = builtins.fetchGit /home/bf/inbox/pulseview;
+  src = builtins.fetchGit "git://sigrok.org/pulseview.git";
   #src = fetchurl {
   #  url = "https://sigrok.org/download/source/pulseview/${pname}-${version}.tar.gz";
   #  sha256 = "1jxbpz1h3m1mgrxw74rnihj8vawgqdpf6c33cqqbyd8v7rxgfhph";
