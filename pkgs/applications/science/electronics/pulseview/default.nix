@@ -1,18 +1,19 @@
-{ mkDerivation, lib, fetchurl, fetchpatch, pkg-config, cmake, glib, boost, libsigrok
+{ lib, stdenv, fetchurl, fetchpatch, pkg-config, cmake, glib, boost, libsigrok
 , libsigrokdecode, libserialport, libzip, udev, libusb1, libftdi1, glibmm
-, pcre, python3, qtbase, qtsvg, qttools
+, pcre, python3, qtbase, qtsvg, qttools, wrapQtAppsHook
 }:
 
-mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "pulseview";
   version = "0.4.2";
 
-  src = fetchurl {
-    url = "https://sigrok.org/download/source/pulseview/${pname}-${version}.tar.gz";
-    sha256 = "1jxbpz1h3m1mgrxw74rnihj8vawgqdpf6c33cqqbyd8v7rxgfhph";
-  };
+  src = builtins.fetchGit /home/bf/inbox/pulseview;
+  #src = fetchurl {
+  #  url = "https://sigrok.org/download/source/pulseview/${pname}-${version}.tar.gz";
+  #  sha256 = "1jxbpz1h3m1mgrxw74rnihj8vawgqdpf6c33cqqbyd8v7rxgfhph";
+  #};
 
-  nativeBuildInputs = [ cmake pkg-config ];
+  nativeBuildInputs = [ cmake pkg-config wrapQtAppsHook ];
 
   buildInputs = [
     glib boost libsigrok libsigrokdecode libserialport libzip udev libusb1 libftdi1 glibmm
@@ -23,10 +24,10 @@ mkDerivation rec {
   patches = [
     # Allow building with glib 2.68
     # PR at https://github.com/sigrokproject/pulseview/pull/39
-    (fetchpatch {
-      url = "https://github.com/sigrokproject/pulseview/commit/fb89dd11f2a4a08b73c498869789e38677181a8d.patch";
-      sha256 = "07ifsis9jlc0jjp2d11f7hvw9kaxcbk0a57h2m4xsv1d7vzl9yfh";
-    })
+    #(fetchpatch {
+    #  url = "https://github.com/sigrokproject/pulseview/commit/fb89dd11f2a4a08b73c498869789e38677181a8d.patch";
+    #  sha256 = "07ifsis9jlc0jjp2d11f7hvw9kaxcbk0a57h2m4xsv1d7vzl9yfh";
+    #})
   ];
 
   meta = with lib; {
