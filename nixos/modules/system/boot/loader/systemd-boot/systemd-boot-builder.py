@@ -204,8 +204,95 @@ def get_profiles() -> List[str]:
     else:
         return []
 
+
+def set_up_esp(esp_dir: str) -> None:
+    if os.getenv("NIXOS_INSTALL_BOOTLOADER") == "1":
+        # bootctl uses fopen() with modes "wxe" and fails if the file exists.
+        if os.path.exists(f"{esp_dir}/loader/loader.conf"):
+            os.unlink(f"{esp_dir}/loader/loader.conf")
+
+        flags = []
+
+        if "@canTouchEfiVariables@" != "1":
+            flags.append("--no-variables")
+
+        if "@graceful@" == "1":
+            flags.append("--graceful")
+
+        subprocess.check_call(["@systemd@/bin/bootctl", f"--esp-path={esp_path}"] + flags + ["install"])
+    else:
+        # Update bootloader to latest if needed
+        available_out = subprocess.check_output(["@systemd@/bin/bootctl", "--version"], universal_newlines=True).split()[2]
+        installed_out = subprocess.check_output(["@systemd@/bin/bootctl", f"--esp-path={esp_path}", "status"], universal_newlines=True)
+
+        # See status_binaries() in systemd bootctl.c for code which generates this
+        installed_match = re.search(r"^\W+File:.*/EFI/(?:BOOT|systemd)/.*\.efi \(systemd-boot ([\d.]+[^)]*)\)$",
+                      installed_out, re.IGNORECASE | re.MULTILINE)
+
+        available_match = re.search(r"^\((.*)\)$", available_out)
+
+        if installed_match is None:
+            raise Exception("could not find any previously installed systemd-boot")
+
+        if available_match is None:
+            raise Exception("could not determine systemd-boot version")
+
+        installed_version = installed_match.group(1)
+        available_version = available_match.group(1)
+
+        if installed_version < available_version:
+            print("updating systemd-boot from %s to %s" % (installed_version, available_version))
+            subprocess.check_call(["@systemd@/bin/bootctl", f"--esp-path={esp_path}", "update"])
+
+    mkdir_p(f"{esp_path}/efi/nixos")
+    mkdir_p(f"{esp_path}/loader/entries")
+
+    gens = get_generations()
+    for profile in get_profiles():
+        gens += get_generations(profile)
+    remove_old_entries(gens)
+    for gen in gens:
+        try:
+            write_entry(*gen, machine_id)
+            for specialisation in get_specialisations(*gen):
+                write_entry(*specialisation, machine_id)
+            if os.readlink(system_dir(*gen)) == args.default_config:
+                write_loader_conf(*gen)
+        except OSError as e:
+            profile = f"profile '{gen.profile}'" if gen.profile else "default profile"
+            print("ignoring {} in the list of boot entries because of the following error:\n{}".format(profile, e), file=sys.stderr)
+
+    for root, _, files in os.walk(f'{esp_path}/efi/nixos/.extra-files', topdown=False):
+        relative_root = root.removeprefix(f"{esp_path}/efi/nixos/.extra-files").removeprefix("/")
+        actual_root = os.path.join(esp_path, relative_root)
+
+        for file in files:
+            actual_file = os.path.join(actual_root, file)
+
+            if os.path.exists(actual_file):
+                os.unlink(actual_file)
+            os.unlink(os.path.join(root, file))
+
+        if not len(os.listdir(actual_root)):
+            os.rmdir(actual_root)
+        os.rmdir(root)
+
+    mkdir_p(f"{esp_path}/efi/nixos/.extra-files")
+
+    subprocess.check_call("@copyExtraFiles@")
+
+    # Since fat32 provides little recovery facilities after a crash,
+    # it can leave the system in an unbootable state, when a crash/outage
+    # happens shortly after an update. To decrease the likelihood of this
+    # event sync the efi filesystem after each update.
+    rc = libc.syncfs(os.open(esp_path, os.O_RDONLY))
+    if rc != 0:
+        print(f"could not sync {esp_path}: {}".format(os.strerror(rc)), file=sys.stderr)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description='Update NixOS-related systemd-boot files')
+    parser.add_argument('--efi-path', required=True, help='Path to the EFI System Partition mount point')
     parser.add_argument('default_config', metavar='DEFAULT-CONFIG', help='The default NixOS config to boot')
     args = parser.parse_args()
 
@@ -227,88 +314,7 @@ def main() -> None:
         warnings.warn("NIXOS_INSTALL_GRUB env var deprecated, use NIXOS_INSTALL_BOOTLOADER", DeprecationWarning)
         os.environ["NIXOS_INSTALL_BOOTLOADER"] = "1"
 
-    if os.getenv("NIXOS_INSTALL_BOOTLOADER") == "1":
-        # bootctl uses fopen() with modes "wxe" and fails if the file exists.
-        if os.path.exists("@efiSysMountPoint@/loader/loader.conf"):
-            os.unlink("@efiSysMountPoint@/loader/loader.conf")
-
-        flags = []
-
-        if "@canTouchEfiVariables@" != "1":
-            flags.append("--no-variables")
-
-        if "@graceful@" == "1":
-            flags.append("--graceful")
-
-        subprocess.check_call(["@systemd@/bin/bootctl", "--esp-path=@efiSysMountPoint@"] + flags + ["install"])
-    else:
-        # Update bootloader to latest if needed
-        available_out = subprocess.check_output(["@systemd@/bin/bootctl", "--version"], universal_newlines=True).split()[2]
-        installed_out = subprocess.check_output(["@systemd@/bin/bootctl", "--esp-path=@efiSysMountPoint@", "status"], universal_newlines=True)
-
-        # See status_binaries() in systemd bootctl.c for code which generates this
-        installed_match = re.search(r"^\W+File:.*/EFI/(?:BOOT|systemd)/.*\.efi \(systemd-boot ([\d.]+[^)]*)\)$",
-                      installed_out, re.IGNORECASE | re.MULTILINE)
-
-        available_match = re.search(r"^\((.*)\)$", available_out)
-
-        if installed_match is None:
-            raise Exception("could not find any previously installed systemd-boot")
-
-        if available_match is None:
-            raise Exception("could not determine systemd-boot version")
-
-        installed_version = installed_match.group(1)
-        available_version = available_match.group(1)
-
-        if installed_version < available_version:
-            print("updating systemd-boot from %s to %s" % (installed_version, available_version))
-            subprocess.check_call(["@systemd@/bin/bootctl", "--esp-path=@efiSysMountPoint@", "update"])
-
-    mkdir_p("@efiSysMountPoint@/efi/nixos")
-    mkdir_p("@efiSysMountPoint@/loader/entries")
-
-    gens = get_generations()
-    for profile in get_profiles():
-        gens += get_generations(profile)
-    remove_old_entries(gens)
-    for gen in gens:
-        try:
-            write_entry(*gen, machine_id)
-            for specialisation in get_specialisations(*gen):
-                write_entry(*specialisation, machine_id)
-            if os.readlink(system_dir(*gen)) == args.default_config:
-                write_loader_conf(*gen)
-        except OSError as e:
-            profile = f"profile '{gen.profile}'" if gen.profile else "default profile"
-            print("ignoring {} in the list of boot entries because of the following error:\n{}".format(profile, e), file=sys.stderr)
-
-    for root, _, files in os.walk('@efiSysMountPoint@/efi/nixos/.extra-files', topdown=False):
-        relative_root = root.removeprefix("@efiSysMountPoint@/efi/nixos/.extra-files").removeprefix("/")
-        actual_root = os.path.join("@efiSysMountPoint@", relative_root)
-
-        for file in files:
-            actual_file = os.path.join(actual_root, file)
-
-            if os.path.exists(actual_file):
-                os.unlink(actual_file)
-            os.unlink(os.path.join(root, file))
-
-        if not len(os.listdir(actual_root)):
-            os.rmdir(actual_root)
-        os.rmdir(root)
-
-    mkdir_p("@efiSysMountPoint@/efi/nixos/.extra-files")
-
-    subprocess.check_call("@copyExtraFiles@")
-
-    # Since fat32 provides little recovery facilities after a crash,
-    # it can leave the system in an unbootable state, when a crash/outage
-    # happens shortly after an update. To decrease the likelihood of this
-    # event sync the efi filesystem after each update.
-    rc = libc.syncfs(os.open("@efiSysMountPoint@", os.O_RDONLY))
-    if rc != 0:
-        print("could not sync @efiSysMountPoint@: {}".format(os.strerror(rc)), file=sys.stderr)
+    set_up_esp(args.efi_path)
 
 
 if __name__ == '__main__':

@@ -132,8 +132,7 @@ let
           machine.succeed("nixos-install < /dev/null >&2")
 
       with subtest("Shutdown system after installation"):
-          machine.succeed("umount /mnt/boot || true")
-          machine.succeed("umount /mnt")
+          machine.succeed("umount -R /mnt")
           machine.succeed("sync")
           machine.shutdown()
 
@@ -543,6 +542,40 @@ in {
           "mkdir -p /mnt/boot",
           "mount LABEL=BOOT /mnt/boot",
       )
+    '';
+  };
+
+  systemd-boot-mirrored-boots = makeInstallerTest "systemd-boot-mirrored-boots" {
+    createPartitions = ''
+      machine.succeed(
+          "flock /dev/vda parted --script /dev/vda -- mklabel gpt"
+          + " mkpart ESP fat32 1M 100MiB"  # /boot
+          + " set 1 boot on"
+          + " mkpart ESP fat32 100MiB 200MiB"  # /boot2
+          + " set 1 boot on"
+          + " mkpart primary linux-swap 200MiB 1024MiB"
+          + " mkpart primary ext2 1024MiB -1MiB",  # /
+          "udevadm settle",
+          "mkswap /dev/vda3 -L swap",
+          "swapon -L swap",
+          "mkfs.ext3 -L nixos /dev/vda4",
+          "mount LABEL=nixos /mnt",
+          "mkfs.vfat -n BOOT /dev/vda1",
+          "mkdir -p /mnt/boot",
+          "mount LABEL=BOOT /mnt/boot",
+          "mkfs.vfat -n BOOT2 /dev/vda2",
+          "mkdir -p /mnt/boot2",
+          "mount LABEL=BOOT2 /mnt/boot2",
+      )
+    '';
+    bootLoader = "systemd-boot";
+    extraConfig = ''
+      #fileSystems."/boot2" = {
+      #  device = "/dev/disk/by-label/BOOT2";
+      #};
+      boot.loader.systemd-boot.mirroredBoots = [
+        { path = "/boot2"; }
+      ];
     '';
   };
 

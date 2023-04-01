@@ -39,6 +39,32 @@ in
     '';
   };
 
+  mirrored-boots = makeTest {
+    name = "systemd-boot-mirrored-boots";
+    meta.maintainers = with pkgs.lib.maintainers; [ bjornfor ];
+
+    nodes.machine = { pkgs, lib, ... }: {
+      imports = [ common ];
+      virtualisation.emptyDiskImages = [ 512 ];
+      virtualisation.fileSystems."/boot2".device = "/dev/vdc";
+      boot.loader.systemd-boot.mirroredBoots = [
+        #{ path = "/boot2" = device = "/dev/disk/by-id/..."; }
+      ];
+    };
+
+    testScript = ''
+      machine.start()
+      machine.wait_for_unit("multi-user.target")
+
+      #machine.succeed(
+      #    "test -e /boot/loader/entries/nixos-generation-1-specialisation-something.conf"
+      #)
+      #machine.succeed(
+      #    "grep -q 'title NixOS (something)' /boot/loader/entries/nixos-generation-1-specialisation-something.conf"
+      #)
+    '';
+  };
+
   # Check that specialisations create corresponding boot entries.
   specialisation = makeTest {
     name = "systemd-boot-specialisation";

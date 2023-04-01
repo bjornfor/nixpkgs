@@ -26,7 +26,7 @@ let
 
     inherit (cfg) consoleMode graceful;
 
-    inherit (efi) efiSysMountPoint canTouchEfiVariables;
+    inherit (efi) canTouchEfiVariables;
 
     memtest86 = if cfg.memtest86.enable then pkgs.memtest86-efi else "";
 
@@ -60,7 +60,10 @@ let
 
   finalSystemdBootBuilder = pkgs.writeScript "install-systemd-boot.sh" ''
     #!${pkgs.runtimeShell}
-    ${checkedSystemdBootBuilder} "$@"
+    ${checkedSystemdBootBuilder} --efi-path=${efi.efiSysMountPoint} "$@"
+    ${lib.flip lib.concatMapStrings cfg.mirroredBoots (path: ''
+      ${checkedSystemdBootBuilder} --efi-path=${path} "$@"
+    '')}
     ${cfg.extraInstallCommands}
   '';
 in {
@@ -161,6 +164,45 @@ in {
       };
     };
 
+    mirroredBoots = mkOption {
+      default = [ ];
+      example = [
+        { path = "/boot2"; }
+      ];
+      description = lib.mdDoc ''
+        Mirror the boot loader and boot configuration to extra (EFI System
+        Partition) partitions. Use fileSystems.*.device to set up the
+        mountpoints referenced here.
+      '';
+
+      type = with types; listOf (submodule {
+        options = {
+
+          path = mkOption {
+            default = null;
+            example = "/boot1/efi";
+            type = types.nullOr types.str;
+            description = lib.mdDoc ''
+              The path to the EFI System Partition mount point, where
+              systemd-boot will be written.
+            '';
+          };
+
+          #efiBootloaderId = mkOption {
+          #  default = null;
+          #  example = "NixOS-fsid";
+          #  type = types.nullOr types.str;
+          #  description = lib.mdDoc ''
+          #    The id of the bootloader to store in efi nvram.
+          #    The default is to name it NixOS and append the path or efiSysMountPoint.
+          #    This is only used if `boot.loader.efi.canTouchEfiVariables` is true.
+          #  '';
+          #};
+
+        };
+      });
+    };
+
     netbootxyz = {
       enable = mkOption {
         default = false;
@@ -241,6 +283,11 @@ in {
       {
         assertion = (config.boot.kernelPackages.kernel.features or { efiBootStub = true; }) ? efiBootStub;
         message = "This kernel does not support the EFI boot stub";
+      }
+      {
+        # TODO: (maybe) for each mirroredBoots entry, check that there's a fileSystems.FOO entry as well.
+        #assertion = ...;
+        #message = "...";
       }
     ] ++ concatMap (filename: [
       {
