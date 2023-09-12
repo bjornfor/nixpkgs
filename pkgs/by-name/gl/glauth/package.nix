@@ -6,6 +6,7 @@
 , openldap
 , libressl
 , iproute2
+, nixosTests
 }:
 
 let
@@ -98,6 +99,10 @@ buildGoModule rec {
 
   # Disable go workspaces to fix build.
   GOWORK = "off";
+
+  passthru.tests = {
+    inherit (nixosTests) glauth;
+  };
 
   meta = with lib; {
     description = "A lightweight LDAP server for development, home use, or CI";
