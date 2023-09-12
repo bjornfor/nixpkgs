@@ -307,6 +307,7 @@ in {
   gitlab = runTest ./gitlab.nix;
   gitolite = handleTest ./gitolite.nix {};
   gitolite-fcgiwrap = handleTest ./gitolite-fcgiwrap.nix {};
+  glauth = handleTest ./glauth.nix { };
   glusterfs = handleTest ./glusterfs.nix {};
   gnome = handleTest ./gnome.nix {};
   gnome-flashback = handleTest ./gnome-flashback.nix {};
