@@ -68,7 +68,7 @@ import ./make-test-python.nix {
 
     # TODO: fix
     with subtest("ldapsearch"):
-        machine.succeed("ldapsearch -LLL -H ldap://localhost:3389 -D cn=hackers,ou=superheros,dc=example,dc=com -w dogood -x -bou=superheros,ou=groups,dc=example,dc=com '(&(objectClass=*)(memberOf=ou=superheros,ou=groups,dc=example,dc=com))'")
+        machine.succeed("ldapsearch -LLL -H ldap://localhost:389 -D cn=hackers,ou=superheros,dc=example,dc=com -w dogood -x -bou=superheros,ou=groups,dc=example,dc=com '(&(objectClass=*)(memberOf=ou=superheros,ou=groups,dc=example,dc=com))'")
 
     # TODO: test login from a client machine?
   '';
