@@ -36,7 +36,7 @@ import ./make-test-python.nix {
             # employeenumber = [12345, 54321];
             # [[users.capabilities]];
             action = "search";
-            object = "ou=superheros,dc=glauth,dc=com";
+            object = "ou=superheros,dc=example,dc=com";
           }
         ];
         groups = [
