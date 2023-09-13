@@ -66,7 +66,10 @@ import ./make-test-python.nix {
     with subtest("API is up"):
         machine.succeed("curl -sfL --head http://localhost:5555")
 
-    # TODO: test ldapsearch?
+    # TODO: fix
+    with subtest("ldapsearch"):
+        machine.succeed("ldapsearch -LLL -H ldap://localhost:3389 -D cn=hackers,ou=superheros,dc=example,dc=com -w dogood -x -bou=superheros,ou=groups,dc=example,dc=com '(&(objectClass=*)(memberOf=ou=superheros,ou=groups,dc=example,dc=com))'")
+
     # TODO: test login from a client machine?
   '';
 }
