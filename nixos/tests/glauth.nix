@@ -30,13 +30,17 @@ import ./make-test-python.nix {
             primarygroup = 5501;
             # to create a passSHA256: echo -n "mysecret" | openssl dgst -sha256
             passsha256 = "6478579e37aff45f013e14eeb30b3cc56c72ccdc310123bcdf53e0333e3f416a"; # dogood
-            # TODO: How to map this?
-            # [[users.customattributes]];
-            # employeetype = ["Intern", "Temp"];
-            # employeenumber = [12345, 54321];
-            # [[users.capabilities]];
-            action = "search";
-            object = "ou=superheros,dc=example,dc=com";
+            customattributes = [
+              { employeetype = ["Intern" "Temp"];
+                employeenumber = [12345 54321];
+              }
+            ];
+            capabilities = [
+              { action = "search";
+                #object = "ou=superheros,dc=example,dc=com";
+                object = "*";
+              }
+            ];
           }
         ];
         groups = [
@@ -66,9 +70,8 @@ import ./make-test-python.nix {
     with subtest("API is up"):
         machine.succeed("curl -sfL --head http://localhost:5555")
 
-    # TODO: fix
     with subtest("ldapsearch"):
-        machine.succeed("ldapsearch -LLL -H ldap://localhost:389 -D cn=hackers,ou=superheros,dc=example,dc=com -w dogood -x -bou=superheros,ou=groups,dc=example,dc=com '(&(objectClass=*)(memberOf=ou=superheros,ou=groups,dc=example,dc=com))'")
+        machine.succeed("ldapsearch -LLL -H ldap://localhost:389 -D cn=hackers,ou=superheros,dc=example,dc=com -w dogood -x -bou=groups,dc=example,dc=com '(&(objectClass=*)(memberOf=ou=superheros,ou=groups,dc=example,dc=com))'")
 
     # TODO: test login from a client machine?
   '';
